@@ -44,13 +44,15 @@
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBox Text="{Binding ShortcutInput, UpdateSourceTrigger=PropertyChanged}"
-                                     Width="140"
-                                     Padding="10,7"
+                                     Width="148"
+                                     Padding="12,8"
                                      FontSize="13"
                                      FontWeight="Medium"
+                                     Foreground="{StaticResource Brush.Ink.Primary}"
+                                     CaretBrush="{StaticResource Brush.Accent.Primary}"
                                      VerticalContentAlignment="Center"
-                                     BorderBrush="{StaticResource Brush.Border.Hairline}"
-                                     Background="{StaticResource Brush.Canvas.Primary}"
+                                     BorderBrush="{StaticResource Brush.Border.GlassRim}"
+                                     Background="{StaticResource Brush.Canvas.Subtle}"
                                      Margin="0,0,8,0" />
                             <Button Content="Apply"
                                     Style="{StaticResource SecondaryPillButtonStyle}"
@@ -194,7 +196,9 @@
                         <ItemsControl ItemsSource="{Binding DiagnosticOutputs}" Margin="0,0,0,14">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{StaticResource Brush.Canvas.Primary}"
+                                    <Border Background="{StaticResource Brush.Canvas.Subtle}"
+                                            BorderBrush="{StaticResource Brush.Border.Hairline}"
+                                            BorderThickness="1"
                                             CornerRadius="10"
                                             Padding="12,9"
                                             Margin="0,0,0,6">

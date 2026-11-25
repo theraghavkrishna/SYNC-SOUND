@@ -43,6 +43,7 @@ public sealed record AudioEngineConfiguration
     public bool AutoRecoverOutputs { get; init; } = true;
     public float MasterVolume { get; init; } = 1.0f;
     public IReadOnlyDictionary<string, int>? PerOutputDelayMs { get; init; }
+    public IReadOnlyDictionary<string, float>? PerOutputVolume { get; init; }
 }
 
 /// <summary>

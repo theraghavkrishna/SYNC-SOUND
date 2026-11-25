@@ -5,15 +5,23 @@ namespace SyncSound.App.ViewModels;
 public sealed class DeviceItemViewModel : ViewModelBase
 {
     private readonly Action<string, bool> _onSelectionToggled;
+    private readonly Action<string, float>? _onVolumeChanged;
     private bool _isSelected;
+    private double _volume;
     private string _statusBadge = "Connected";
     private string? _errorMessage;
 
-    public DeviceItemViewModel(AudioDevice model, Action<string, bool> onSelectionToggled)
+    public DeviceItemViewModel(
+        AudioDevice model,
+        Action<string, bool> onSelectionToggled,
+        double initialVolume = 1.0,
+        Action<string, float>? onVolumeChanged = null)
     {
         Model = model;
         _onSelectionToggled = onSelectionToggled;
+        _onVolumeChanged = onVolumeChanged;
         _isSelected = model.IsSelected;
+        _volume = Math.Clamp(initialVolume, 0.0, 1.0);
     }
 
     public AudioDevice Model { get; }
@@ -49,6 +57,35 @@ public sealed class DeviceItemViewModel : ViewModelBase
             {
                 _onSelectionToggled(Id, value);
             }
+        }
+    }
+
+    public double Volume
+    {
+        get => _volume;
+        set
+        {
+            var clamped = Math.Clamp(value, 0.0, 1.0);
+            if (Math.Abs(_volume - clamped) > 0.001)
+            {
+                _volume = clamped;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(VolumePercentText));
+                _onVolumeChanged?.Invoke(Id, (float)clamped);
+            }
+        }
+    }
+
+    public string VolumePercentText => $"{(int)Math.Round(_volume * 100)}%";
+
+    public void SyncVolumeSilently(double volume)
+    {
+        var clamped = Math.Clamp(volume, 0.0, 1.0);
+        if (Math.Abs(_volume - clamped) > 0.001)
+        {
+            _volume = clamped;
+            OnPropertyChanged(nameof(Volume));
+            OnPropertyChanged(nameof(VolumePercentText));
         }
     }
 

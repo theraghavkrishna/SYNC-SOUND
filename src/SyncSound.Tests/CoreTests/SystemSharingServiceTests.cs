@@ -65,6 +65,7 @@ public sealed class SystemSharingServiceTests
         public Task StopAsync() => Task.CompletedTask;
         public void SetMasterVolume(float volume) { }
         public void SetOutputDelayMs(string deviceId, int delayMs) { }
+        public void SetOutputVolume(string deviceId, float volume) { }
         public ValueTask DisposeAsync()
         {
             _ = StatusChanged;

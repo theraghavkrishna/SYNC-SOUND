@@ -17,9 +17,6 @@
         <DataTemplate DataType="{x:Type vm:DevicesViewModel}">
             <views:DevicesView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:PlayerViewModel}">
-            <views:PlayerView />
-        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
@@ -27,7 +24,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="236" />
+            <ColumnDefinition Width="244" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
@@ -39,35 +36,43 @@
                 Padding="20,28,20,24">
             <DockPanel>
                 <!-- Brand Header -->
-                <StackPanel DockPanel.Dock="Top" Margin="6,0,0,28">
+                <StackPanel DockPanel.Dock="Top" Margin="6,0,0,30">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,11,0" VerticalAlignment="Center">
                             <Border Width="3.5" Height="11" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0" />
-                            <Border Width="3.5" Height="19" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0" />
+                            <Border Width="3.5" Height="20" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.7" Color="#22D3EE" />
+                                </Border.Effect>
+                            </Border>
                             <Border Width="3.5" Height="14" CornerRadius="1.75" Background="{StaticResource Brush.Ink.Primary}" Margin="1.5,0" />
                         </StackPanel>
                         <TextBlock Text="SYNC SOUND"
                                    FontFamily="{StaticResource Font.Display}"
-                                   FontSize="15.5"
+                                   FontSize="16"
                                    FontWeight="Bold"
                                    Foreground="{StaticResource Brush.Ink.Primary}" />
                     </StackPanel>
                     <TextBlock Text="One sound. Everyone listening."
                                FontSize="11.5"
                                Foreground="{StaticResource Brush.Ink.Muted}"
-                               Margin="0,5,0,0" />
+                               Margin="0,6,0,0" />
                 </StackPanel>
 
                 <!-- Footer Connection Summary -->
                 <Border DockPanel.Dock="Bottom"
-                        Background="{StaticResource Brush.Surface.Card}"
-                        BorderBrush="{StaticResource Brush.Border.Hairline}"
+                        Background="{StaticResource Brush.Surface.GlassCard}"
+                        BorderBrush="{StaticResource Brush.Border.GlassRim}"
                         BorderThickness="1"
-                        CornerRadius="14"
+                        CornerRadius="15"
                         Padding="14,12">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="7" Height="7" Fill="{StaticResource Brush.Status.Success}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <Ellipse Width="8" Height="8" Fill="{StaticResource Brush.Status.Success}" VerticalAlignment="Center" Margin="0,0,9,0">
+                                <Ellipse.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.75" Color="#34D399" />
+                                </Ellipse.Effect>
+                            </Ellipse>
                             <TextBlock Text="{Binding FooterConnectionText}"
                                        FontSize="12.5"
                                        FontWeight="SemiBold"
@@ -76,11 +81,11 @@
                         <TextBlock Text="Running in background"
                                    FontSize="11.5"
                                    Foreground="{StaticResource Brush.Ink.Muted}"
-                                   Margin="15,3,0,0" />
+                                   Margin="17,3,0,0" />
                     </StackPanel>
                 </Border>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links (3 Core Screens) -->
                 <StackPanel Margin="0,4,0,0">
                     <RadioButton Style="{StaticResource RailNavRadioStyle}"
                                  GroupName="MainNav"
@@ -114,21 +119,6 @@
 
                     <RadioButton Style="{StaticResource RailNavRadioStyle}"
                                  GroupName="MainNav"
-                                 IsChecked="{Binding IsPlayerSelected, Mode=TwoWay}">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="{StaticResource Icon.Player}"
-                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"
-                                  StrokeThickness="1.75"
-                                  Width="16"
-                                  Height="16"
-                                  Stretch="Uniform"
-                                  Margin="0,0,12,0" />
-                            <TextBlock Text="Player" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton Style="{StaticResource RailNavRadioStyle}"
-                                 GroupName="MainNav"
                                  IsChecked="{Binding IsSettingsSelected, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="{StaticResource Icon.Settings}"
@@ -145,13 +135,13 @@
             </DockPanel>
         </Border>
 
-        <!-- Active View Host -->
+        <!-- Active View Host with Subtle Ambient Atmospheric Glow -->
         <Grid Grid.Column="1" Background="{StaticResource Brush.Canvas.Primary}">
+            <Rectangle Fill="{StaticResource Brush.Canvas.AmbientGlow}" IsHitTestVisible="False" />
+
             <views:HomeView Visibility="{Binding IsHomeSelected, Converter={StaticResource BoolToVisibilityConverter}}" />
             <views:DevicesView DataContext="{Binding DevicesViewModel}"
                                Visibility="{Binding DataContext.IsDevicesSelected, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}" />
-            <views:PlayerView DataContext="{Binding PlayerViewModel}"
-                              Visibility="{Binding DataContext.IsPlayerSelected, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}" />
             <views:SettingsView DataContext="{Binding SettingsViewModel}"
                                 Visibility="{Binding DataContext.IsSettingsSelected, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolToVisibilityConverter}}" />
         </Grid>

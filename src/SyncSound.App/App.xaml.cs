@@ -161,6 +161,7 @@ public partial class App : Application
         }
         else
         {
+            (_sidebarWindow.DataContext as QuickSidebarViewModel)?.SyncVolumesFromSettings();
             _sidebarWindow.ShowAnimated();
         }
     }
@@ -236,7 +237,6 @@ public partial class App : Application
         services.AddSingleton<IAudioOutputFactory, WasapiAudioOutputFactory>();
         services.AddSingleton<IAudioEngine, AudioEngine>();
         services.AddSingleton<IDeviceManagerService, DeviceManagerService>();
-        services.AddSingleton<IMusicPlayerService, MusicPlayerService>();
         services.AddSingleton<ISystemSharingService, SystemSharingService>();
         services.AddSingleton<IWindowsSettingsLauncher, WindowsSettingsLauncher>();
         services.AddSingleton<IGlobalHotkeyService, GlobalHotkeyService>();
@@ -244,7 +244,6 @@ public partial class App : Application
         services.AddSingleton<ITrayIconService, TrayIconService>();
 
         services.AddSingleton<DevicesViewModel>();
-        services.AddSingleton<PlayerViewModel>();
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<QuickSidebarViewModel>();
         services.AddSingleton<MainViewModel>();

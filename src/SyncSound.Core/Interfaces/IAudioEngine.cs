@@ -25,6 +25,7 @@ public interface IAudioEngine : IAsyncDisposable
     Task StopAsync();
     void SetMasterVolume(float volume);
     void SetOutputDelayMs(string deviceId, int delayMs);
+    void SetOutputVolume(string deviceId, float volume);
 }
 
 public interface ISettingsService

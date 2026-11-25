@@ -356,6 +356,21 @@ public sealed class AudioEngine : IAudioEngine
         }
     }
 
+    public void SetOutputVolume(string deviceId, float volume)
+    {
+        if (string.IsNullOrWhiteSpace(deviceId))
+        {
+            return;
+        }
+
+        var clamped = Math.Clamp(volume, 0.0f, 1.0f);
+        lock (_gate)
+        {
+            var entry = _entries.FirstOrDefault(e => string.Equals(e.Device.Id, deviceId, StringComparison.OrdinalIgnoreCase));
+            entry?.Output?.SetVolume(clamped);
+        }
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (_disposed)

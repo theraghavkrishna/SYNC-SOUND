@@ -30,7 +30,14 @@ public sealed class WasapiAudioOutputFactory : IAudioOutputFactory
         }
 
         var estimatedLatency = _syncCoordinator.EstimateEndpointLatencyMs(device, configuration.OutputLatencyMs);
-        return new WasapiAudioOutput(device, sourceFormat, configuration, delayMs, estimatedLatency, _logger);
+        var initialVolume = 1.0f;
+        if (configuration.PerOutputVolume is not null &&
+            configuration.PerOutputVolume.TryGetValue(device.Id, out var configuredVolume))
+        {
+            initialVolume = configuredVolume;
+        }
+
+        return new WasapiAudioOutput(device, sourceFormat, configuration, delayMs, estimatedLatency, initialVolume, _logger);
     }
 }
 
@@ -52,6 +59,7 @@ public sealed class WasapiAudioOutput : IAudioOutput
     private volatile AudioOutputState _state = AudioOutputState.Initializing;
     private volatile bool _disposed;
     private volatile bool _faulted;
+    private volatile float _volume = 1.0f;
     private long _underrunCount;
     private string? _errorMessage;
 
@@ -61,11 +69,13 @@ public sealed class WasapiAudioOutput : IAudioOutput
         AudioEngineConfiguration configuration,
         int initialDelayMs,
         int estimatedLatencyMs,
+        float initialVolume = 1.0f,
         ILogger? logger = null)
     {
         DeviceId = device.Id;
         DeviceName = device.Name;
         EstimatedLatencyMs = estimatedLatencyMs;
+        _volume = Math.Clamp(initialVolume, 0.0f, 1.0f);
         _logger = logger ?? Log.Logger;
 
         // Preallocate enough scratch space for typical 20-100 ms chunks without heap churn.
@@ -137,6 +147,7 @@ public sealed class WasapiAudioOutput : IAudioOutput
     public string? FormatSummary { get; }
     public int ConfiguredDelayMs => _delayLine?.DelayMs ?? 0;
     public int EstimatedLatencyMs { get; }
+    public float Volume => _volume;
     public bool IsFaulted => _faulted;
 
     public event EventHandler<string?>? Faulted;
@@ -201,6 +212,11 @@ public sealed class WasapiAudioOutput : IAudioOutput
         _delayLine?.SetDelayMs(delayMs);
     }
 
+    public void SetVolume(float volume)
+    {
+        _volume = Math.Clamp(volume, 0.0f, 1.0f);
+    }
+
     public void WriteFloatSamples(ReadOnlySpan<float> samples, AudioPcmFormat sourceFormat)
     {
         if (_disposed || _faulted || _buffer is null || samples.IsEmpty)
@@ -213,7 +229,23 @@ public sealed class WasapiAudioOutput : IAudioOutput
             ? _scratchBytes
             : new byte[byteCount];
 
-        MemoryMarshal.AsBytes(samples).CopyTo(targetBytes);
+        var vol = _volume;
+        if (vol >= 0.999f)
+        {
+            MemoryMarshal.AsBytes(samples).CopyTo(targetBytes);
+        }
+        else if (vol <= 0.001f)
+        {
+            Array.Clear(targetBytes, 0, byteCount);
+        }
+        else
+        {
+            var destFloats = MemoryMarshal.Cast<byte, float>(targetBytes.AsSpan(0, byteCount));
+            for (var i = 0; i < samples.Length; i++)
+            {
+                destFloats[i] = samples[i] * vol;
+            }
+        }
 
         try
         {

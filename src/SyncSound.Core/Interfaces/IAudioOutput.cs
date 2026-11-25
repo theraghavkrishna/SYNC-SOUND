@@ -13,6 +13,7 @@ public interface IAudioOutput : IDisposable
     string? FormatSummary { get; }
     int ConfiguredDelayMs { get; }
     int EstimatedLatencyMs { get; }
+    float Volume { get; }
     bool IsFaulted { get; }
 
     event EventHandler<string?>? Faulted;
@@ -22,6 +23,7 @@ public interface IAudioOutput : IDisposable
     void Resume();
     void Stop();
     void SetDelayCompensationMs(int delayMs);
+    void SetVolume(float volume);
     void WriteFloatSamples(ReadOnlySpan<float> samples, AudioPcmFormat sourceFormat);
     AudioOutputSnapshot GetSnapshot();
 }

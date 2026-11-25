@@ -7,43 +7,209 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Centered Editorial Hero -->
+        <!-- Centered Motion-Rich Acoustic Hero -->
         <StackPanel Grid.Row="0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    MaxWidth="600">
+                    MaxWidth="620">
 
-            <!-- Acoustic Emblem -->
-            <Grid Width="96" Height="96" HorizontalAlignment="Center" Margin="0,0,0,28">
-                <Ellipse x:Name="PulseRing"
-                         Width="96"
-                         Height="96"
+            <!-- Animated Acoustic Core Emblem -->
+            <Grid Width="136" Height="136" HorizontalAlignment="Center" Margin="0,0,0,26">
+                <!-- Outer Breathing Pulse Ring -->
+                <Ellipse x:Name="OuterPulseRing"
+                         Width="132"
+                         Height="132"
+                         Stroke="{StaticResource Brush.Accent.Border}"
+                         StrokeThickness="1.2"
+                         Opacity="0.35"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <ScaleTransform x:Name="OuterPulseScale" ScaleX="0.92" ScaleY="0.92" />
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Style>
+                        <Style TargetType="Ellipse">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="OuterPulseStoryboard">
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                                 From="0.88" To="1.18" Duration="0:0:1.6" />
+                                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                                 From="0.88" To="1.18" Duration="0:0:1.6" />
+                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                 From="0.7" To="0.0" Duration="0:0:1.6" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <StopStoryboard BeginStoryboardName="OuterPulseStoryboard" />
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Ellipse.Style>
+                </Ellipse>
+
+                <!-- Middle Halo Ring -->
+                <Ellipse x:Name="MiddleHalo"
+                         Width="104"
+                         Height="104"
                          Fill="{StaticResource Brush.Accent.Soft}"
                          Stroke="{StaticResource Brush.Accent.Border}"
-                         StrokeThickness="1.5" />
-                <Ellipse Width="70"
-                         Height="70"
-                         Fill="{StaticResource Brush.Surface.Card}">
+                         StrokeThickness="1.5"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <ScaleTransform ScaleX="1" ScaleY="1" />
+                    </Ellipse.RenderTransform>
+                    <Ellipse.Style>
+                        <Style TargetType="Ellipse">
+                            <Style.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                                             From="0.96" To="1.04" Duration="0:0:2.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <SineEase EasingMode="EaseInOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                                             From="0.96" To="1.04" Duration="0:0:2.2">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <SineEase EasingMode="EaseInOut" />
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Ellipse.Style>
+                </Ellipse>
+
+                <!-- Floating Tactile Glass Core -->
+                <Ellipse Width="78"
+                         Height="78"
+                         Stroke="{StaticResource Brush.Border.GlassRim}"
+                         StrokeThickness="1.2">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#1F283D" Offset="0" />
+                            <GradientStop Color="#0D121D" Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
                     <Ellipse.Effect>
-                        <DropShadowEffect BlurRadius="16" ShadowDepth="3" Opacity="0.08" Color="#18181B" />
+                        <DropShadowEffect BlurRadius="22" ShadowDepth="4" Opacity="0.55" Color="#000000" />
                     </Ellipse.Effect>
                 </Ellipse>
 
-                <!-- 4-bar SYNC SOUND acoustic wave mark -->
+                <!-- 5-Bar Animated Acoustic Equalizer -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
-                    <Border Width="4.5" Height="14" CornerRadius="2.25" Background="{StaticResource Brush.Accent.Primary}" Margin="2.5,0" />
-                    <Border Width="4.5" Height="26" CornerRadius="2.25" Background="{StaticResource Brush.Accent.Primary}" Margin="2.5,0" />
-                    <Border Width="4.5" Height="20" CornerRadius="2.25" Background="{StaticResource Brush.Ink.Primary}" Margin="2.5,0" />
-                    <Border Width="4.5" Height="12" CornerRadius="2.25" Background="{StaticResource Brush.Accent.Primary}" Margin="2.5,0" />
+                    <Border Width="4" Height="16" CornerRadius="2" Background="{StaticResource Brush.Accent.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform><ScaleTransform ScaleY="0.7" /></Border.RenderTransform>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="Bar1Anim">
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.45" To="1.35" Duration="0:0:0.38" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="Bar1Anim" /></DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                    <Border Width="4" Height="28" CornerRadius="2" Background="{StaticResource Brush.Accent.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform><ScaleTransform ScaleY="0.9" /></Border.RenderTransform>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="Bar2Anim">
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.2" To="0.4" Duration="0:0:0.31" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="Bar2Anim" /></DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                    <Border Width="4" Height="34" CornerRadius="2" Background="{StaticResource Brush.Ink.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform><ScaleTransform ScaleY="0.85" /></Border.RenderTransform>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="Bar3Anim">
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.5" To="1.15" Duration="0:0:0.27" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="Bar3Anim" /></DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                    <Border Width="4" Height="24" CornerRadius="2" Background="{StaticResource Brush.Accent.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform><ScaleTransform ScaleY="0.9" /></Border.RenderTransform>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="Bar4Anim">
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.25" To="0.45" Duration="0:0:0.35" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="Bar4Anim" /></DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                    <Border Width="4" Height="14" CornerRadius="2" Background="{StaticResource Brush.Accent.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform><ScaleTransform ScaleY="0.7" /></Border.RenderTransform>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <DataTrigger.EnterActions>
+                                            <BeginStoryboard x:Name="Bar5Anim">
+                                                <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.55" To="1.4" Duration="0:0:0.42" />
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </DataTrigger.EnterActions>
+                                        <DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="Bar5Anim" /></DataTrigger.ExitActions>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
                 </StackPanel>
             </Grid>
 
             <!-- Hero Headline -->
             <TextBlock Text="{Binding HeroTitle}"
                        FontFamily="{StaticResource Font.Display}"
-                       FontSize="36"
+                       FontSize="38"
                        FontWeight="SemiBold"
                        Foreground="{StaticResource Brush.Ink.Primary}"
                        TextAlignment="Center"
@@ -69,14 +235,18 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{StaticResource Brush.Surface.Card}"
-                                BorderBrush="{StaticResource Brush.Border.Hairline}"
+                        <Border Background="{StaticResource Brush.Surface.GlassCard}"
+                                BorderBrush="{StaticResource Brush.Border.GlassRim}"
                                 BorderThickness="1"
                                 CornerRadius="16"
-                                Padding="14,7"
+                                Padding="14,8"
                                 Margin="5">
                             <StackPanel Orientation="Horizontal">
-                                <Ellipse Width="7" Height="7" Fill="{StaticResource Brush.Status.Success}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <Ellipse Width="7" Height="7" Fill="{StaticResource Brush.Status.Success}" Margin="0,0,8,0" VerticalAlignment="Center">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.8" Color="#34D399" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
                                 <TextBlock Text="{Binding}"
                                            FontSize="13"
                                            FontWeight="Medium"
@@ -89,7 +259,7 @@
 
             <!-- Inline Error / Partial Notice -->
             <Border Background="{StaticResource Brush.Status.WarningSoft}"
-                    BorderBrush="#FCD34D"
+                    BorderBrush="#66FBBF24"
                     BorderThickness="1"
                     CornerRadius="12"
                     Padding="14,10"
@@ -106,11 +276,11 @@
             <!-- Primary & Secondary Actions -->
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
-                        Margin="0,28,0,0">
+                        Margin="0,30,0,0">
                 <Button Content="{Binding ShareButtonText}"
                         Style="{StaticResource PrimaryPillButtonStyle}"
                         Command="{Binding ToggleSharingCommand}"
-                        MinWidth="180"
+                        MinWidth="188"
                         Margin="0,0,12,0" />
 
                 <Button Content="Choose headphones"
@@ -120,22 +290,24 @@
             </StackPanel>
         </StackPanel>
 
-        <!-- Bottom Subtle Tip -->
+        <!-- Bottom Frosted Shortcut Tip -->
         <Border Grid.Row="1"
                 HorizontalAlignment="Center"
-                Background="{StaticResource Brush.Canvas.Subtle}"
+                Background="{StaticResource Brush.Surface.GlassCard}"
+                BorderBrush="{StaticResource Brush.Border.GlassRim}"
+                BorderThickness="1"
                 CornerRadius="14"
                 Padding="16,9">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Quick Sidebar available anytime with"
                            FontSize="12.5"
-                           Foreground="{StaticResource Brush.Ink.Muted}"
+                           Foreground="{StaticResource Brush.Ink.Secondary}"
                            VerticalAlignment="Center" />
-                <Border Background="{StaticResource Brush.Surface.Card}"
+                <Border Background="{StaticResource Brush.Canvas.Primary}"
                         BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
                         CornerRadius="6"
-                        Padding="7,2"
+                        Padding="8,3"
                         Margin="8,0">
                     <TextBlock Text="{Binding ShortcutHint}"
                                FontSize="11.5"

@@ -9,7 +9,6 @@ public enum AppSection
 {
     Home = 0,
     Devices,
-    Player,
     Settings
 }
 
@@ -35,7 +34,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         ISystemSharingService sharingService,
         ISettingsService settingsService,
         DevicesViewModel devicesViewModel,
-        PlayerViewModel playerViewModel,
         SettingsViewModel settingsViewModel,
         QuickSidebarViewModel quickSidebarViewModel)
     {
@@ -44,7 +42,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         _settingsService = settingsService;
 
         DevicesViewModel = devicesViewModel;
-        PlayerViewModel = playerViewModel;
         SettingsViewModel = settingsViewModel;
         QuickSidebarViewModel = quickSidebarViewModel;
 
@@ -74,7 +71,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     }
 
     public DevicesViewModel DevicesViewModel { get; }
-    public PlayerViewModel PlayerViewModel { get; }
     public SettingsViewModel SettingsViewModel { get; }
     public QuickSidebarViewModel QuickSidebarViewModel { get; }
 
@@ -94,9 +90,13 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         {
             if (SetProperty(ref _currentSection, value))
             {
+                if (value == AppSection.Devices)
+                {
+                    DevicesViewModel.SyncVolumesFromSettings();
+                }
+
                 OnPropertyChanged(nameof(IsHomeSelected));
                 OnPropertyChanged(nameof(IsDevicesSelected));
-                OnPropertyChanged(nameof(IsPlayerSelected));
                 OnPropertyChanged(nameof(IsSettingsSelected));
             }
         }
@@ -112,12 +112,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     {
         get => _currentSection == AppSection.Devices;
         set { if (value) CurrentSection = AppSection.Devices; }
-    }
-
-    public bool IsPlayerSelected
-    {
-        get => _currentSection == AppSection.Player;
-        set { if (value) CurrentSection = AppSection.Player; }
     }
 
     public bool IsSettingsSelected
@@ -184,7 +178,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     {
         _deviceManager.DevicesUpdated -= OnDevicesUpdated;
         _sharingService.StateChanged -= OnSharingStateChanged;
-        PlayerViewModel.Dispose();
         SettingsViewModel.Dispose();
         QuickSidebarViewModel.Dispose();
     }
@@ -262,7 +255,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             else if (defaultSource is not null && selected.Count == 1 &&
                      string.Equals(selected[0].Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
             {
-                HeroSubtitle = $"{defaultSource.Name} is already your Windows output. Select one more headphone to share together, or play local songs in Player.";
+                HeroSubtitle = $"{defaultSource.Name} is already your Windows output. Select one more headphone to share together.";
             }
             else
             {

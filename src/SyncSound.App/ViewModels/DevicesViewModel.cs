@@ -8,14 +8,22 @@ namespace SyncSound.App.ViewModels;
 public sealed class DevicesViewModel : ViewModelBase
 {
     private readonly IDeviceManagerService _deviceManager;
+    private readonly IAudioEngine _audioEngine;
+    private readonly ISettingsService _settingsService;
     private readonly IWindowsSettingsLauncher _settingsLauncher;
     private string _selectionSummary = "No headphones connected";
     private bool _hasDevices;
     private string? _bannerMessage;
 
-    public DevicesViewModel(IDeviceManagerService deviceManager, IWindowsSettingsLauncher settingsLauncher)
+    public DevicesViewModel(
+        IDeviceManagerService deviceManager,
+        IAudioEngine audioEngine,
+        ISettingsService settingsService,
+        IWindowsSettingsLauncher settingsLauncher)
     {
         _deviceManager = deviceManager;
+        _audioEngine = audioEngine;
+        _settingsService = settingsService;
         _settingsLauncher = settingsLauncher;
 
         RefreshCommand = new RelayCommand(Refresh);
@@ -86,6 +94,17 @@ public sealed class DevicesViewModel : ViewModelBase
         }
     }
 
+    public void SyncVolumesFromSettings()
+    {
+        foreach (var item in Devices)
+        {
+            var vol = _settingsService.Current.PerDeviceVolume.TryGetValue(item.Id, out var saved)
+                ? saved
+                : 1.0f;
+            item.SyncVolumeSilently(vol);
+        }
+    }
+
     private void OnDevicesUpdated(object? sender, EventArgs e)
     {
         var dispatcher = Application.Current?.Dispatcher;
@@ -104,7 +123,10 @@ public sealed class DevicesViewModel : ViewModelBase
         Devices.Clear();
         foreach (var device in _deviceManager.Devices)
         {
-            Devices.Add(new DeviceItemViewModel(device, OnDeviceSelectionToggled));
+            var vol = _settingsService.Current.PerDeviceVolume.TryGetValue(device.Id, out var saved)
+                ? saved
+                : 1.0f;
+            Devices.Add(new DeviceItemViewModel(device, OnDeviceSelectionToggled, vol, OnDeviceVolumeChanged));
         }
 
         HasDevices = Devices.Count > 0;
@@ -122,5 +144,12 @@ public sealed class DevicesViewModel : ViewModelBase
     private void OnDeviceSelectionToggled(string deviceId, bool isSelected)
     {
         _deviceManager.SetDeviceSelected(deviceId, isSelected);
+    }
+
+    private void OnDeviceVolumeChanged(string deviceId, float volume)
+    {
+        _settingsService.Current.PerDeviceVolume[deviceId] = volume;
+        _audioEngine.SetOutputVolume(deviceId, volume);
+        _ = _settingsService.SaveAsync();
     }
 }

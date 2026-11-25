@@ -115,7 +115,8 @@ public sealed class SystemSharingService : ISystemSharingService
                 PrefillChunks = 6,
                 AutoRecoverOutputs = true,
                 MasterVolume = 1.0f,
-                PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs
+                PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs,
+                PerOutputVolume = _settingsService.Current.PerDeviceVolume
             };
 
             var engineStatus = await _engine.StartAsync(source, fanoutTargets, config, cancellationToken).ConfigureAwait(false);

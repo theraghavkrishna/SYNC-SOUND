@@ -9,6 +9,7 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
 {
     private readonly IDeviceManagerService _deviceManager;
     private readonly ISystemSharingService _sharingService;
+    private readonly IAudioEngine _audioEngine;
     private readonly ISettingsService _settingsService;
 
     private string _statusHeadline = "Ready to listen.";
@@ -20,10 +21,12 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
     public QuickSidebarViewModel(
         IDeviceManagerService deviceManager,
         ISystemSharingService sharingService,
+        IAudioEngine audioEngine,
         ISettingsService settingsService)
     {
         _deviceManager = deviceManager;
         _sharingService = sharingService;
+        _audioEngine = audioEngine;
         _settingsService = settingsService;
 
         ToggleSharingCommand = new AsyncRelayCommand(ToggleSharingAsync, () => CanToggleSharing || IsSharing);
@@ -83,6 +86,17 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(ClickOutsideToClose));
     }
 
+    public void SyncVolumesFromSettings()
+    {
+        foreach (var item in Devices)
+        {
+            var vol = _settingsService.Current.PerDeviceVolume.TryGetValue(item.Id, out var saved)
+                ? saved
+                : 1.0f;
+            item.SyncVolumeSilently(vol);
+        }
+    }
+
     public void Dispose()
     {
         _deviceManager.DevicesUpdated -= OnDevicesOrSharingChanged;
@@ -113,7 +127,14 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         Devices.Clear();
         foreach (var d in _deviceManager.Devices)
         {
-            Devices.Add(new DeviceItemViewModel(d, (id, sel) => _deviceManager.SetDeviceSelected(id, sel)));
+            var vol = _settingsService.Current.PerDeviceVolume.TryGetValue(d.Id, out var saved)
+                ? saved
+                : 1.0f;
+            Devices.Add(new DeviceItemViewModel(
+                d,
+                (id, sel) => _deviceManager.SetDeviceSelected(id, sel),
+                vol,
+                OnDeviceVolumeChanged));
         }
 
         var sharing = _sharingService.CurrentState;
@@ -146,5 +167,12 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         }
 
         ToggleSharingCommand.RaiseCanExecuteChanged();
+    }
+
+    private void OnDeviceVolumeChanged(string deviceId, float volume)
+    {
+        _settingsService.Current.PerDeviceVolume[deviceId] = volume;
+        _audioEngine.SetOutputVolume(deviceId, volume);
+        _ = _settingsService.SaveAsync();
     }
 }

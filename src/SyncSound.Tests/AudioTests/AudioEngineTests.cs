@@ -178,6 +178,7 @@ public sealed class AudioEngineTests
         public string? FormatSummary => "48000 Hz, 2ch, 32-bit";
         public int ConfiguredDelayMs { get; private set; }
         public int EstimatedLatencyMs => 40;
+        public float Volume { get; private set; } = 1.0f;
         public bool IsFaulted { get; private set; }
         public bool Disposed { get; private set; }
         public List<float> WrittenSamples { get; } = [];
@@ -189,6 +190,7 @@ public sealed class AudioEngineTests
         public void Resume() => State = AudioOutputState.Playing;
         public void Stop() => State = AudioOutputState.Stopped;
         public void SetDelayCompensationMs(int delayMs) => ConfiguredDelayMs = delayMs;
+        public void SetVolume(float volume) => Volume = Math.Clamp(volume, 0.0f, 1.0f);
 
         public void WriteFloatSamples(ReadOnlySpan<float> samples, AudioPcmFormat sourceFormat)
         {

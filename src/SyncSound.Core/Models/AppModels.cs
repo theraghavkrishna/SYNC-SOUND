@@ -51,4 +51,5 @@ public sealed class AppSettings
     public List<string> SelectedDeviceIds { get; set; } = [];
     public List<string> PreferredDeviceIds { get; set; } = [];
     public Dictionary<string, int> PerDeviceDelayMs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, float> PerDeviceVolume { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
