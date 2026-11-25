@@ -88,6 +88,13 @@ public sealed class DeviceManagerService : IDeviceManagerService
             var updated = new List<AudioDevice>(endpoints.Count);
             foreach (var endpoint in endpoints)
             {
+                // Keep Bluetooth Hands-Free (HFP) telephony endpoints out of the consumer list
+                // because opening HFP forces Bluetooth earbuds out of stereo A2DP mode.
+                if (endpoint.IsHandsFreeProfile)
+                {
+                    continue;
+                }
+
                 var shouldSelect = _settingsService.Current.AutoSelectPreferredDevices
                     ? currentSelected.Contains(endpoint.Id) || savedSelected.Contains(endpoint.Id)
                     : currentSelected.Contains(endpoint.Id);

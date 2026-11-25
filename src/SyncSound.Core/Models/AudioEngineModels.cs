@@ -36,10 +36,10 @@ public sealed record AudioEngineConfiguration
 {
     public int SampleRate { get; init; } = 48000;
     public int Channels { get; init; } = 2;
-    public int ChunkMs { get; init; } = 20;
-    public int OutputLatencyMs { get; init; } = 80;
-    public int BufferDurationMs { get; init; } = 500;
-    public int PrefillChunks { get; init; } = 3;
+    public int ChunkMs { get; init; } = 10;
+    public int OutputLatencyMs { get; init; } = 60;
+    public int BufferDurationMs { get; init; } = 600;
+    public int PrefillChunks { get; init; } = 8;
     public bool AutoRecoverOutputs { get; init; } = true;
     public float MasterVolume { get; init; } = 1.0f;
     public IReadOnlyDictionary<string, int>? PerOutputDelayMs { get; init; }

@@ -149,6 +149,10 @@ public sealed class AudioEngine : IAudioEngine
             try
             {
                 entry.Output!.Start();
+                _logger.Information(
+                    "Audio output active: {DeviceName} ({FormatSummary})",
+                    entry.Device.Name,
+                    entry.Output.FormatSummary);
             }
             catch (Exception ex)
             {

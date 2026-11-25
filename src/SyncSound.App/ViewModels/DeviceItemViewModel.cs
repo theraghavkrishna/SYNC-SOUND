@@ -47,7 +47,6 @@ public sealed class DeviceItemViewModel : ViewModelBase
         {
             if (SetProperty(ref _isSelected, value))
             {
-                Model.IsSelected = value;
                 _onSelectionToggled(Id, value);
             }
         }

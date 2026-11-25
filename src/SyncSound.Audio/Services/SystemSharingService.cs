@@ -85,6 +85,12 @@ public sealed class SystemSharingService : ISystemSharingService
                 $"{defaultSource.Name} is already playing your computer's audio directly.");
         }
 
+        _logger.Information(
+            "Starting system sharing from source '{Source}' to {Count} target(s): {Targets}",
+            defaultSource.Name,
+            fanoutTargets.Count,
+            string.Join(", ", fanoutTargets.Select(t => t.Name)));
+
         _isTransitioning = true;
         try
         {
@@ -103,9 +109,10 @@ public sealed class SystemSharingService : ISystemSharingService
 
             var config = new AudioEngineConfiguration
             {
-                OutputLatencyMs = 80,
-                BufferDurationMs = 500,
-                PrefillChunks = 2,
+                ChunkMs = 10,
+                OutputLatencyMs = 60,
+                BufferDurationMs = 600,
+                PrefillChunks = 6,
                 AutoRecoverOutputs = true,
                 MasterVolume = 1.0f,
                 PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs

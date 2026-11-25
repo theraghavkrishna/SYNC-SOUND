@@ -25,6 +25,7 @@ public sealed class WasapiLoopbackAudioSource : IAudioSource
     private byte[] _copyScratch = new byte[16384];
     private volatile bool _disposed;
     private volatile bool _faulted;
+    private bool _loggedFirstAudio;
 
     public WasapiLoopbackAudioSource(string sourceDeviceId, string sourceDeviceName, ILogger? logger = null)
     {
@@ -45,7 +46,7 @@ public sealed class WasapiLoopbackAudioSource : IAudioSource
                 .WithDevice(_sourceDevice)
                 .WithLoopbackCapture()
                 .WithSharedMode()
-                .WithEventSync()
+                .WithPollingSync()
                 .WithMmcssThreadPriority("Audio")
                 .Build();
 
@@ -110,9 +111,21 @@ public sealed class WasapiLoopbackAudioSource : IAudioSource
             return 0;
         }
 
-        if (_captureBuffer.BufferedDuration.TotalMilliseconds > 180)
+        // Trim excessive latency drift smoothly without allocating or wiping the entire buffer.
+        if (_captureBuffer.BufferedDuration.TotalMilliseconds > 350)
         {
-            _captureBuffer.ClearBuffer();
+            var bytesToDrop = Math.Min(_captureBuffer.BufferedBytes, _captureBuffer.WaveFormat.AverageBytesPerSecond / 5);
+            while (bytesToDrop > 0)
+            {
+                var step = Math.Min(bytesToDrop, _copyScratch.Length);
+                var drained = _captureBuffer.Read(_copyScratch.AsSpan(0, step));
+                if (drained <= 0)
+                {
+                    break;
+                }
+
+                bytesToDrop -= drained;
+            }
         }
 
         return _sampleChain.Read(destination);
@@ -175,6 +188,11 @@ public sealed class WasapiLoopbackAudioSource : IAudioSource
         else
         {
             buffer.CopyTo(_copyScratch);
+            if (!_loggedFirstAudio)
+            {
+                _loggedFirstAudio = true;
+                _logger.Information("Loopback audio stream active on {SourceDevice} ({Bytes} bytes)", DisplayName, buffer.Length);
+            }
         }
 
         _captureBuffer.AddSamples(_copyScratch, 0, buffer.Length);

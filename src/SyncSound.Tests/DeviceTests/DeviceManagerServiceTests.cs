@@ -23,6 +23,15 @@ public sealed class DeviceManagerServiceTests
             using var manager1 = new DeviceManagerService(enumerator, settings1);
             await manager1.InitializeAsync();
 
+            // Hands-Free (HFP) endpoints are filtered out so stereo A2DP is never disrupted
+            Assert.Equal(2, manager1.Devices.Count);
+            Assert.DoesNotContain(manager1.Devices, d => d.Id == "buds-hfp");
+
+            // Test individual toggle (and verify shared-model mutation never skips persistence)
+            var buds = manager1.Devices.Single(d => d.Id == "buds-a2dp");
+            manager1.SetDeviceSelected(buds.Id, true);
+            Assert.Single(manager1.SelectedDevices);
+
             manager1.SelectAllEligible();
 
             Assert.Equal(2, manager1.SelectedDevices.Count);

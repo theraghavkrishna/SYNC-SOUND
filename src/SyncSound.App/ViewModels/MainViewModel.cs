@@ -246,8 +246,11 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             var sourceName = sharing.SourceDevice?.Name ?? defaultSource?.Name ?? "your PC";
             HeroSubtitle = $"{sourceName} continues playing normally while {receiverCount} additional {(receiverCount == 1 ? "device receives" : "devices receive")} shared audio.";
 
-            HasErrorBanner = sharing.State == AudioEngineState.Partial || !string.IsNullOrWhiteSpace(sharing.ErrorMessage);
-            StatusBannerMessage = HasErrorBanner ? (sharing.ErrorMessage ?? sharing.UserMessage) : null;
+            var firstFailed = sharing.FailedOutputs.FirstOrDefault();
+            HasErrorBanner = sharing.State == AudioEngineState.Partial || !string.IsNullOrWhiteSpace(sharing.ErrorMessage) || firstFailed is not null;
+            StatusBannerMessage = firstFailed is not null
+                ? $"{firstFailed.DeviceName}: {firstFailed.ErrorMessage ?? "Disconnected"}"
+                : HasErrorBanner ? (sharing.ErrorMessage ?? sharing.UserMessage) : null;
         }
         else
         {
