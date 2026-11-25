@@ -50,7 +50,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#1AFFFFFF" />
+                                <Setter TargetName="Root" Property="Background" Value="#14141417" />
                                 <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -87,7 +87,7 @@
                                 <Border Width="3.5" Height="12" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0" />
                                 <Border Width="3.5" Height="21" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0">
                                     <Border.Effect>
-                                        <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.85" Color="#22D3EE" />
+                                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.45" Color="#E85D3F" />
                                     </Border.Effect>
                                 </Border>
                                 <Border Width="3.5" Height="15" CornerRadius="1.75" Background="{StaticResource Brush.Ink.Primary}" Margin="1.5,0" />

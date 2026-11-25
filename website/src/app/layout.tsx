@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { Syne, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const syne = Syne({
+const serif = Instrument_Serif({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  variable: "--font-display",
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
 });
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-body",
 });
 
@@ -23,7 +24,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "SYNC SOUND — One sound. Everyone listening.",
   description:
-    "Play any Windows 11 audio through multiple Bluetooth headphones and speakers simultaneously. Per-device rotary volume, instant Quick Sidebar, zero clutter.",
+    "Windows only plays to one pair of headphones. SYNC SOUND plays to everyone. Per-headphone rotary volume, Ctrl+Shift+S Quick Sidebar, zero clutter.",
   icons: {
     icon: "/app-icon.png",
   },
@@ -37,9 +38,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${jakarta.variable} ${jetbrains.variable}`}
+      className={`${serif.variable} ${jakarta.variable} ${jetbrains.variable}`}
     >
-      <body className="bg-[#07090F] text-[#F8FAFC] antialiased selection:bg-[#22D3EE]/30 selection:text-[#F8FAFC]">
+      <body className="bg-[#F7F4ED] text-[#141417] antialiased selection:bg-[#E85D3F]/20 selection:text-[#141417]">
         {children}
       </body>
     </html>

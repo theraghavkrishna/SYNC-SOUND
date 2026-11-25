@@ -6,8 +6,8 @@ namespace SyncSound.Windows.WindowManagement;
 /// </summary>
 public sealed class SingleInstanceManager : IDisposable
 {
-    private const string MutexName = @"Local\SyncSound.SingleInstance.Mutex";
-    private const string ActivationEventName = @"Local\SyncSound.SingleInstance.Activate";
+    private const string MutexName = @"Local\SyncSound.SingleInstance.v3.Mutex";
+    private const string ActivationEventName = @"Local\SyncSound.SingleInstance.v3.Activate";
 
     private readonly Mutex _mutex;
     private readonly EventWaitHandle _activationEvent;

@@ -1,48 +1,41 @@
 import InteractiveStage from "../components/InteractiveStage";
 
 const DOWNLOAD_EXE_URL =
-  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v2.0.0/SYNC-SOUND-x64.exe";
+  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.0.0/SYNC-SOUND-x64.exe";
 const DOWNLOAD_ZIP_URL =
-  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v2.0.0/SYNC-SOUND-Portable-x64.zip";
+  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.0.0/SYNC-SOUND-Portable-x64.zip";
 const GITHUB_URL = "https://github.com/theraghavkrishna/SYNC-SOUND";
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen bg-[#07090F] text-[#F8FAFC] overflow-x-hidden">
-      {/* Ambient Radial Lighting + Subtle Film Grain */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 75% 45% at 50% -5%, rgba(34,211,238,0.16), transparent 70%), radial-gradient(ellipse 50% 35% at 85% 55%, rgba(34,211,238,0.06), transparent 70%)",
-        }}
-      />
-      <div className="pointer-events-none fixed inset-0 z-0 noise-overlay opacity-70" />
+    <div className="relative min-h-screen bg-[#F7F4ED] text-[#141417] overflow-x-hidden">
+      {/* Subtle Warm Paper Grain */}
+      <div className="pointer-events-none fixed inset-0 z-0 paper-grain opacity-75" />
 
-      {/* Floating Glass Pill Navbar */}
+      {/* Floating Cream Pill Navbar */}
       <header className="sticky top-4 z-40 px-4">
-        <nav className="max-w-5xl mx-auto glass-card rounded-full px-4 py-2.5 flex items-center justify-between">
+        <nav className="max-w-5xl mx-auto cream-card rounded-full px-4 py-2.5 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 pl-1">
             <img
               src="/app-icon.png"
               alt="SYNC SOUND"
-              className="w-8 h-8 rounded-lg shadow-md"
+              className="w-8 h-8 rounded-lg shadow-sm"
             />
-            <span className="font-display font-bold text-sm tracking-wide">
+            <span className="font-bold text-sm tracking-wide text-[#141417]">
               SYNC SOUND
             </span>
           </a>
 
-          <div className="hidden md:flex items-center gap-7 text-xs font-medium text-[#94A3B8]">
-            <a href="#stage" className="hover:text-[#F8FAFC] transition-colors">
-              Live Stage
+          <div className="hidden md:flex items-center gap-7 text-xs font-semibold text-[#52525B]">
+            <a href="#stage" className="hover:text-[#141417] transition-colors">
+              Live Demo
             </a>
-            <a href="#craft" className="hover:text-[#F8FAFC] transition-colors">
-              Architecture
+            <a href="#why" className="hover:text-[#141417] transition-colors">
+              How It Works
             </a>
             <a
               href="#smartscreen"
-              className="hover:text-[#F8FAFC] transition-colors"
+              className="hover:text-[#141417] transition-colors"
             >
               First Launch
             </a>
@@ -50,7 +43,7 @@ export default function HomePage() {
               href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-[#F8FAFC] transition-colors"
+              className="hover:text-[#141417] transition-colors"
             >
               GitHub
             </a>
@@ -58,76 +51,69 @@ export default function HomePage() {
 
           <a
             href={DOWNLOAD_EXE_URL}
-            className="px-4 py-2 rounded-full text-xs font-bold text-[#06121A] transition-transform hover:scale-[1.03] active:scale-[0.97]"
+            className="px-4 py-2 rounded-full text-xs font-bold text-white transition-transform hover:scale-[1.03] active:scale-[0.97]"
             style={{
-              background: "linear-gradient(135deg, #38E8FF 0%, #06B6D4 100%)",
-              boxShadow: "0 6px 20px -4px rgba(34,211,238,0.45)",
+              background: "linear-gradient(135deg, #F06E51 0%, #D94B2D 100%)",
+              boxShadow: "0 6px 18px -4px rgba(232,93,63,0.45)",
             }}
           >
-            Download v2.0.0
+            Download v3.0
           </a>
         </nav>
       </header>
 
       <main className="relative z-10 max-w-6xl mx-auto px-5 md:px-8 pt-16 pb-28 space-y-28">
-        {/* HERO SECTION */}
+        {/* HERO — YC-Level Crisp Editorial Copywriting */}
         <section className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full glass-card mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#22D3EE] shadow-[0_0_8px_#22D3EE]" />
-            <span className="font-mono-tech text-[11px] uppercase tracking-widest text-[#94A3B8]">
-              Windows 11 · v2.0.0 · Free &amp; Open Source
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#E4DFD3] shadow-xs mb-8">
+            <span className="w-2 h-2 rounded-full bg-[#E85D3F]" />
+            <span className="font-mono-tech text-[11px] uppercase tracking-widest text-[#52525B] font-medium">
+              Windows 11 · v3.0.0 · Free &amp; Open Source
             </span>
           </div>
 
-          <h1 className="font-display text-5xl sm:text-7xl md:text-[82px] font-extrabold tracking-[-0.03em] leading-[0.95] text-[#F8FAFC]">
-            One sound.
+          <h1 className="text-5xl sm:text-7xl md:text-[84px] font-extrabold tracking-[-0.035em] leading-[0.95] text-[#141417]">
+            Windows plays to one.
             <br />
-            <span
-              className="bg-clip-text text-transparent"
-              style={{
-                backgroundImage:
-                  "linear-gradient(135deg, #F8FAFC 10%, #22D3EE 90%)",
-              }}
-            >
-              Everyone listening.
+            <span className="font-serif-editorial italic font-normal text-[#E85D3F]">
+              Play to everyone.
             </span>
           </h1>
 
-          <p className="mt-7 text-lg sm:text-xl text-[#94A3B8] max-w-2xl mx-auto leading-relaxed">
-            Pair two or more headphones to your Windows laptop. Pick who hears.
-            Press one button. Zero audio-routing jargon.
+          <p className="mt-7 text-lg sm:text-xl text-[#52525B] max-w-2xl mx-auto leading-relaxed">
+            Watch a movie on a flight. Listen to music together on one laptop.
+            Pair any headphones in Windows, pick who hears, press one button.
           </p>
 
           {/* Primary Conversion Cluster */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href={DOWNLOAD_EXE_URL}
-              className="w-full sm:w-auto px-8 py-4 rounded-full text-base font-bold text-[#06121A] transition-all hover:scale-[1.03] active:scale-[0.97] inline-flex items-center justify-center gap-3"
+              className="w-full sm:w-auto px-8 py-4 rounded-full text-base font-bold text-white transition-all hover:scale-[1.03] active:scale-[0.97] inline-flex items-center justify-center gap-3"
               style={{
-                background: "linear-gradient(135deg, #38E8FF 0%, #06B6D4 100%)",
-                boxShadow: "0 14px 40px -8px rgba(34,211,238,0.55)",
+                background: "linear-gradient(135deg, #F06E51 0%, #D94B2D 100%)",
+                boxShadow: "0 14px 36px -8px rgba(232,93,63,0.48)",
               }}
             >
               <span>Download for Windows 11</span>
-              <span className="font-mono-tech text-xs px-2 py-0.5 rounded-full bg-[#06121A]/15">
+              <span className="font-mono-tech text-xs px-2 py-0.5 rounded-full bg-black/15">
                 .exe
               </span>
             </a>
 
             <a
               href={DOWNLOAD_ZIP_URL}
-              className="w-full sm:w-auto px-7 py-4 rounded-full text-sm font-semibold text-[#F8FAFC] glass-card hover:border-[#22D3EE]/40 transition-colors"
+              className="w-full sm:w-auto px-7 py-4 rounded-full text-sm font-semibold text-[#141417] cream-card hover:border-[#E85D3F]/50 transition-colors"
             >
               Portable .zip
             </a>
           </div>
 
-          {/* Inline SmartScreen Quick Note */}
-          <p className="mt-5 text-xs text-[#64748B]">
-            Unsigned indie build — if Windows SmartScreen appears, click{" "}
+          <p className="mt-5 text-xs text-[#84848E]">
+            Unsigned indie build — if SmartScreen appears, click{" "}
             <a
               href="#smartscreen"
-              className="text-[#22D3EE] hover:underline font-medium"
+              className="text-[#E85D3F] hover:underline font-semibold"
             >
               More info → Run anyway
             </a>
@@ -140,98 +126,93 @@ export default function HomePage() {
           <InteractiveStage />
         </section>
 
-        {/* EDITORIAL ARCHITECTURE / WHY IT EXISTS */}
-        <section id="craft" className="scroll-mt-24 space-y-10">
+        {/* YC-STYLE SHARP VALUE PROPOSITION */}
+        <section id="why" className="scroll-mt-24 space-y-12">
           <div className="max-w-2xl">
-            <span className="font-mono-tech text-xs uppercase tracking-widest text-[#22D3EE]">
-              Invisible Engineering
+            <span className="font-mono-tech text-xs uppercase tracking-widest text-[#E85D3F] font-semibold">
+              No Virtual Cables. No Audio Engineering.
             </span>
-            <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight mt-3 leading-tight">
-              Built like an instrument.
-              <br />
-              <span className="text-[#94A3B8]">Simple like a switch.</span>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight mt-3 leading-[1.05] text-[#141417]">
+              Other tools give you a mixer board.
+              <span className="font-serif-editorial italic font-normal text-[#52525B] block mt-1">
+                We give you a switch.
+              </span>
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
-            <div className="glass-card rounded-[22px] p-7 space-y-4">
-              <div className="w-11 h-11 rounded-2xl bg-[#22D3EE]/10 border border-[#22D3EE]/25 flex items-center justify-center font-mono-tech text-sm font-bold text-[#22D3EE]">
+            <div className="cream-card rounded-[22px] p-7 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#FDF0ED] border border-[#F4C2B5] flex items-center justify-center font-mono-tech text-xs font-bold text-[#E85D3F]">
                 01
               </div>
-              <h3 className="font-display text-xl font-bold">
-                Per-Headphone Rotary Volume
+              <h3 className="text-lg font-bold text-[#141417]">
+                Individual Volume Knobs
               </h3>
-              <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Different earbuds have wildly different sensitivity. Dial each
-                listener&apos;s level independently with tactile rotary knobs
-                right in Devices or the Quick Sidebar.
+              <p className="text-sm text-[#52525B] leading-relaxed">
+                Your earbuds are loud; theirs are quiet. Turn each person&apos;s
+                rotary dial independently without touching Windows settings.
               </p>
             </div>
 
-            <div className="glass-card rounded-[22px] p-7 space-y-4">
-              <div className="w-11 h-11 rounded-2xl bg-[#22D3EE]/10 border border-[#22D3EE]/25 flex items-center justify-center font-mono-tech text-sm font-bold text-[#22D3EE]">
+            <div className="cream-card rounded-[22px] p-7 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#FDF0ED] border border-[#F4C2B5] flex items-center justify-center font-mono-tech text-xs font-bold text-[#E85D3F]">
                 02
               </div>
-              <h3 className="font-display text-xl font-bold">
-                Instant Quick Sidebar
+              <h3 className="text-lg font-bold text-[#141417]">
+                Ctrl+Shift+S Quick Sidebar
               </h3>
-              <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Hit{" "}
-                <span className="font-mono-tech text-[#F8FAFC] px-1.5 py-0.5 rounded bg-white/10">
-                  Ctrl+Shift+S
-                </span>{" "}
-                over any movie, game, or browser tab. Toggle listeners or tweak
-                knobs without leaving full screen.
+              <p className="text-sm text-[#52525B] leading-relaxed">
+                Never alt-tab out of Netflix or a game. Summon the floating
+                sidebar from anywhere, adjust knobs, and tuck it right back.
               </p>
             </div>
 
-            <div className="glass-card rounded-[22px] p-7 space-y-4">
-              <div className="w-11 h-11 rounded-2xl bg-[#22D3EE]/10 border border-[#22D3EE]/25 flex items-center justify-center font-mono-tech text-sm font-bold text-[#22D3EE]">
+            <div className="cream-card rounded-[22px] p-7 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-[#FDF0ED] border border-[#F4C2B5] flex items-center justify-center font-mono-tech text-xs font-bold text-[#E85D3F]">
                 03
               </div>
-              <h3 className="font-display text-xl font-bold">
-                Native WASAPI Fan-Out
+              <h3 className="text-lg font-bold text-[#141417]">
+                Zero Bloat. Just Sharing.
               </h3>
-              <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Captures system audio cleanly via WASAPI loopback and feeds
-                every selected output with automatic resampling and disconnect
-                isolation.
+              <p className="text-sm text-[#52525B] leading-relaxed">
+                Three clean screens: Home, Devices, Settings. Plays YouTube,
+                Spotify, Netflix, games — literally anything on your PC.
               </p>
             </div>
           </div>
         </section>
 
-        {/* SMARTSCREEN FIRST-LAUNCH TRUST GUIDE */}
+        {/* DARK INK-BLACK SMARTSCREEN TRUST SECTION */}
         <section id="smartscreen" className="scroll-mt-24">
-          <div className="glass-card-active rounded-[26px] p-7 md:p-10 grid md:grid-cols-12 gap-8 items-center">
+          <div className="ink-card rounded-[28px] p-7 md:p-11 grid md:grid-cols-12 gap-8 items-center text-[#F7F4ED]">
             <div className="md:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FBBF24]/10 border border-[#FBBF24]/30 text-[#FBBF24] text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E85D3F]/15 border border-[#E85D3F]/40 text-[#F06E51] text-xs font-semibold">
                 First-Launch Windows Note
               </div>
-              <h2 className="font-display text-2xl sm:text-4xl font-bold tracking-tight">
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
                 See &ldquo;Windows protected your PC&rdquo;?
               </h2>
-              <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed">
+              <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed">
                 SYNC SOUND is free, open-source, and published without a paid
                 $400/yr Authenticode certificate. Windows SmartScreen flags
-                all new unsigned indie apps until they build reputation.
+                every new indie `.exe` until it builds reputation.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <a
                   href={DOWNLOAD_EXE_URL}
-                  className="px-6 py-3 rounded-full text-sm font-bold text-[#06121A]"
+                  className="px-6 py-3 rounded-full text-sm font-bold text-white"
                   style={{
                     background:
-                      "linear-gradient(135deg, #38E8FF 0%, #06B6D4 100%)",
+                      "linear-gradient(135deg, #F06E51 0%, #D94B2D 100%)",
                   }}
                 >
-                  Download v2.0.0 (.exe)
+                  Download v3.0.0 (.exe)
                 </a>
                 <a
                   href={GITHUB_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-6 py-3 rounded-full text-sm font-semibold glass-card hover:border-white/25 transition-colors"
+                  className="px-6 py-3 rounded-full text-sm font-semibold border border-white/15 hover:border-white/35 transition-colors"
                 >
                   Inspect Source on GitHub
                 </a>
@@ -239,31 +220,30 @@ export default function HomePage() {
             </div>
 
             <div className="md:col-span-5 space-y-3">
-              <div className="glass-card rounded-2xl p-4 flex items-start gap-4">
-                <span className="font-mono-tech text-xs font-bold px-2.5 py-1 rounded-lg bg-[#22D3EE]/15 text-[#22D3EE] border border-[#22D3EE]/30">
+              <div className="rounded-2xl p-4 bg-white/[0.05] border border-white/10 flex items-start gap-4">
+                <span className="font-mono-tech text-xs font-bold px-2.5 py-1 rounded-lg bg-[#E85D3F]/20 text-[#F06E51] border border-[#E85D3F]/35">
                   STEP 1
                 </span>
                 <div>
-                  <div className="font-semibold text-sm">
+                  <div className="font-semibold text-sm text-[#F7F4ED]">
                     Click &ldquo;More info&rdquo;
                   </div>
-                  <div className="text-xs text-[#94A3B8] mt-0.5">
-                    Look just under the SmartScreen message on the left side.
+                  <div className="text-xs text-[#A1A1AA] mt-0.5">
+                    Right under the SmartScreen message on the left.
                   </div>
                 </div>
               </div>
 
-              <div className="glass-card rounded-2xl p-4 flex items-start gap-4">
+              <div className="rounded-2xl p-4 bg-white/[0.05] border border-white/10 flex items-start gap-4">
                 <span className="font-mono-tech text-xs font-bold px-2.5 py-1 rounded-lg bg-[#34D399]/15 text-[#34D399] border border-[#34D399]/30">
                   STEP 2
                 </span>
                 <div>
-                  <div className="font-semibold text-sm">
+                  <div className="font-semibold text-sm text-[#F7F4ED]">
                     Click &ldquo;Run anyway&rdquo;
                   </div>
-                  <div className="text-xs text-[#94A3B8] mt-0.5">
-                    Windows remembers your choice—every future launch opens
-                    instantly.
+                  <div className="text-xs text-[#A1A1AA] mt-0.5">
+                    Only needed once. Every future launch opens instantly.
                   </div>
                 </div>
               </div>
@@ -272,49 +252,52 @@ export default function HomePage() {
         </section>
 
         {/* FINAL CTA */}
-        <section className="text-center glass-card rounded-[28px] py-16 px-6">
+        <section className="text-center cream-card rounded-[28px] py-16 px-6">
           <img
             src="/app-icon.png"
             alt="SYNC SOUND App Icon"
-            className="w-16 h-16 rounded-2xl mx-auto mb-6 shadow-2xl"
+            className="w-16 h-16 rounded-2xl mx-auto mb-6 shadow-xl"
           />
-          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight">
-            Ready to share the sound?
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#141417]">
+            Connect. Select everyone.{" "}
+            <span className="font-serif-editorial italic font-normal text-[#E85D3F]">
+              Play.
+            </span>
           </h2>
-          <p className="mt-4 text-[#94A3B8] max-w-md mx-auto text-sm sm:text-base">
+          <p className="mt-4 text-[#52525B] max-w-md mx-auto text-sm sm:text-base">
             Single-file Windows 11 executable. No account, no subscription, no
-            audio clutter.
+            audio routing headaches.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
               href={DOWNLOAD_EXE_URL}
-              className="px-8 py-4 rounded-full text-sm font-bold text-[#06121A] transition-transform hover:scale-[1.03]"
+              className="px-8 py-4 rounded-full text-sm font-bold text-white transition-transform hover:scale-[1.03]"
               style={{
-                background: "linear-gradient(135deg, #38E8FF 0%, #06B6D4 100%)",
-                boxShadow: "0 12px 35px -6px rgba(34,211,238,0.5)",
+                background: "linear-gradient(135deg, #F06E51 0%, #D94B2D 100%)",
+                boxShadow: "0 12px 30px -6px rgba(232,93,63,0.45)",
               }}
             >
-              Download SYNC SOUND v2.0.0
+              Download SYNC SOUND v3.0.0
             </a>
           </div>
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/[0.06] py-8 px-6 text-center text-xs text-[#64748B]">
+      <footer className="relative z-10 border-t border-[#E4DFD3] py-8 px-6 text-center text-xs text-[#84848E]">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <span>SYNC SOUND · Windows 11</span>
           <div className="flex items-center gap-6">
-            <a href={DOWNLOAD_EXE_URL} className="hover:text-[#F8FAFC]">
-              v2.0.0 EXE
+            <a href={DOWNLOAD_EXE_URL} className="hover:text-[#141417]">
+              v3.0.0 EXE
             </a>
-            <a href={DOWNLOAD_ZIP_URL} className="hover:text-[#F8FAFC]">
+            <a href={DOWNLOAD_ZIP_URL} className="hover:text-[#141417]">
               Portable ZIP
             </a>
             <a
               href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-[#F8FAFC]"
+              className="hover:text-[#141417]"
             >
               GitHub
             </a>

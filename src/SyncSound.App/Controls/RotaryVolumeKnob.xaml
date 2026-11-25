@@ -25,41 +25,41 @@
               VerticalAlignment="Center">
             <!-- Background 270-degree Track Arc -->
             <Path x:Name="TrackArc"
-                  Stroke="#26FFFFFF"
+                  Stroke="#DFD9CC"
                   StrokeThickness="3.2"
                   StrokeStartLineCap="Round"
                   StrokeEndLineCap="Round" />
 
-            <!-- Active Glowing Value Arc -->
+            <!-- Active Burnt Orange Value Arc -->
             <Path x:Name="ValueArc"
                   Stroke="{StaticResource Brush.Accent.Primary}"
                   StrokeThickness="3.2"
                   StrokeStartLineCap="Round"
                   StrokeEndLineCap="Round">
                 <Path.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.65" Color="#22D3EE" />
+                    <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.4" Color="#E85D3F" />
                 </Path.Effect>
             </Path>
 
-            <!-- Tactile Elevated Dial Cap -->
+            <!-- Tactile Brushed Studio-Black Dial Cap -->
             <Ellipse Width="28"
                      Height="28"
                      HorizontalAlignment="Center"
                      VerticalAlignment="Center"
-                     Stroke="#2AFFFFFF"
+                     Stroke="#3A3A40"
                      StrokeThickness="1">
                 <Ellipse.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#232A3B" Offset="0" />
-                        <GradientStop Color="#121622" Offset="1" />
+                        <GradientStop Color="#2B2B31" Offset="0" />
+                        <GradientStop Color="#121215" Offset="1" />
                     </LinearGradientBrush>
                 </Ellipse.Fill>
                 <Ellipse.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Opacity="0.55" Color="#000000" />
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Opacity="0.32" Color="#141417" />
                 </Ellipse.Effect>
             </Ellipse>
 
-            <!-- Rotating Indicator Tick -->
+            <!-- Rotating Burnt Orange Indicator Tick -->
             <Grid Width="28"
                   Height="28"
                   HorizontalAlignment="Center"

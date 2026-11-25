@@ -18,7 +18,7 @@
                 <!-- Outer Rotating Dashed Orbital Ring -->
                 <Ellipse Width="168"
                          Height="168"
-                         Stroke="#2822D3EE"
+                         Stroke="#38E85D3F"
                          StrokeThickness="1.2"
                          StrokeDashArray="6 8"
                          RenderTransformOrigin="0.5,0.5">
@@ -44,7 +44,7 @@
                 <!-- Counter-Rotating Inner Segmented Ring -->
                 <Ellipse Width="138"
                          Height="138"
-                         Stroke="#4522D3EE"
+                         Stroke="#60E85D3F"
                          StrokeThickness="1.4"
                          StrokeDashArray="18 10 4 10"
                          RenderTransformOrigin="0.5,0.5">
@@ -134,18 +134,18 @@
                     </Ellipse.Style>
                 </Ellipse>
 
-                <!-- 3D Specular Glass Core Sphere -->
+                <!-- 3D Specular Obsidian Hardware Sphere -->
                 <Ellipse Width="88"
                          Height="88"
                          Fill="{StaticResource Brush.Surface.SphereGlass}"
-                         Stroke="{StaticResource Brush.Border.GlassRim}"
+                         Stroke="#35353B"
                          StrokeThickness="1.4">
                     <Ellipse.Effect>
-                        <DropShadowEffect BlurRadius="26" ShadowDepth="6" Opacity="0.65" Color="#000000" />
+                        <DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.32" Color="#141417" />
                     </Ellipse.Effect>
                 </Ellipse>
 
-                <!-- 7-Bar Reactive Spatial Equalizer -->
+                <!-- 7-Bar Reactive Spatial Equalizer (Burnt Orange + Cream inside Obsidian Sphere) -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center">
@@ -157,7 +157,7 @@
                         <Border.RenderTransform><ScaleTransform ScaleY="0.85" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B2"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.25" To="0.35" Duration="0:0:0.32" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B2" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
-                    <Border Width="3.5" Height="30" CornerRadius="1.75" Background="{StaticResource Brush.Ink.Primary}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
+                    <Border Width="3.5" Height="30" CornerRadius="1.75" Background="#F7F4ED" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform><ScaleTransform ScaleY="0.9" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B3"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.45" To="1.2" Duration="0:0:0.27" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B3" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
@@ -165,7 +165,7 @@
                         <Border.RenderTransform><ScaleTransform ScaleY="0.85" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B4"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.15" To="0.4" Duration="0:0:0.24" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B4" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
-                    <Border Width="3.5" Height="28" CornerRadius="1.75" Background="{StaticResource Brush.Ink.Primary}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
+                    <Border Width="3.5" Height="28" CornerRadius="1.75" Background="#F7F4ED" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform><ScaleTransform ScaleY="0.9" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B5"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.5" To="1.25" Duration="0:0:0.30" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B5" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>

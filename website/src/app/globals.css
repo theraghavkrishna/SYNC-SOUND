@@ -1,125 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --bg-obsidian: #07090f;
-  --bg-slate: #111623;
-  --bg-slate-top: #182034;
-  --accent-cyan: #22d3ee;
-  --signal-emerald: #34d399;
-  --ink-primary: #f8fafc;
-  --ink-secondary: #94a3b8;
-  --ink-muted: #64748b;
+  --bg-cream: #f7f4ed;
+  --bg-cream-rail: #efece3;
+  --ink-black: #141417;
+  --ink-secondary: #52525b;
+  --ink-muted: #84848e;
+  --accent-orange: #e85d3f;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     font-family: var(--font-body), system-ui, sans-serif;
-    background-color: var(--bg-obsidian);
-    color: var(--ink-primary);
+    background-color: var(--bg-cream);
+    color: var(--ink-black);
   }
 }
 
-.font-display {
-  font-family: var(--font-display), system-ui, sans-serif;
+.font-serif-editorial {
+  font-family: var(--font-serif), Georgia, serif;
 }
 
 .font-mono-tech {
   font-family: var(--font-mono), monospace;
 }
 
-/* Tactile Dark-Glass Surface */
-.glass-card {
-  background: linear-gradient(180deg, rgba(24, 32, 52, 0.78) 0%, rgba(12, 16, 27, 0.88) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+/* Tactile Warm Cream Hardware Card */
+.cream-card {
+  background: linear-gradient(180deg, #ffffff 0%, #faf8f2 100%);
+  border: 1px solid #e4dfd3;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 24px 60px -15px rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(20px);
+    inset 0 1px 0 #ffffff,
+    0 20px 50px -18px rgba(20, 20, 23, 0.12);
 }
 
-.glass-card-active {
-  background: linear-gradient(180deg, rgba(25, 36, 60, 0.88) 0%, rgba(12, 18, 30, 0.94) 100%);
-  border: 1px solid rgba(34, 211, 238, 0.42);
+.cream-card-active {
+  background: linear-gradient(180deg, #ffffff 0%, #fdf6f3 100%);
+  border: 1.5px solid rgba(232, 93, 63, 0.55);
   box-shadow:
-    inset 0 1px 0 rgba(34, 211, 238, 0.25),
-    0 0 40px -12px rgba(34, 211, 238, 0.25),
-    0 24px 60px -15px rgba(0, 0, 0, 0.75);
+    inset 0 1px 0 #ffffff,
+    0 18px 42px -14px rgba(232, 93, 63, 0.18);
 }
 
-/* Subtle Film Grain */
-.noise-overlay {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0);
-  background-size: 24px 24px;
+/* Dark Hardware Accent Surface */
+.ink-card {
+  background: linear-gradient(180deg, #1f1f24 0%, #111114 100%);
+  border: 1px solid #2e2e36;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 28px 64px -18px rgba(20, 20, 23, 0.45);
 }
 
-/* Orbital & Sonar Motion */
+/* Subtle Warm Paper Texture */
+.paper-grain {
+  background-image: radial-gradient(rgba(20, 20, 23, 0.04) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
 @keyframes orbit-cw {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @keyframes orbit-ccw {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
-  }
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
 }
 
 @keyframes sonar-pulse {
-  0% {
-    transform: scale(0.76);
-    opacity: 0.75;
-  }
-  100% {
-    transform: scale(1.48);
-    opacity: 0;
-  }
+  0% { transform: scale(0.76); opacity: 0.72; }
+  100% { transform: scale(1.48); opacity: 0; }
 }
 
 @keyframes eq-dance {
-  0%,
-  100% {
-    transform: scaleY(0.45);
-  }
-  50% {
-    transform: scaleY(1.25);
-  }
+  0%, 100% { transform: scaleY(0.45); }
+  50% { transform: scaleY(1.25); }
 }
 
-.animate-orbit-cw {
-  animation: orbit-cw 24s linear infinite;
-}
-
-.animate-orbit-ccw {
-  animation: orbit-ccw 15s linear infinite;
-}
-
-.animate-sonar {
-  animation: sonar-pulse 1.9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-
-.animate-eq-1 {
-  animation: eq-dance 0.65s ease-in-out infinite;
-}
-.animate-eq-2 {
-  animation: eq-dance 0.52s ease-in-out 0.1s infinite;
-}
-.animate-eq-3 {
-  animation: eq-dance 0.48s ease-in-out 0.2s infinite;
-}
-.animate-eq-4 {
-  animation: eq-dance 0.58s ease-in-out 0.15s infinite;
-}
-.animate-eq-5 {
-  animation: eq-dance 0.7s ease-in-out 0.05s infinite;
-}
+.animate-orbit-cw { animation: orbit-cw 24s linear infinite; }
+.animate-orbit-ccw { animation: orbit-ccw 15s linear infinite; }
+.animate-sonar { animation: sonar-pulse 1.9s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+.animate-eq-1 { animation: eq-dance 0.65s ease-in-out infinite; }
+.animate-eq-2 { animation: eq-dance 0.52s ease-in-out 0.1s infinite; }
+.animate-eq-3 { animation: eq-dance 0.48s ease-in-out 0.2s infinite; }
+.animate-eq-4 { animation: eq-dance 0.58s ease-in-out 0.15s infinite; }
+.animate-eq-5 { animation: eq-dance 0.7s ease-in-out 0.05s infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-orbit-cw,
