@@ -1,0 +1,39 @@
+## Visual Studio / .NET
+bin/
+obj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+publish/
+artifacts/
+
+## Packages
+*.nupkg
+*.snupkg
+packages/
+
+## Logs & local user settings
+*.log
+logs/
+appsettings.local.json
+
+## Installer outputs
+installer/Output/
+*.exe
+*.zip
+!assets/**/*.exe
+
+## OS & Editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
