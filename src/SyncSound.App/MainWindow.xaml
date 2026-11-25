@@ -5,6 +5,7 @@
         xmlns:views="clr-namespace:SyncSound.App.Views"
         xmlns:vm="clr-namespace:SyncSound.App.ViewModels"
         Title="SYNC SOUND"
+        Icon="Assets/SyncSound.ico"
         Width="1100"
         Height="740"
         MinWidth="880"
