@@ -37,7 +37,22 @@ public partial class MainWindow : Window
         if (SystemParameters.ClientAreaAnimation)
         {
             Opacity = 0;
-            BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200)));
+            BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)));
         }
+    }
+
+    private void OnMinimizeClick(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void OnMaximizeClick(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
+
+    private void OnCloseClick(object sender, RoutedEventArgs e)
+    {
+        Close();
     }
 }
