@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:SyncSound.App.Controls"
         Title="SYNC SOUND Quick Sidebar"
-        Width="388"
-        Height="580"
+        Width="392"
+        Height="600"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -15,7 +15,7 @@
         Deactivated="Window_Deactivated">
     <Border Margin="14"
             Background="{StaticResource Brush.Canvas.Primary}"
-            BorderBrush="{StaticResource Brush.Border.GlassRim}"
+            BorderBrush="{StaticResource Brush.Border.Hairline}"
             BorderThickness="1.2"
             CornerRadius="24"
             Effect="{StaticResource Shadow.Sidebar}">
@@ -24,10 +24,10 @@
         </Border.RenderTransform>
 
         <Grid>
-            <!-- Subtle Top Ambient Glow -->
+            <!-- Subtle Top Warm Ambient Glow -->
             <Rectangle Fill="{StaticResource Brush.Canvas.AmbientGlow}" RadiusX="24" RadiusY="24" IsHitTestVisible="False" />
 
-            <Grid Margin="22">
+            <Grid Margin="20">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -35,19 +35,28 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- Top Wordmark + Close -->
-                <DockPanel Grid.Row="0" Margin="0,0,0,18">
+                <!-- Top Vector Squircle Wordmark + Close -->
+                <DockPanel Grid.Row="0" Margin="0,0,0,16">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Margin="0,0,9,0" VerticalAlignment="Center">
-                            <Border Width="3" Height="10" CornerRadius="1.5" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0" />
-                            <Border Width="3" Height="17" CornerRadius="1.5" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0" />
-                            <Border Width="3" Height="12" CornerRadius="1.5" Background="{StaticResource Brush.Ink.Primary}" Margin="1.5,0" />
-                        </StackPanel>
+                        <Border Width="26"
+                                Height="26"
+                                CornerRadius="7"
+                                Background="{StaticResource Brush.Surface.InkCard}"
+                                Margin="0,0,10,0">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Border Width="2" Height="6" CornerRadius="1" Background="{StaticResource Brush.Accent.Primary}" Margin="0.9,0" />
+                                <Border Width="2" Height="11" CornerRadius="1" Background="{StaticResource Brush.Accent.Hover}" Margin="0.9,0" />
+                                <Border Width="2" Height="15" CornerRadius="1" Background="#FFFFFF" Margin="0.9,0" />
+                                <Border Width="2" Height="11" CornerRadius="1" Background="{StaticResource Brush.Accent.Hover}" Margin="0.9,0" />
+                                <Border Width="2" Height="6" CornerRadius="1" Background="{StaticResource Brush.Accent.Primary}" Margin="0.9,0" />
+                            </StackPanel>
+                        </Border>
                         <TextBlock Text="SYNC SOUND"
                                    FontFamily="{StaticResource Font.Display}"
                                    FontSize="13.5"
                                    FontWeight="Bold"
-                                   Foreground="{StaticResource Brush.Ink.Primary}" />
+                                   Foreground="{StaticResource Brush.Ink.Primary}"
+                                   VerticalAlignment="Center" />
                     </StackPanel>
 
                     <Button DockPanel.Dock="Right"
@@ -62,9 +71,9 @@
                             Padding="6,0" />
                 </DockPanel>
 
-                <!-- Status Hero Card -->
+                <!-- Dark Ink-Black Status Hero Card (Matches Landing Page Contrast Card) -->
                 <Border Grid.Row="1"
-                        Style="{StaticResource SurfaceCardStyle}"
+                        Style="{StaticResource InkCardStyle}"
                         Padding="18"
                         Margin="0,0,0,16">
                     <StackPanel>
@@ -72,7 +81,7 @@
                             <Ellipse Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
-                                        <Setter Property="Fill" Value="{StaticResource Brush.Ink.Muted}" />
+                                        <Setter Property="Fill" Value="{StaticResource Brush.Accent.Primary}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsSharing}" Value="True">
                                                 <Setter Property="Fill" Value="{StaticResource Brush.Status.Success}" />
@@ -83,14 +92,14 @@
                             </Ellipse>
                             <TextBlock Text="{Binding StatusHeadline}"
                                        FontFamily="{StaticResource Font.Display}"
-                                       FontSize="18.5"
-                                       FontWeight="SemiBold"
-                                       Foreground="{StaticResource Brush.Ink.Primary}"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Foreground="#F7F4ED"
                                        TextWrapping="Wrap" />
                         </StackPanel>
                         <TextBlock Text="{Binding StatusDetail}"
                                    FontSize="12.5"
-                                   Foreground="{StaticResource Brush.Ink.Secondary}"
+                                   Foreground="#A1A1AA"
                                    Margin="16,2,0,14" />
                         <Button Content="{Binding ShareButtonText}"
                                 Style="{StaticResource PrimaryPillButtonStyle}"
@@ -108,15 +117,16 @@
                                 <Border Background="{StaticResource Brush.Surface.GlassCard}"
                                         CornerRadius="16"
                                         Padding="13,10"
-                                        Margin="0,0,0,9">
+                                        Margin="0,0,0,9"
+                                        Effect="{StaticResource Shadow.SoftCard}">
                                     <Border.Style>
                                         <Style TargetType="Border">
-                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.GlassRim}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
                                             <Setter Property="BorderThickness" Value="1" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Border}" />
-                                                    <Setter Property="BorderThickness" Value="1.2" />
+                                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Primary}" />
+                                                    <Setter Property="BorderThickness" Value="1.4" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -160,7 +170,7 @@
 
                 <!-- Open Full App -->
                 <Button Grid.Row="3"
-                        Content="Open full app"
+                        Content="Open full workspace"
                         Style="{StaticResource SecondaryPillButtonStyle}"
                         Command="{Binding OpenMainAppCommand}"
                         Margin="0,12,0,0" />

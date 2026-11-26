@@ -6,17 +6,17 @@
         xmlns:vm="clr-namespace:SyncSound.App.ViewModels"
         Title="SYNC SOUND"
         Icon="Assets/SyncSound.ico"
-        Width="1100"
-        Height="740"
-        MinWidth="880"
-        MinHeight="620"
+        Width="1120"
+        Height="750"
+        MinWidth="900"
+        MinHeight="640"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStartupLocation="CenterScreen">
     <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="42"
-                            CornerRadius="20"
+        <shell:WindowChrome CaptionHeight="46"
+                            CornerRadius="22"
                             GlassFrameThickness="0"
                             ResizeBorderThickness="6"
                             UseAeroCaptionButtons="False" />
@@ -39,7 +39,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Secondary}" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="12.5" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
             <Setter Property="Template">
@@ -50,8 +50,26 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#14141417" />
+                                <Setter TargetName="Root" Property="Background" Value="#16141417" />
                                 <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseCaptionButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#FFE85D3F" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -61,61 +79,74 @@
     </Window.Resources>
 
     <Border Margin="10"
-            CornerRadius="20"
+            CornerRadius="22"
             Background="{StaticResource Brush.Canvas.Primary}"
-            BorderBrush="{StaticResource Brush.Border.GlassRim}"
+            BorderBrush="{StaticResource Brush.Border.Hairline}"
             BorderThickness="1.2"
             ClipToBounds="True"
             Effect="{StaticResource Shadow.Sidebar}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="248" />
+                <ColumnDefinition Width="256" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Left Navigation Rail (Layered Obsidian Glass) -->
+            <!-- Left Navigation Rail (Warm Linen Tactile Surface) -->
             <Border Grid.Column="0"
                     Background="{StaticResource Brush.Surface.RailGlass}"
                     BorderBrush="{StaticResource Brush.Border.Hairline}"
                     BorderThickness="0,0,1,0"
                     Padding="20,26,20,22">
                 <DockPanel>
-                    <!-- Brand Header with Animated Equalizer Mark -->
-                    <StackPanel DockPanel.Dock="Top" Margin="6,6,0,30">
+                    <!-- Brand Header with Crisp 8K Vector Squircle Logo -->
+                    <StackPanel DockPanel.Dock="Top" Margin="4,4,0,30">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" Margin="0,0,11,0" VerticalAlignment="Center">
-                                <Border Width="3.5" Height="12" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0" />
-                                <Border Width="3.5" Height="21" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.5,0">
-                                    <Border.Effect>
-                                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.45" Color="#E85D3F" />
-                                    </Border.Effect>
-                                </Border>
-                                <Border Width="3.5" Height="15" CornerRadius="1.75" Background="{StaticResource Brush.Ink.Primary}" Margin="1.5,0" />
+                            <!-- Pure Vector Squircle Badge (Crisp at any DPI) -->
+                            <Border Width="34"
+                                    Height="34"
+                                    CornerRadius="10"
+                                    Background="{StaticResource Brush.Surface.InkCard}"
+                                    BorderBrush="#33FFFFFF"
+                                    BorderThickness="1"
+                                    Margin="0,0,12,0">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.22" Color="#141417" />
+                                </Border.Effect>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Border Width="2.5" Height="8" CornerRadius="1.25" Background="{StaticResource Brush.Accent.Primary}" Margin="1.1,0" />
+                                    <Border Width="2.5" Height="14" CornerRadius="1.25" Background="{StaticResource Brush.Accent.Hover}" Margin="1.1,0" />
+                                    <Border Width="2.5" Height="19" CornerRadius="1.25" Background="#FFFFFF" Margin="1.1,0" />
+                                    <Border Width="2.5" Height="14" CornerRadius="1.25" Background="{StaticResource Brush.Accent.Hover}" Margin="1.1,0" />
+                                    <Border Width="2.5" Height="8" CornerRadius="1.25" Background="{StaticResource Brush.Accent.Primary}" Margin="1.1,0" />
+                                </StackPanel>
+                            </Border>
+
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="SYNC SOUND"
+                                           FontFamily="{StaticResource Font.Display}"
+                                           FontSize="15.5"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource Brush.Ink.Primary}" />
+                                <TextBlock Text="SHARED AUDIO"
+                                           FontFamily="{StaticResource Font.Mono}"
+                                           FontSize="9.5"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.Accent.Primary}"
+                                           Margin="0,1,0,0" />
                             </StackPanel>
-                            <TextBlock Text="SYNC SOUND"
-                                       FontFamily="{StaticResource Font.Display}"
-                                       FontSize="16"
-                                       FontWeight="Bold"
-                                       Foreground="{StaticResource Brush.Ink.Primary}" />
                         </StackPanel>
-                        <TextBlock Text="One sound. Everyone listening."
-                                   FontSize="11.5"
-                                   Foreground="{StaticResource Brush.Ink.Muted}"
-                                   Margin="0,6,0,0" />
                     </StackPanel>
 
-                    <!-- Footer Connection Summary -->
+                    <!-- Footer Connection Summary (Tactile Cream-White Card) -->
                     <Border DockPanel.Dock="Bottom"
-                            Background="{StaticResource Brush.Surface.GlassCard}"
-                            BorderBrush="{StaticResource Brush.Border.GlassRim}"
-                            BorderThickness="1"
-                            CornerRadius="15"
+                            Style="{StaticResource SurfaceCardStyle}"
+                            CornerRadius="16"
                             Padding="14,12">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Ellipse Width="8" Height="8" Fill="{StaticResource Brush.Status.Success}" VerticalAlignment="Center" Margin="0,0,9,0">
                                     <Ellipse.Effect>
-                                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.8" Color="#34D399" />
+                                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.7" Color="#10B981" />
                                     </Ellipse.Effect>
                                 </Ellipse>
                                 <TextBlock Text="{Binding FooterConnectionText}"
@@ -123,7 +154,7 @@
                                            FontWeight="SemiBold"
                                            Foreground="{StaticResource Brush.Ink.Primary}" />
                             </StackPanel>
-                            <TextBlock Text="Running in background"
+                            <TextBlock Text="Tray &amp; shortcut active"
                                        FontSize="11.5"
                                        Foreground="{StaticResource Brush.Ink.Muted}"
                                        Margin="17,3,0,0" />
@@ -132,6 +163,13 @@
 
                     <!-- Navigation Links (3 Core Screens) -->
                     <StackPanel Margin="0,4,0,0">
+                        <TextBlock Text="WORKSPACE"
+                                   FontFamily="{StaticResource Font.Mono}"
+                                   FontSize="10"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource Brush.Ink.Muted}"
+                                   Margin="12,0,0,8" />
+
                         <RadioButton Style="{StaticResource RailNavRadioStyle}"
                                      GroupName="MainNav"
                                      IsChecked="{Binding IsHomeSelected, Mode=TwoWay}">
@@ -143,7 +181,7 @@
                                       Height="16"
                                       Stretch="Uniform"
                                       Margin="0,0,12,0" />
-                                <TextBlock Text="Home" VerticalAlignment="Center" />
+                                <TextBlock Text="Stage" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
 
@@ -158,7 +196,7 @@
                                       Height="16"
                                       Stretch="Uniform"
                                       Margin="0,0,12,0" />
-                                <TextBlock Text="Devices" VerticalAlignment="Center" />
+                                <TextBlock Text="Outputs" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
 
@@ -173,22 +211,22 @@
                                       Height="16"
                                       Stretch="Uniform"
                                       Margin="0,0,12,0" />
-                                <TextBlock Text="Settings" VerticalAlignment="Center" />
+                                <TextBlock Text="Preferences" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
                     </StackPanel>
                 </DockPanel>
             </Border>
 
-            <!-- Active View Host with Custom Caption Bar + Ambient Atmospheric Glow -->
+            <!-- Active View Host with Custom Caption Bar + Warm Ambient Glow -->
             <Grid Grid.Column="1" Background="{StaticResource Brush.Canvas.Primary}">
                 <Rectangle Fill="{StaticResource Brush.Canvas.AmbientGlow}" IsHitTestVisible="False" />
 
-                <!-- Custom Dark Window Controls -->
+                <!-- Custom Window Controls -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
-                            Margin="0,12,14,0"
+                            Margin="0,14,16,0"
                             Panel.ZIndex="10">
                     <Button Style="{StaticResource CaptionButtonStyle}"
                             Content="─"
@@ -198,10 +236,10 @@
                             Content="□"
                             ToolTip="Maximize / Restore"
                             Click="OnMaximizeClick"
-                            Margin="2,0" />
-                    <Button Style="{StaticResource CaptionButtonStyle}"
+                            Margin="3,0" />
+                    <Button Style="{StaticResource CloseCaptionButtonStyle}"
                             Content="✕"
-                            ToolTip="Close"
+                            ToolTip="Close to Tray"
                             Click="OnCloseClick" />
                 </StackPanel>
 

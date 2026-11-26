@@ -147,23 +147,23 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
 
         if (connected == 0)
         {
-            StatusHeadline = "Let's connect some headphones.";
-            StatusDetail = "No active audio outputs detected.";
+            StatusHeadline = "No outputs found.";
+            StatusDetail = "Pair headphones in Windows Settings.";
         }
         else if (IsSharing)
         {
-            StatusHeadline = sharing.UserMessage;
-            StatusDetail = $"{sharing.ActiveOutputs.Count} receiving shared audio";
+            StatusHeadline = sharing.State == AudioEngineState.Partial ? sharing.UserMessage : "Playing to everyone.";
+            StatusDetail = $"{sharing.ActiveOutputs.Count} receiving live synced audio";
         }
         else if (selected == 0)
         {
-            StatusHeadline = "Choose a device to begin.";
+            StatusHeadline = "Pick who listens.";
             StatusDetail = $"{connected} connected";
         }
         else
         {
-            StatusHeadline = "Ready to listen.";
-            StatusDetail = $"{selected} selected · {connected} connected";
+            StatusHeadline = "Ready to share.";
+            StatusDetail = $"{selected} armed · {connected} connected";
         }
 
         ToggleSharingCommand.RaiseCanExecuteChanged();

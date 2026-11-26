@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import SyncSoundLogo from "./SyncSoundLogo";
 
 interface SimDevice {
   id: string;
@@ -179,11 +180,7 @@ export default function InteractiveStage() {
         {/* Custom Cream & Ink Chrome Bar */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#E4DFD3] bg-[#EFECE3]/80">
           <div className="flex items-center gap-3">
-            <img
-              src="/app-icon.png"
-              alt="SYNC SOUND Icon"
-              className="w-6 h-6 rounded-md shadow-sm"
-            />
+            <SyncSoundLogo className="w-6 h-6 rounded-md shadow-sm" />
             <span className="text-xs tracking-wider font-bold text-[#141417]">
               SYNC SOUND
             </span>
@@ -346,11 +343,7 @@ export default function InteractiveStage() {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <img
-                  src="/app-icon.png"
-                  alt="SYNC SOUND"
-                  className="w-5 h-5 rounded"
-                />
+                <SyncSoundLogo className="w-5 h-5 rounded" />
                 <span className="text-xs font-bold tracking-wider text-[#141417]">
                   QUICK SIDEBAR
                 </span>

@@ -224,8 +224,8 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
         if (allDevices.Count == 0)
         {
-            HeroTitle = "Let's connect some headphones.";
-            HeroSubtitle = "Pair your earbuds or plug in headphones through Windows, and they will appear here automatically.";
+            HeroTitle = "No outputs connected.";
+            HeroSubtitle = "Pair Bluetooth earbuds or plug in wired headphones in Windows Settings to begin.";
             StatusBannerMessage = null;
             HasErrorBanner = false;
         }
@@ -233,11 +233,11 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         {
             HeroTitle = sharing.State == AudioEngineState.Partial
                 ? sharing.UserMessage
-                : "You're all listening.";
+                : "Playing to everyone.";
 
             var receiverCount = sharing.ActiveOutputs.Count;
             var sourceName = sharing.SourceDevice?.Name ?? defaultSource?.Name ?? "your PC";
-            HeroSubtitle = $"{sourceName} continues playing normally while {receiverCount} additional {(receiverCount == 1 ? "device receives" : "devices receive")} shared audio.";
+            HeroSubtitle = $"{sourceName} keeps playing normally while {receiverCount} additional {(receiverCount == 1 ? "output receives" : "outputs receive")} live synced audio.";
 
             var firstFailed = sharing.FailedOutputs.FirstOrDefault();
             HasErrorBanner = sharing.State == AudioEngineState.Partial || !string.IsNullOrWhiteSpace(sharing.ErrorMessage) || firstFailed is not null;
@@ -247,19 +247,19 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         }
         else
         {
-            HeroTitle = "Ready to listen.";
+            HeroTitle = "Ready to share.";
             if (selected.Count == 0)
             {
-                HeroSubtitle = "Choose the headphones you want to listen with, then press Start sharing.";
+                HeroSubtitle = "Pick who hears in Outputs, then press Start sharing.";
             }
             else if (defaultSource is not null && selected.Count == 1 &&
                      string.Equals(selected[0].Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
             {
-                HeroSubtitle = $"{defaultSource.Name} is already your Windows output. Select one more headphone to share together.";
+                HeroSubtitle = $"{defaultSource.Name} is already your primary Windows output. Add one more headphone to share together.";
             }
             else
             {
-                HeroSubtitle = $"{selected.Count} {(selected.Count == 1 ? "device" : "devices")} selected. Play anything on Windows and everyone hears it.";
+                HeroSubtitle = $"{selected.Count} {(selected.Count == 1 ? "output" : "outputs")} armed. Play YouTube, Spotify, Netflix, or any game.";
             }
 
             HasErrorBanner = !string.IsNullOrWhiteSpace(sharing.ErrorMessage);

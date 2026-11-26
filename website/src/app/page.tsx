@@ -1,9 +1,10 @@
 import InteractiveStage from "../components/InteractiveStage";
+import SyncSoundLogo from "../components/SyncSoundLogo";
 
 const DOWNLOAD_EXE_URL =
-  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.0.1/SYNC-SOUND-x64.exe";
+  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.1.0/SYNC-SOUND-x64.exe";
 const DOWNLOAD_ZIP_URL =
-  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.0.1/SYNC-SOUND-Portable-x64.zip";
+  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.1.0/SYNC-SOUND-Portable-x64.zip";
 const GITHUB_URL = "https://github.com/theraghavkrishna/SYNC-SOUND";
 
 export default function HomePage() {
@@ -16,11 +17,7 @@ export default function HomePage() {
       <header className="sticky top-4 z-40 px-4">
         <nav className="max-w-5xl mx-auto cream-card rounded-full px-4 py-2.5 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 pl-1">
-            <img
-              src="/app-icon.png"
-              alt="SYNC SOUND"
-              className="w-8 h-8 rounded-lg shadow-sm"
-            />
+            <SyncSoundLogo className="w-8 h-8 rounded-lg shadow-sm" />
             <span className="font-bold text-sm tracking-wide text-[#141417]">
               SYNC SOUND
             </span>
@@ -57,7 +54,7 @@ export default function HomePage() {
               boxShadow: "0 6px 18px -4px rgba(232,93,63,0.45)",
             }}
           >
-            Download v3.0.1
+            Download v3.1.0
           </a>
         </nav>
       </header>
@@ -68,7 +65,7 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#E4DFD3] shadow-xs mb-8">
             <span className="w-2 h-2 rounded-full bg-[#E85D3F]" />
             <span className="font-mono-tech text-[11px] uppercase tracking-widest text-[#52525B] font-medium">
-              Windows 11 · v3.0.1 · Free &amp; Open Source
+              Windows 11 · v3.1.0 · Free &amp; Open Source
             </span>
           </div>
 
@@ -206,7 +203,7 @@ export default function HomePage() {
                       "linear-gradient(135deg, #F06E51 0%, #D94B2D 100%)",
                   }}
                 >
-                  Download v3.0.1.1 (.exe)
+                  Download v3.1.0.1 (.exe)
                 </a>
                 <a
                   href={GITHUB_URL}
@@ -253,11 +250,7 @@ export default function HomePage() {
 
         {/* FINAL CTA */}
         <section className="text-center cream-card rounded-[28px] py-16 px-6">
-          <img
-            src="/app-icon.png"
-            alt="SYNC SOUND App Icon"
-            className="w-16 h-16 rounded-2xl mx-auto mb-6 shadow-xl"
-          />
+          <SyncSoundLogo className="w-16 h-16 rounded-2xl mx-auto mb-6 shadow-xl" />
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#141417]">
             Connect. Select everyone.{" "}
             <span className="font-serif-editorial italic font-normal text-[#E85D3F]">
@@ -277,7 +270,7 @@ export default function HomePage() {
                 boxShadow: "0 12px 30px -6px rgba(232,93,63,0.45)",
               }}
             >
-              Download SYNC SOUND v3.0.1
+              Download SYNC SOUND v3.1.0
             </a>
           </div>
         </section>
@@ -288,7 +281,7 @@ export default function HomePage() {
           <span>SYNC SOUND · Windows 11</span>
           <div className="flex items-center gap-6">
             <a href={DOWNLOAD_EXE_URL} className="hover:text-[#141417]">
-              v3.0.1 EXE
+              v3.1.0 EXE
             </a>
             <a href={DOWNLOAD_ZIP_URL} className="hover:text-[#141417]">
               Portable ZIP

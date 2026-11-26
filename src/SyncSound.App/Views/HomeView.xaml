@@ -1,7 +1,7 @@
 <UserControl x:Class="SyncSound.App.Views.HomeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid Margin="44,44,44,32">
+    <Grid Margin="48,38,48,30">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
@@ -13,13 +13,54 @@
                     HorizontalAlignment="Center"
                     MaxWidth="640">
 
+            <!-- Editorial Tech Pill Badge (Matches Landing Page) -->
+            <Border Background="{StaticResource Brush.Surface.GlassCard}"
+                    BorderBrush="{StaticResource Brush.Border.Hairline}"
+                    BorderThickness="1"
+                    CornerRadius="16"
+                    Padding="14,6"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,22"
+                    Effect="{StaticResource Shadow.SoftCard}">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="7" Height="7" VerticalAlignment="Center" Margin="0,0,8,0">
+                        <Ellipse.Style>
+                            <Style TargetType="Ellipse">
+                                <Setter Property="Fill" Value="{StaticResource Brush.Accent.Primary}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <Setter Property="Fill" Value="{StaticResource Brush.Status.Success}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Ellipse.Style>
+                    </Ellipse>
+                    <TextBlock FontFamily="{StaticResource Font.Mono}"
+                               FontSize="10.5"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource Brush.Ink.Secondary}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="MULTI-OUTPUT ENGINE · STANDBY" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSharing}" Value="True">
+                                        <Setter Property="Text" Value="MULTI-OUTPUT ENGINE · STREAMING LIVE" />
+                                        <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
             <!-- Orbital Spatial Acoustic Stage -->
-            <Grid Width="176" Height="176" HorizontalAlignment="Center" Margin="0,0,0,22">
+            <Grid Width="180" Height="180" HorizontalAlignment="Center" Margin="0,0,0,20">
                 <!-- Outer Rotating Dashed Orbital Ring -->
-                <Ellipse Width="168"
-                         Height="168"
-                         Stroke="#38E85D3F"
-                         StrokeThickness="1.2"
+                <Ellipse Width="172"
+                         Height="172"
+                         Stroke="#3CE85D3F"
+                         StrokeThickness="1.3"
                          StrokeDashArray="6 8"
                          RenderTransformOrigin="0.5,0.5">
                     <Ellipse.RenderTransform>
@@ -42,10 +83,10 @@
                 </Ellipse>
 
                 <!-- Counter-Rotating Inner Segmented Ring -->
-                <Ellipse Width="138"
-                         Height="138"
-                         Stroke="#60E85D3F"
-                         StrokeThickness="1.4"
+                <Ellipse Width="140"
+                         Height="140"
+                         Stroke="#68E85D3F"
+                         StrokeThickness="1.5"
                          StrokeDashArray="18 10 4 10"
                          RenderTransformOrigin="0.5,0.5">
                     <Ellipse.RenderTransform>
@@ -68,10 +109,10 @@
                 </Ellipse>
 
                 <!-- Active Sonar Pulse Wave (triggers when IsSharing == True) -->
-                <Ellipse Width="130"
-                         Height="130"
+                <Ellipse Width="132"
+                         Height="132"
                          Stroke="{StaticResource Brush.Accent.Primary}"
-                         StrokeThickness="1.8"
+                         StrokeThickness="2"
                          Opacity="0"
                          RenderTransformOrigin="0.5,0.5">
                     <Ellipse.RenderTransform>
@@ -85,11 +126,11 @@
                                         <BeginStoryboard x:Name="SonarWave">
                                             <Storyboard RepeatBehavior="Forever">
                                                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                                                 From="0.72" To="1.38" Duration="0:0:1.7" />
+                                                                 From="0.72" To="1.40" Duration="0:0:1.7" />
                                                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                                                 From="0.72" To="1.38" Duration="0:0:1.7" />
+                                                                 From="0.72" To="1.40" Duration="0:0:1.7" />
                                                 <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                 From="0.75" To="0.0" Duration="0:0:1.7" />
+                                                                 From="0.80" To="0.0" Duration="0:0:1.7" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </DataTrigger.EnterActions>
@@ -103,8 +144,8 @@
                 </Ellipse>
 
                 <!-- Ambient Breathing Halo -->
-                <Ellipse Width="112"
-                         Height="112"
+                <Ellipse Width="114"
+                         Height="114"
                          Fill="{StaticResource Brush.Accent.Soft}"
                          Stroke="{StaticResource Brush.Accent.Border}"
                          StrokeThickness="1.2"
@@ -135,13 +176,13 @@
                 </Ellipse>
 
                 <!-- 3D Specular Obsidian Hardware Sphere -->
-                <Ellipse Width="88"
-                         Height="88"
+                <Ellipse Width="90"
+                         Height="90"
                          Fill="{StaticResource Brush.Surface.SphereGlass}"
-                         Stroke="#35353B"
-                         StrokeThickness="1.4">
+                         Stroke="#40FFFFFF"
+                         StrokeThickness="1.2">
                     <Ellipse.Effect>
-                        <DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.32" Color="#141417" />
+                        <DropShadowEffect BlurRadius="26" ShadowDepth="8" Opacity="0.34" Color="#141417" />
                     </Ellipse.Effect>
                 </Ellipse>
 
@@ -153,7 +194,7 @@
                         <Border.RenderTransform><ScaleTransform ScaleY="0.7" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B1"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.4" To="1.5" Duration="0:0:0.41" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B1" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
-                    <Border Width="3.5" Height="22" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
+                    <Border Width="3.5" Height="22" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Hover}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform><ScaleTransform ScaleY="0.85" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B2"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.25" To="0.35" Duration="0:0:0.32" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B2" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
@@ -161,7 +202,7 @@
                         <Border.RenderTransform><ScaleTransform ScaleY="0.9" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B3"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.45" To="1.2" Duration="0:0:0.27" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B3" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
-                    <Border Width="3.5" Height="36" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
+                    <Border Width="3.5" Height="36" CornerRadius="1.75" Background="#FFFFFF" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform><ScaleTransform ScaleY="0.85" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B4"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.15" To="0.4" Duration="0:0:0.24" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B4" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
@@ -169,7 +210,7 @@
                         <Border.RenderTransform><ScaleTransform ScaleY="0.9" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B5"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="0.5" To="1.25" Duration="0:0:0.30" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B5" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
-                    <Border Width="3.5" Height="20" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Primary}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
+                    <Border Width="3.5" Height="20" CornerRadius="1.75" Background="{StaticResource Brush.Accent.Hover}" Margin="1.8,0" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform><ScaleTransform ScaleY="0.8" /></Border.RenderTransform>
                         <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsSharing}" Value="True"><DataTrigger.EnterActions><BeginStoryboard x:Name="B6"><Storyboard RepeatBehavior="Forever" AutoReverse="True"><DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1.3" To="0.4" Duration="0:0:0.36" /></Storyboard></BeginStoryboard></DataTrigger.EnterActions><DataTrigger.ExitActions><StopStoryboard BeginStoryboardName="B6" /></DataTrigger.ExitActions></DataTrigger></Style.Triggers></Style></Border.Style>
                     </Border>
@@ -180,27 +221,36 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Hero Headline -->
+            <!-- Editorial Hero Headline -->
             <TextBlock Text="{Binding HeroTitle}"
                        FontFamily="{StaticResource Font.Display}"
-                       FontSize="40"
-                       FontWeight="SemiBold"
+                       FontSize="42"
+                       FontWeight="Bold"
                        Foreground="{StaticResource Brush.Ink.Primary}"
                        TextAlignment="Center"
                        TextWrapping="Wrap" />
 
+            <!-- Editorial Burnt-Orange Serif Accent -->
+            <TextBlock Text="One sound. Everyone listening."
+                       FontFamily="{StaticResource Font.Editorial}"
+                       FontStyle="Italic"
+                       FontSize="20"
+                       Foreground="{StaticResource Brush.Accent.Primary}"
+                       TextAlignment="Center"
+                       Margin="0,4,0,0" />
+
             <!-- Hero Subheadline -->
             <TextBlock Text="{Binding HeroSubtitle}"
-                       FontSize="15.5"
+                       FontSize="15"
                        Foreground="{StaticResource Brush.Ink.Secondary}"
                        TextAlignment="Center"
                        TextWrapping="Wrap"
-                       LineHeight="24"
+                       LineHeight="23"
                        Margin="0,12,0,0" />
 
-            <!-- Live Selected / Connected Device Chips -->
+            <!-- Live Selected / Connected Device Chips (Tactile Cream-White Pills) -->
             <ItemsControl ItemsSource="{Binding HomeDeviceChips}"
-                          Margin="0,24,0,0"
+                          Margin="0,22,0,0"
                           HorizontalAlignment="Center">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -210,20 +260,21 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Background="{StaticResource Brush.Surface.GlassCard}"
-                                BorderBrush="{StaticResource Brush.Border.GlassRim}"
+                                BorderBrush="{StaticResource Brush.Border.Hairline}"
                                 BorderThickness="1"
                                 CornerRadius="16"
                                 Padding="14,8"
-                                Margin="5">
+                                Margin="5"
+                                Effect="{StaticResource Shadow.SoftCard}">
                             <StackPanel Orientation="Horizontal">
                                 <Ellipse Width="7" Height="7" Fill="{StaticResource Brush.Status.Success}" Margin="0,0,8,0" VerticalAlignment="Center">
                                     <Ellipse.Effect>
-                                        <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.85" Color="#34D399" />
+                                        <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.7" Color="#10B981" />
                                     </Ellipse.Effect>
                                 </Ellipse>
                                 <TextBlock Text="{Binding}"
-                                           FontSize="13"
-                                           FontWeight="Medium"
+                                           FontSize="12.5"
+                                           FontWeight="SemiBold"
                                            Foreground="{StaticResource Brush.Ink.Primary}" />
                             </StackPanel>
                         </Border>
@@ -233,62 +284,65 @@
 
             <!-- Inline Error / Partial Notice -->
             <Border Background="{StaticResource Brush.Status.WarningSoft}"
-                    BorderBrush="#66FBBF24"
+                    BorderBrush="#66D97706"
                     BorderThickness="1"
                     CornerRadius="12"
                     Padding="14,10"
-                    Margin="0,18,0,0"
+                    Margin="0,16,0,0"
                     HorizontalAlignment="Center"
                     Visibility="{Binding HasErrorBanner, Converter={StaticResource BoolToVisibilityConverter}}">
                 <TextBlock Text="{Binding StatusBannerMessage}"
                            FontSize="13"
+                           FontWeight="Medium"
                            Foreground="{StaticResource Brush.Status.Warning}"
                            TextWrapping="Wrap"
                            TextAlignment="Center" />
             </Border>
 
-            <!-- Primary & Secondary Actions -->
+            <!-- Primary & Secondary Tactile Pill Actions -->
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
-                        Margin="0,30,0,0">
+                        Margin="0,28,0,0">
                 <Button Content="{Binding ShareButtonText}"
                         Style="{StaticResource PrimaryPillButtonStyle}"
                         Command="{Binding ToggleSharingCommand}"
-                        MinWidth="192"
+                        MinWidth="196"
                         Margin="0,0,12,0" />
 
-                <Button Content="Choose headphones"
+                <Button Content="Manage outputs"
                         Style="{StaticResource SecondaryPillButtonStyle}"
                         Command="{Binding ManageDevicesCommand}"
                         Padding="22,13" />
             </StackPanel>
         </StackPanel>
 
-        <!-- Bottom Frosted Shortcut Tip -->
+        <!-- Bottom Tactile Shortcut Pill -->
         <Border Grid.Row="1"
                 HorizontalAlignment="Center"
                 Background="{StaticResource Brush.Surface.GlassCard}"
-                BorderBrush="{StaticResource Brush.Border.GlassRim}"
+                BorderBrush="{StaticResource Brush.Border.Hairline}"
                 BorderThickness="1"
-                CornerRadius="14"
-                Padding="16,9">
+                CornerRadius="16"
+                Padding="16,9"
+                Effect="{StaticResource Shadow.SoftCard}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Quick Sidebar available anytime with"
+                <TextBlock Text="Summon Quick Sidebar anytime with"
                            FontSize="12.5"
                            Foreground="{StaticResource Brush.Ink.Secondary}"
                            VerticalAlignment="Center" />
-                <Border Background="{StaticResource Brush.Canvas.Primary}"
-                        BorderBrush="{StaticResource Brush.Border.Hairline}"
+                <Border Background="{StaticResource Brush.Surface.InkCard}"
+                        BorderBrush="#33FFFFFF"
                         BorderThickness="1"
-                        CornerRadius="6"
-                        Padding="8,3"
-                        Margin="8,0">
+                        CornerRadius="7"
+                        Padding="9,3.5"
+                        Margin="9,0">
                     <TextBlock Text="{Binding ShortcutHint}"
-                               FontSize="11.5"
+                               FontFamily="{StaticResource Font.Mono}"
+                               FontSize="11"
                                FontWeight="SemiBold"
-                               Foreground="{StaticResource Brush.Ink.Primary}" />
+                               Foreground="#F7F4ED" />
                 </Border>
-                <Button Content="Preview now"
+                <Button Content="Open sidebar →"
                         Command="{Binding OpenSidebarCommand}"
                         Background="Transparent"
                         BorderThickness="0"

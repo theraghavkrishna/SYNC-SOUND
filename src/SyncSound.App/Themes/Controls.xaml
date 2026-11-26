@@ -1,22 +1,24 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Base Window Style -->
+    <!-- Base Window Typography -->
     <Style TargetType="Window">
         <Setter Property="FontFamily" Value="{StaticResource Font.Body}" />
         <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
     </Style>
 
-    <!-- Primary Bioluminescent Cyan Pill CTA with Tactile Scale Microinteraction -->
+    <!-- Primary Burnt Orange 3D Pill CTA with Tactile Scale Microinteraction -->
     <Style x:Key="PrimaryPillButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource Brush.Accent.Gradient}" />
-        <Setter Property="Foreground" Value="#06121A" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="FontFamily" Value="{StaticResource Font.Body}" />
         <Setter Property="FontSize" Value="14.5" />
-        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="28,13" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="#55FFFFFF" />
+        <Setter Property="BorderBrush" Value="#4DFFFFFF" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Effect" Value="{StaticResource Shadow.HeroButton}" />
         <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
@@ -41,34 +43,41 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.03" Duration="0:0:0.16" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.03" Duration="0:0:0.16" />
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.03" Duration="0:0:0.15">
+                                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.03" Duration="0:0:0.15">
+                                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.18" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.18" />
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.18">
+                                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.18">
+                                            <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut" /></DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Root" Property="Background" Value="{StaticResource Brush.Accent.Pressed}" />
-                            <Setter Property="Foreground" Value="#FFFFFF" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.97" Duration="0:0:0.08" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.97" Duration="0:0:0.08" />
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.965" Duration="0:0:0.08" />
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.965" Duration="0:0:0.08" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Root" Property="Opacity" Value="0.35" />
+                            <Setter TargetName="Root" Property="Opacity" Value="0.42" />
                             <Setter Property="Effect" Value="{x:Null}" />
                             <Setter Property="Cursor" Value="Arrow" />
                         </Trigger>
@@ -78,17 +87,18 @@
         </Setter>
     </Style>
 
-    <!-- Secondary Frosted Glass Pill Button -->
+    <!-- Secondary Tactile Cream-White Raised Pill Button -->
     <Style x:Key="SecondaryPillButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource Brush.Surface.GlassCard}" />
         <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.GlassRim}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontFamily" Value="{StaticResource Font.Body}" />
         <Setter Property="FontSize" Value="13.5" />
-        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="18,10" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Effect" Value="{StaticResource Shadow.SoftCard}" />
         <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
         <Setter Property="RenderTransform">
             <Setter.Value>
@@ -108,7 +118,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource Brush.Surface.Hover}" />
+                            <Setter TargetName="Root" Property="Background" Value="#FFFFFF" />
                             <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource Brush.Accent.Border}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
@@ -131,7 +141,8 @@
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Root" Property="Opacity" Value="0.38" />
+                            <Setter TargetName="Root" Property="Opacity" Value="0.42" />
+                            <Setter Property="Effect" Value="{x:Null}" />
                             <Setter Property="Cursor" Value="Arrow" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -140,7 +151,7 @@
         </Setter>
     </Style>
 
-    <!-- Left Rail Navigation Item with Glowing Indicator -->
+    <!-- Left Rail Tactile Navigation Item with Burnt Orange Indicator -->
     <Style x:Key="RailNavRadioStyle" TargetType="RadioButton">
         <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Secondary}" />
         <Setter Property="Background" Value="Transparent" />
@@ -156,7 +167,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="Transparent"
                             BorderThickness="1"
-                            CornerRadius="13"
+                            CornerRadius="14"
                             Padding="{TemplateBinding Padding}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -168,11 +179,11 @@
                                     Height="16"
                                     CornerRadius="1.75"
                                     Background="{StaticResource Brush.Accent.Primary}"
-                                    Margin="0,0,10,0"
+                                    Margin="0,0,11,0"
                                     Opacity="0"
                                     VerticalAlignment="Center">
                                 <Border.Effect>
-                                    <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.8" Color="#22D3EE" />
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.65" Color="#E85D3F" />
                                 </Border.Effect>
                             </Border>
                             <ContentPresenter Grid.Column="1" VerticalAlignment="Center" />
@@ -180,12 +191,13 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#14FFFFFF" />
+                            <Setter TargetName="Root" Property="Background" Value="#70FFFFFF" />
                             <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
                         </Trigger>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="Root" Property="Background" Value="{StaticResource Brush.Surface.GlassCard}" />
-                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource Brush.Border.GlassRim}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
+                            <Setter TargetName="Root" Property="Effect" Value="{StaticResource Shadow.SoftCard}" />
                             <Setter TargetName="ActivePill" Property="Opacity" Value="1" />
                             <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
                             <Setter Property="FontWeight" Value="SemiBold" />
@@ -196,7 +208,7 @@
         </Setter>
     </Style>
 
-    <!-- Animated Apple-Inspired Pill Toggle Switch -->
+    <!-- Animated Apple-Inspired Tactile Ceramic Pill Toggle Switch -->
     <Style x:Key="PillToggleSwitchStyle" TargetType="CheckBox">
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Width" Value="48" />
@@ -208,29 +220,28 @@
                             Width="48"
                             Height="26"
                             CornerRadius="13"
-                            Background="#242D42"
-                            BorderBrush="#22FFFFFF"
+                            Background="#DED8CA"
+                            BorderBrush="#CFC8B8"
                             BorderThickness="1">
                         <Border x:Name="Thumb"
                                 Width="20"
                                 Height="20"
                                 CornerRadius="10"
-                                Background="#F8FAFC"
+                                Background="#FFFFFF"
                                 HorizontalAlignment="Left"
                                 Margin="2,0,0,0">
                             <Border.RenderTransform>
                                 <TranslateTransform x:Name="ThumbSlide" X="0" />
                             </Border.RenderTransform>
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.45" Color="#000000" />
+                                <DropShadowEffect BlurRadius="6" ShadowDepth="1.5" Direction="270" Opacity="0.22" Color="#141417" />
                             </Border.Effect>
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Track" Property="Background" Value="{StaticResource Brush.Accent.Primary}" />
-                            <Setter TargetName="Track" Property="BorderBrush" Value="#55FFFFFF" />
-                            <Setter TargetName="Thumb" Property="Background" Value="#06121A" />
+                            <Setter TargetName="Track" Property="Background" Value="{StaticResource Brush.Accent.Gradient}" />
+                            <Setter TargetName="Track" Property="BorderBrush" Value="#D94B2D" />
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -261,7 +272,7 @@
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Track" Property="Opacity" Value="0.4" />
+                            <Setter TargetName="Track" Property="Opacity" Value="0.45" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -269,7 +280,7 @@
         </Setter>
     </Style>
 
-    <!-- Dark Glass Minimal Slider -->
+    <!-- Tactile Hardware Delay Slider -->
     <Style x:Key="MinimalSliderStyle" TargetType="Slider">
         <Setter Property="Height" Value="22" />
         <Setter Property="Cursor" Value="Hand" />
@@ -277,7 +288,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Slider">
                     <Grid VerticalAlignment="Center">
-                        <Border Height="5" CornerRadius="2.5" Background="#1E273B" VerticalAlignment="Center" />
+                        <Border Height="5" CornerRadius="2.5" Background="#DFD9CC" VerticalAlignment="Center" />
                         <Track x:Name="PART_Track">
                             <Track.DecreaseRepeatButton>
                                 <RepeatButton Command="Slider.DecreaseLarge" IsTabStop="False">
@@ -298,12 +309,12 @@
                                 </RepeatButton>
                             </Track.IncreaseRepeatButton>
                             <Track.Thumb>
-                                <Thumb Width="15" Height="15">
+                                <Thumb Width="16" Height="16">
                                     <Thumb.Template>
                                         <ControlTemplate TargetType="Thumb">
-                                            <Ellipse Fill="#F8FAFC" Stroke="{StaticResource Brush.Accent.Primary}" StrokeThickness="2.2">
+                                            <Ellipse Fill="#FFFFFF" Stroke="{StaticResource Brush.Accent.Primary}" StrokeThickness="2.4">
                                                 <Ellipse.Effect>
-                                                    <DropShadowEffect BlurRadius="8" ShadowDepth="0" Opacity="0.55" Color="#22D3EE" />
+                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.35" Color="#141417" />
                                                 </Ellipse.Effect>
                                             </Ellipse>
                                         </ControlTemplate>
@@ -317,12 +328,21 @@
         </Setter>
     </Style>
 
-    <!-- Non-Flat Frosted Glass Surface Card Style -->
+    <!-- Non-Flat Tactile Cream-White Elevated Card -->
     <Style x:Key="SurfaceCardStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource Brush.Surface.GlassCard}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.GlassRim}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Effect" Value="{StaticResource Shadow.SoftCard}" />
+    </Style>
+
+    <!-- Dark Ink-Black Hardware Card (Matches Landing Page SmartScreen Card) -->
+    <Style x:Key="InkCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Brush.Surface.InkCard}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.InkRim}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="20" />
         <Setter Property="Effect" Value="{StaticResource Shadow.SoftCard}" />
     </Style>
 

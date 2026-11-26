@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:SyncSound.App.Controls">
-    <Grid Margin="40,46,40,32">
+    <Grid Margin="44,46,44,32">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -10,15 +10,21 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <DockPanel Grid.Row="0" Margin="0,0,0,22">
+        <DockPanel Grid.Row="0" Margin="0,0,0,24">
             <StackPanel DockPanel.Dock="Left">
-                <TextBlock Text="Your headphones"
-                           FontFamily="{StaticResource Font.Display}"
-                           FontSize="28"
+                <TextBlock Text="AUDIO OUTPUTS"
+                           FontFamily="{StaticResource Font.Mono}"
+                           FontSize="10.5"
                            FontWeight="SemiBold"
+                           Foreground="{StaticResource Brush.Accent.Primary}"
+                           Margin="0,0,0,4" />
+                <TextBlock Text="Choose who hears."
+                           FontFamily="{StaticResource Font.Display}"
+                           FontSize="30"
+                           FontWeight="Bold"
                            Foreground="{StaticResource Brush.Ink.Primary}" />
                 <TextBlock Text="{Binding SelectionSummary}"
-                           FontSize="14"
+                           FontSize="13.5"
                            Foreground="{StaticResource Brush.Ink.Secondary}"
                            Margin="0,4,0,0" />
             </StackPanel>
@@ -35,7 +41,7 @@
                         Style="{StaticResource SecondaryPillButtonStyle}"
                         Command="{Binding SelectAllCommand}"
                         Margin="0,0,8,0" />
-                <Button Content="Add headphones"
+                <Button Content="Pair device"
                         Style="{StaticResource PrimaryPillButtonStyle}"
                         Padding="20,10"
                         FontSize="13.5"
@@ -48,13 +54,14 @@
                 Background="{StaticResource Brush.Accent.Soft}"
                 BorderBrush="{StaticResource Brush.Accent.Border}"
                 BorderThickness="1"
-                CornerRadius="12"
+                CornerRadius="14"
                 Padding="14,10"
                 Margin="0,0,0,16"
                 Visibility="{Binding HasBanner, Converter={StaticResource BoolToVisibilityConverter}}">
             <TextBlock Text="{Binding BannerMessage}"
                        FontSize="13"
-                       Foreground="{StaticResource Brush.Accent.Primary}" />
+                       FontWeight="Medium"
+                       Foreground="{StaticResource Brush.Accent.Pressed}" />
         </Border>
 
         <!-- Device Cards -->
@@ -67,17 +74,17 @@
                     <DataTemplate>
                         <Border Padding="20,16"
                                 Margin="0,0,0,12"
-                                CornerRadius="18"
+                                CornerRadius="20"
                                 Background="{StaticResource Brush.Surface.GlassCard}"
                                 Effect="{StaticResource Shadow.SoftCard}">
                             <Border.Style>
                                 <Style TargetType="Border">
-                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.GlassRim}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
                                     <Setter Property="BorderThickness" Value="1" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Border}" />
-                                            <Setter Property="BorderThickness" Value="1.4" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Primary}" />
+                                            <Setter Property="BorderThickness" Value="1.5" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -91,7 +98,7 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Device Icon Tile with Active Glow -->
+                                <!-- Device Icon Tile -->
                                 <Border Grid.Column="0"
                                         Width="50"
                                         Height="50"
@@ -148,10 +155,11 @@
                                                 Padding="8,3"
                                                 Margin="10,0,0,0"
                                                 Visibility="{Binding IsDefault, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <TextBlock Text="Playing original sound"
-                                                       FontSize="11"
+                                            <TextBlock Text="Windows Default"
+                                                       FontFamily="{StaticResource Font.Mono}"
+                                                       FontSize="10"
                                                        FontWeight="SemiBold"
-                                                       Foreground="{StaticResource Brush.Accent.Primary}" />
+                                                       Foreground="{StaticResource Brush.Accent.Pressed}" />
                                         </Border>
                                     </StackPanel>
 
@@ -200,12 +208,12 @@
                 Style="{StaticResource SurfaceCardStyle}"
                 Padding="40"
                 Visibility="{Binding HasDevices, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="380">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="390">
                 <Border Width="72"
                         Height="72"
                         CornerRadius="22"
                         Background="{StaticResource Brush.Canvas.Subtle}"
-                        BorderBrush="{StaticResource Brush.Border.GlassRim}"
+                        BorderBrush="{StaticResource Brush.Border.Hairline}"
                         BorderThickness="1"
                         HorizontalAlignment="Center"
                         Margin="0,0,0,18">
@@ -218,13 +226,13 @@
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center" />
                 </Border>
-                <TextBlock Text="Let's connect some headphones."
+                <TextBlock Text="No headphones detected."
                            FontFamily="{StaticResource Font.Display}"
                            FontSize="22"
-                           FontWeight="SemiBold"
+                           FontWeight="Bold"
                            Foreground="{StaticResource Brush.Ink.Primary}"
                            TextAlignment="Center" />
-                <TextBlock Text="Connect Bluetooth earbuds or plug in headphones using Windows Settings, then click Refresh."
+                <TextBlock Text="Pair Bluetooth earbuds or plug in wired headphones in Windows Settings, then click Refresh."
                            FontSize="13.5"
                            Foreground="{StaticResource Brush.Ink.Secondary}"
                            TextAlignment="Center"
