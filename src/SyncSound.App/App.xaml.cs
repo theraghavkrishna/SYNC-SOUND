@@ -34,6 +34,25 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // ── Global crash handlers — catch ALL unobserved exceptions ──
+        AppDomain.CurrentDomain.UnhandledException += (_, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            Log.Fatal(ex, "AppDomain unhandled exception (IsTerminating={IsTerminating})", args.IsTerminating);
+            Log.CloseAndFlush();
+            MessageBox.Show(
+                $"SYNC SOUND encountered a fatal error:\n\n{ex?.Message}\n\nPlease report this on GitHub.",
+                "SYNC SOUND — Fatal Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        };
+
+        TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            Log.Error(args.Exception, "Unobserved task exception");
+            args.SetObserved();
+        };
+
         _singleInstance = SingleInstanceManager.Acquire(out var isPrimary);
         if (!isPrimary)
         {
@@ -51,6 +70,25 @@ public partial class App : Application
             args.Handled = true;
         };
 
+        try
+        {
+            await InitializeAsync(e);
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Failed to initialize application");
+            Log.CloseAndFlush();
+            MessageBox.Show(
+                $"SYNC SOUND failed to start:\n\n{ex.Message}\n\nCheck logs at %LocalAppData%\\SyncSound\\logs",
+                "SYNC SOUND — Startup Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+            Shutdown(1);
+        }
+    }
+
+    private async Task InitializeAsync(StartupEventArgs e)
+    {
         ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
         var services = new ServiceCollection();
@@ -109,8 +147,11 @@ public partial class App : Application
             Dispatcher.BeginInvoke(() => _trayService?.UpdateSharingState(state.IsSharing, state.ActiveOutputs.Count));
 
         // Second-instance activation
-        _singleInstance.SecondInstanceLaunched += (_, _) => Dispatcher.BeginInvoke(ShowMainWindow);
-        _singleInstance.StartListening();
+        if (_singleInstance is not null)
+        {
+            _singleInstance.SecondInstanceLaunched += (_, _) => Dispatcher.BeginInvoke(ShowMainWindow);
+            _singleInstance.StartListening();
+        }
 
         var startMinimized = e.Args.Any(a => a.Equals("--minimized", StringComparison.OrdinalIgnoreCase)) ||
                              settingsService.Current.StartMinimized;
