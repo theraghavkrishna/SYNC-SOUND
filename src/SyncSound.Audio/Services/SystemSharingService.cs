@@ -114,7 +114,7 @@ public sealed class SystemSharingService : ISystemSharingService
                 BufferDurationMs = 600,
                 PrefillChunks = 6,
                 AutoRecoverOutputs = true,
-                MasterVolume = 1.0f,
+                MasterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f),
                 PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs,
                 PerOutputVolume = _settingsService.Current.PerDeviceVolume
             };

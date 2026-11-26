@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using SyncSound.App.Services;
 using SyncSound.App.ViewModels;
 using SyncSound.App.Views;
 using SyncSound.Audio.Engine;
@@ -105,6 +106,9 @@ public partial class App : Application
         var settingsService = _serviceProvider.GetRequiredService<ISettingsService>();
         await settingsService.LoadAsync();
 
+        var themeService = _serviceProvider.GetRequiredService<ThemeService>();
+        themeService.ApplyTheme(settingsService.Current.ThemeMode);
+
         var deviceManager = _serviceProvider.GetRequiredService<IDeviceManagerService>();
         await deviceManager.InitializeAsync();
 
@@ -116,6 +120,7 @@ public partial class App : Application
         _sidebarWindow.DataContext = mainVm.QuickSidebarViewModel;
 
         mainVm.OpenSidebarRequested += (_, _) => ToggleSidebar();
+        mainVm.QuickSidebarViewModel.MasterVolumeSynced += (_, _) => mainVm.SyncMasterVolumeFromSettings();
         mainVm.QuickSidebarViewModel.OpenMainAppRequested += (_, _) =>
         {
             _sidebarWindow.HideAnimated();
@@ -290,6 +295,7 @@ public partial class App : Application
     private static void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton(Log.Logger);
+        services.AddSingleton<ThemeService>();
         services.AddSingleton<ISettingsService, JsonSettingsService>();
         services.AddSingleton<IAudioDeviceEnumerator, WindowsAudioDeviceEnumerator>();
         services.AddSingleton<ISyncCoordinator, BestEffortSyncCoordinator>();

@@ -2,148 +2,36 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- =====================================================================
-         SYNC SOUND Design Tokens v3.1
-         Palette: Warm Cream (#F7F4ED) + Ink Black (#141417) + Burnt Orange (#E85D3F)
-         Tactile Hardware Depth — Zero Flat Surfaces
+         SYNC SOUND Typography, Scale & Vector Icon System
+         Primary Interface: Manrope (Embedded) -> Segoe UI Variable -> Segoe UI
+         Editorial Accent: Georgia Italic
          ===================================================================== -->
 
-    <!-- Warm Cream Canvas & Recessed Surfaces -->
-    <Color x:Key="Color.Canvas.Primary">#F7F4ED</Color>
-    <Color x:Key="Color.Canvas.Rail">#F2EEE4</Color>
-    <Color x:Key="Color.Canvas.Subtle">#ECE7DA</Color>
-
-    <!-- Tactile Elevated Surfaces -->
-    <Color x:Key="Color.Surface.Card">#FFFFFF</Color>
-    <Color x:Key="Color.Surface.CardTop">#FFFFFF</Color>
-    <Color x:Key="Color.Surface.CardBottom">#FAF7F0</Color>
-    <Color x:Key="Color.Surface.Hover">#F3EFE5</Color>
-    <Color x:Key="Color.Border.Hairline">#E2DDD0</Color>
-
-    <!-- Ink Hierarchy -->
-    <Color x:Key="Color.Ink.Primary">#141417</Color>
-    <Color x:Key="Color.Ink.Secondary">#52525B</Color>
-    <Color x:Key="Color.Ink.Muted">#84848E</Color>
-
-    <!-- Primary Accent: Burnt Orange -->
-    <Color x:Key="Color.Accent.Primary">#E85D3F</Color>
-    <Color x:Key="Color.Accent.Hover">#F06E51</Color>
-    <Color x:Key="Color.Accent.Pressed">#D94B2D</Color>
-    <Color x:Key="Color.Accent.Soft">#16E85D3F</Color>
-    <Color x:Key="Color.Accent.Border">#55E85D3F</Color>
-
-    <!-- Semantic Status -->
-    <Color x:Key="Color.Status.Success">#10B981</Color>
-    <Color x:Key="Color.Status.SuccessSoft">#1810B981</Color>
-    <Color x:Key="Color.Status.Warning">#D97706</Color>
-    <Color x:Key="Color.Status.WarningSoft">#18F59E0B</Color>
-    <Color x:Key="Color.Status.Error">#DC2626</Color>
-    <Color x:Key="Color.Status.ErrorSoft">#18EF4444</Color>
-
-    <!-- Solid Brushes -->
-    <SolidColorBrush x:Key="Brush.Canvas.Primary" Color="{StaticResource Color.Canvas.Primary}" />
-    <SolidColorBrush x:Key="Brush.Canvas.Rail" Color="{StaticResource Color.Canvas.Rail}" />
-    <SolidColorBrush x:Key="Brush.Canvas.Subtle" Color="{StaticResource Color.Canvas.Subtle}" />
-    <SolidColorBrush x:Key="Brush.Surface.Card" Color="{StaticResource Color.Surface.Card}" />
-    <SolidColorBrush x:Key="Brush.Surface.Hover" Color="{StaticResource Color.Surface.Hover}" />
-    <SolidColorBrush x:Key="Brush.Border.Hairline" Color="{StaticResource Color.Border.Hairline}" />
-
-    <SolidColorBrush x:Key="Brush.Ink.Primary" Color="{StaticResource Color.Ink.Primary}" />
-    <SolidColorBrush x:Key="Brush.Ink.Secondary" Color="{StaticResource Color.Ink.Secondary}" />
-    <SolidColorBrush x:Key="Brush.Ink.Muted" Color="{StaticResource Color.Ink.Muted}" />
-
-    <SolidColorBrush x:Key="Brush.Accent.Primary" Color="{StaticResource Color.Accent.Primary}" />
-    <SolidColorBrush x:Key="Brush.Accent.Hover" Color="{StaticResource Color.Accent.Hover}" />
-    <SolidColorBrush x:Key="Brush.Accent.Pressed" Color="{StaticResource Color.Accent.Pressed}" />
-    <SolidColorBrush x:Key="Brush.Accent.Soft" Color="{StaticResource Color.Accent.Soft}" />
-    <SolidColorBrush x:Key="Brush.Accent.Border" Color="{StaticResource Color.Accent.Border}" />
-
-    <SolidColorBrush x:Key="Brush.Status.Success" Color="{StaticResource Color.Status.Success}" />
-    <SolidColorBrush x:Key="Brush.Status.SuccessSoft" Color="{StaticResource Color.Status.SuccessSoft}" />
-    <SolidColorBrush x:Key="Brush.Status.Warning" Color="{StaticResource Color.Status.Warning}" />
-    <SolidColorBrush x:Key="Brush.Status.WarningSoft" Color="{StaticResource Color.Status.WarningSoft}" />
-    <SolidColorBrush x:Key="Brush.Status.Error" Color="{StaticResource Color.Status.Error}" />
-    <SolidColorBrush x:Key="Brush.Status.ErrorSoft" Color="{StaticResource Color.Status.ErrorSoft}" />
-
-    <!-- Layered Non-Flat Tactile Gradients -->
-    <LinearGradientBrush x:Key="Brush.Surface.GlassCard" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FFFFFF" Offset="0" />
-        <GradientStop Color="#FAF7F0" Offset="1" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="Brush.Surface.InkCard" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#1E1E24" Offset="0" />
-        <GradientStop Color="#121216" Offset="1" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="Brush.Border.GlassRim" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FFFFFF" Offset="0" />
-        <GradientStop Color="#E6E1D5" Offset="0.4" />
-        <GradientStop Color="#D7D1C3" Offset="1" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="Brush.Border.InkRim" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#38FFFFFF" Offset="0" />
-        <GradientStop Color="#12FFFFFF" Offset="1" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="Brush.Accent.Gradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#F06E51" Offset="0" />
-        <GradientStop Color="#E85D3F" Offset="0.5" />
-        <GradientStop Color="#D94B2D" Offset="1" />
-    </LinearGradientBrush>
-
-    <RadialGradientBrush x:Key="Brush.Canvas.AmbientGlow" Center="0.5,0.34" GradientOrigin="0.5,0.34" RadiusX="0.62" RadiusY="0.62">
-        <GradientStop Color="#1AE85D3F" Offset="0" />
-        <GradientStop Color="#08E85D3F" Offset="0.48" />
-        <GradientStop Color="#00F7F4ED" Offset="1" />
-    </RadialGradientBrush>
-
-    <RadialGradientBrush x:Key="Brush.Surface.SphereGlass" Center="0.34,0.24" GradientOrigin="0.30,0.20" RadiusX="0.78" RadiusY="0.78">
-        <GradientStop Color="#34343D" Offset="0" />
-        <GradientStop Color="#1A1A20" Offset="0.52" />
-        <GradientStop Color="#0E0E12" Offset="1" />
-    </RadialGradientBrush>
-
-    <LinearGradientBrush x:Key="Brush.Surface.RailGlass" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#F5F2EA" Offset="0" />
-        <GradientStop Color="#ECE7DC" Offset="1" />
-    </LinearGradientBrush>
-
-    <!-- Typography -->
-    <FontFamily x:Key="Font.Display">Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.Display">pack://application:,,,/Assets/Fonts/#Manrope, Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.Body">pack://application:,,,/Assets/Fonts/#Manrope, Segoe UI Variable Text, Segoe UI</FontFamily>
     <FontFamily x:Key="Font.Editorial">Georgia, Palatino Linotype, Times New Roman</FontFamily>
-    <FontFamily x:Key="Font.Body">Segoe UI Variable Text, Segoe UI</FontFamily>
     <FontFamily x:Key="Font.Mono">Cascadia Mono, Consolas, Courier New</FontFamily>
 
-    <!-- Tactile Hardware Elevation Shadows -->
-    <DropShadowEffect x:Key="Shadow.SoftCard"
-                      BlurRadius="22"
-                      ShadowDepth="5"
-                      Direction="270"
-                      Opacity="0.08"
-                      Color="#141417" />
+    <!-- Corner Radius Scale -->
+    <CornerRadius x:Key="Radius.Card">20</CornerRadius>
+    <CornerRadius x:Key="Radius.CardCompact">14</CornerRadius>
+    <CornerRadius x:Key="Radius.Pill">24</CornerRadius>
+    <CornerRadius x:Key="Radius.Window">22</CornerRadius>
 
-    <DropShadowEffect x:Key="Shadow.HeroButton"
-                      BlurRadius="24"
-                      ShadowDepth="6"
-                      Direction="270"
-                      Opacity="0.36"
-                      Color="#E85D3F" />
-
-    <DropShadowEffect x:Key="Shadow.Sidebar"
-                      BlurRadius="36"
-                      ShadowDepth="10"
-                      Direction="270"
-                      Opacity="0.18"
-                      Color="#141417" />
-
-    <!-- Crisp Vector Geometry Icons -->
-    <Geometry x:Key="Icon.Home">M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V14H9V21H4C3.45 21 3 20.55 3 20V10.5Z</Geometry>
+    <!-- Coherent Vector Icon Family (24x24 viewBox, consistent 1.75px stroke) -->
+    <Geometry x:Key="Icon.Listen">M3 12H6.5L9 5L12 19L15 9L17.5 12H21</Geometry>
     <Geometry x:Key="Icon.Headphones">M4 13V12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12V13M4 13H6.5C7.33 13 8 13.67 8 14.5V18.5C8 19.33 7.33 20 6.5 20H5C3.9 20 3 19.1 3 18V14C3 13.45 3.45 13 4 13ZM20 13H17.5C16.67 13 16 13.67 16 14.5V18.5C16 19.33 16.67 20 17.5 20H19C20.1 20 21 19.1 21 18V14C21 13.45 20.55 13 20 13Z</Geometry>
-    <Geometry x:Key="Icon.Settings">M12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15ZM19.4 15A1.65 1.65 0 0 0 19.73 16.82L19.79 16.88A2 2 0 1 1 16.96 19.71L16.9 19.65A1.65 1.65 0 0 0 15.08 19.32A1.65 1.65 0 0 0 14 20.83V21A2 2 0 1 1 10 21V20.91A1.65 1.65 0 0 0 8.92 19.4A1.65 1.65 0 0 0 7.1 19.73L7.04 19.79A2 2 0 1 1 4.21 16.96L4.27 16.9A1.65 1.65 0 0 0 4.6 15.08A1.65 1.65 0 0 0 3.09 14H3A2 2 0 1 1 3 10H3.09A1.65 1.65 0 0 0 4.6 8.92A1.65 1.65 0 0 0 4.27 7.1L4.21 7.04A2 2 0 1 1 7.04 4.21L7.1 4.27A1.65 1.65 0 0 0 8.92 4.6H9A1.65 1.65 0 0 0 10 3.09V3A2 2 0 1 1 14 3V3.09A1.65 1.65 0 0 0 15.08 4.6A1.65 1.65 0 0 0 16.9 4.27L16.96 4.21A2 2 0 1 1 19.79 7.04L19.73 7.1A1.65 1.65 0 0 0 19.4 8.92V9A1.65 1.65 0 0 0 20.91 10H21A2 2 0 1 1 21 14H20.91A1.65 1.65 0 0 0 19.4 15Z</Geometry>
+    <Geometry x:Key="Icon.Earbuds">M7 6C4.79 6 3 7.79 3 10C3 11.86 4.28 13.42 6 13.86V19C6 19.55 6.45 20 7 20C7.55 20 8 19.55 8 19V10C8 7.79 7.55 6 7 6ZM17 6C19.21 6 21 7.79 21 10C21 11.86 19.72 13.42 18 13.86V19C18 19.55 17.55 20 17 20C16.45 20 16 19.55 16 19V10C16 7.79 16.45 6 17 6Z</Geometry>
     <Geometry x:Key="Icon.Speaker">M6 3H18C19.1 3 20 3.9 20 5V19C20 20.1 19.1 21 18 21H6C4.9 21 4 20.1 4 19V5C4 3.9 4.9 3 6 3ZM12 17C14.21 17 16 15.21 16 13C16 10.79 14.21 9 12 9C9.79 9 8 10.79 8 13C8 15.21 9.79 17 12 17ZM12 6.5A0.75 0.75 0 1 0 12 8A0.75 0.75 0 1 0 12 6.5Z</Geometry>
-    <Geometry x:Key="Icon.Check">M5 12.5L9.5 17L19 7.5</Geometry>
+    <Geometry x:Key="Icon.Display">M3 5H21V16H3V5ZM8 20H16M12 16V20</Geometry>
+    <Geometry x:Key="Icon.Settings">M12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15ZM19.4 15A1.65 1.65 0 0 0 19.73 16.82L19.79 16.88A2 2 0 1 1 16.96 19.71L16.9 19.65A1.65 1.65 0 0 0 15.08 19.32A1.65 1.65 0 0 0 14 20.83V21A2 2 0 1 1 10 21V20.91A1.65 1.65 0 0 0 8.92 19.4A1.65 1.65 0 0 0 7.1 19.73L7.04 19.79A2 2 0 1 1 4.21 16.96L4.27 16.9A1.65 1.65 0 0 0 4.6 15.08A1.65 1.65 0 0 0 3.09 14H3A2 2 0 1 1 3 10H3.09A1.65 1.65 0 0 0 4.6 8.92A1.65 1.65 0 0 0 4.27 7.1L4.21 7.04A2 2 0 1 1 7.04 4.21L7.1 4.27A1.65 1.65 0 0 0 8.92 4.6H9A1.65 1.65 0 0 0 10 3.09V3A2 2 0 1 1 14 3V3.09A1.65 1.65 0 0 0 15.08 4.6A1.65 1.65 0 0 0 16.9 4.27L16.96 4.21A2 2 0 1 1 19.79 7.04L19.73 7.1A1.65 1.65 0 0 0 19.4 8.92V9A1.65 1.65 0 0 0 20.91 10H21A2 2 0 1 1 21 14H20.91A1.65 1.65 0 0 0 19.4 15Z</Geometry>
+    <Geometry x:Key="Icon.Volume">M11 5L6 9H2V15H6L11 19V5ZM15.5 8.5C16.8 9.8 16.8 14.2 15.5 15.5M18.5 6C21 8.5 21 15.5 18.5 18</Geometry>
+    <Geometry x:Key="Icon.Mute">M11 5L6 9H2V15H6L11 19V5ZM21 9L15 15M15 9L21 15</Geometry>
+    <Geometry x:Key="Icon.Battery">M2 8H18V16H2V8ZM21 10.5V13.5</Geometry>
     <Geometry x:Key="Icon.Plus">M12 5V19M5 12H19</Geometry>
     <Geometry x:Key="Icon.Refresh">M20 11A8 8 0 0 0 6.3 5.3L4 7.5M4 4V7.5H7.5M4 13A8 8 0 0 0 17.7 18.7L20 16.5M20 20V16.5H16.5</Geometry>
+    <Geometry x:Key="Icon.Check">M5 12.5L9.5 17L19 7.5</Geometry>
+    <Geometry x:Key="Icon.Sun">M12 3V5M12 19V21M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M3 12H5M19 12H21M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22M12 8A4 4 0 1 0 12 16A4 4 0 1 0 12 8Z</Geometry>
+    <Geometry x:Key="Icon.Moon">M20.35 15.35A8.5 8.5 0 0 1 8.65 3.65A8.5 8.5 0 1 0 20.35 15.35Z</Geometry>
 
 </ResourceDictionary>

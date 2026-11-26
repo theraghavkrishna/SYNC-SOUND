@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
+using SyncSound.App.Services;
 using SyncSound.Core.Interfaces;
 using SyncSound.Core.Models;
 
@@ -16,22 +17,31 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 {
     private readonly IDeviceManagerService _deviceManager;
     private readonly ISystemSharingService _sharingService;
+    private readonly IAudioEngine _audioEngine;
     private readonly ISettingsService _settingsService;
 
     private AppSection _currentSection = AppSection.Home;
-    private string _heroTitle = "Ready to listen.";
-    private string _heroSubtitle = "Connect your headphones, choose everyone, and press Start sharing.";
-    private string _shareButtonText = "Start sharing";
-    private string _footerConnectionText = "0 devices connected";
+    private SyncVisualState _visualState = SyncVisualState.Ready;
+    private string _heroTitle = "Everyone's here.";
+    private string _heroAccent = "Your headphones are ready.";
+    private string _heroSubtitle = "Press Start listening whenever you're ready.";
+    private string _shareButtonText = "Start listening";
+    private string _footerConnectionText = "0 connected";
+    private string _connectedCountText = "0 connected";
+    private string _selectedCountText = "0 selected";
     private string _shortcutHint = "Ctrl+Shift+S";
     private bool _isSharing;
     private bool _hasErrorBanner;
     private string? _statusBannerMessage;
     private bool _hasConnectedDevices;
+    private double _masterVolume = 1.0;
+    private double _preMuteVolume = 1.0;
+    private bool _isMuted;
 
     public MainViewModel(
         IDeviceManagerService deviceManager,
         ISystemSharingService sharingService,
+        IAudioEngine audioEngine,
         ISettingsService settingsService,
         DevicesViewModel devicesViewModel,
         SettingsViewModel settingsViewModel,
@@ -39,11 +49,17 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     {
         _deviceManager = deviceManager;
         _sharingService = sharingService;
+        _audioEngine = audioEngine;
         _settingsService = settingsService;
 
         DevicesViewModel = devicesViewModel;
         SettingsViewModel = settingsViewModel;
         QuickSidebarViewModel = quickSidebarViewModel;
+
+        _masterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
+        _preMuteVolume = _masterVolume > 0.01 ? _masterVolume : 0.85;
+        _isMuted = _masterVolume <= 0.005;
+        _audioEngine.SetMasterVolume((float)_masterVolume);
 
         NavigateCommand = new RelayCommand(p =>
         {
@@ -57,13 +73,13 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             }
         });
 
-        ToggleSharingCommand = new AsyncRelayCommand(ToggleSharingAsync, () => HasConnectedDevices || IsSharing);
+        ToggleSharingCommand = new AsyncRelayCommand(PrimaryActionAsync, () => true);
+        ToggleMuteCommand = new RelayCommand(ToggleMute);
         OpenSidebarCommand = new RelayCommand(() => OpenSidebarRequested?.Invoke(this, EventArgs.Empty));
         ManageDevicesCommand = new RelayCommand(() => CurrentSection = AppSection.Devices);
 
         _deviceManager.DevicesUpdated += OnDevicesUpdated;
         _sharingService.StateChanged += OnSharingStateChanged;
-        _settingsService = settingsService;
         SettingsViewModel.HotkeyUpdated += (_, shortcut) => ShortcutHint = shortcut;
         ShortcutHint = _settingsService.Current.Hotkey;
 
@@ -75,9 +91,11 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     public QuickSidebarViewModel QuickSidebarViewModel { get; }
 
     public ObservableCollection<string> HomeDeviceChips { get; } = [];
+    public ObservableCollection<DeviceItemViewModel> ListeningGroupDevices { get; } = [];
 
     public RelayCommand NavigateCommand { get; }
     public AsyncRelayCommand ToggleSharingCommand { get; }
+    public RelayCommand ToggleMuteCommand { get; }
     public RelayCommand OpenSidebarCommand { get; }
     public RelayCommand ManageDevicesCommand { get; }
 
@@ -120,10 +138,22 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         set { if (value) CurrentSection = AppSection.Settings; }
     }
 
+    public SyncVisualState VisualState
+    {
+        get => _visualState;
+        private set => SetProperty(ref _visualState, value);
+    }
+
     public string HeroTitle
     {
         get => _heroTitle;
         private set => SetProperty(ref _heroTitle, value);
+    }
+
+    public string HeroAccent
+    {
+        get => _heroAccent;
+        private set => SetProperty(ref _heroAccent, value);
     }
 
     public string HeroSubtitle
@@ -142,6 +172,18 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     {
         get => _footerConnectionText;
         private set => SetProperty(ref _footerConnectionText, value);
+    }
+
+    public string ConnectedCountText
+    {
+        get => _connectedCountText;
+        private set => SetProperty(ref _connectedCountText, value);
+    }
+
+    public string SelectedCountText
+    {
+        get => _selectedCountText;
+        private set => SetProperty(ref _selectedCountText, value);
     }
 
     public string ShortcutHint
@@ -174,6 +216,57 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         private set => SetProperty(ref _statusBannerMessage, value);
     }
 
+    public double MasterVolume
+    {
+        get => _masterVolume;
+        set
+        {
+            var clamped = Math.Clamp(value, 0.0, 1.0);
+            if (Math.Abs(_masterVolume - clamped) > 0.001)
+            {
+                _masterVolume = clamped;
+                if (clamped > 0.01)
+                {
+                    _preMuteVolume = clamped;
+                    IsMuted = false;
+                }
+                else
+                {
+                    IsMuted = true;
+                }
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MasterVolumePercentText));
+
+                _audioEngine.SetMasterVolume((float)clamped);
+                _settingsService.Current.MasterVolume = (float)clamped;
+                _ = _settingsService.SaveAsync();
+
+                QuickSidebarViewModel.SyncMasterVolumeFromSettings();
+            }
+        }
+    }
+
+    public string MasterVolumePercentText => $"{(int)Math.Round(_masterVolume * 100)}%";
+
+    public bool IsMuted
+    {
+        get => _isMuted;
+        private set => SetProperty(ref _isMuted, value);
+    }
+
+    public void SyncMasterVolumeFromSettings()
+    {
+        var saved = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
+        if (Math.Abs(_masterVolume - saved) > 0.001)
+        {
+            _masterVolume = saved;
+            IsMuted = saved <= 0.005;
+            OnPropertyChanged(nameof(MasterVolume));
+            OnPropertyChanged(nameof(MasterVolumePercentText));
+        }
+    }
+
     public void Dispose()
     {
         _deviceManager.DevicesUpdated -= OnDevicesUpdated;
@@ -182,8 +275,45 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         QuickSidebarViewModel.Dispose();
     }
 
-    private Task ToggleSharingAsync() =>
-        IsSharing ? _sharingService.StopSharingAsync() : _sharingService.StartSharingAsync();
+    private void ToggleMute()
+    {
+        if (IsMuted || _masterVolume <= 0.005)
+        {
+            MasterVolume = _preMuteVolume > 0.05 ? _preMuteVolume : 0.85;
+        }
+        else
+        {
+            _preMuteVolume = _masterVolume;
+            MasterVolume = 0.0;
+        }
+    }
+
+    private Task PrimaryActionAsync()
+    {
+        if (IsSharing)
+        {
+            return _sharingService.StopSharingAsync();
+        }
+
+        if (_deviceManager.Devices.Count <= 1)
+        {
+            DevicesViewModel.OpenBluetoothSettings();
+            return Task.CompletedTask;
+        }
+
+        var selected = _deviceManager.SelectedDevices;
+        var defaultSource = _deviceManager.DefaultDevice;
+        var hasAdditional = selected.Any(d =>
+            defaultSource is null || !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase));
+
+        if (!hasAdditional)
+        {
+            CurrentSection = AppSection.Devices;
+            return Task.CompletedTask;
+        }
+
+        return _sharingService.StartSharingAsync();
+    }
 
     private void OnDevicesUpdated(object? sender, EventArgs e) => DispatchRefresh();
     private void OnSharingStateChanged(object? sender, SharingState e) => DispatchRefresh();
@@ -210,10 +340,10 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
         HasConnectedDevices = allDevices.Count > 0;
         IsSharing = sharing.IsSharing;
-        ShareButtonText = IsSharing ? "Stop sharing" : "Start sharing";
-        FooterConnectionText = allDevices.Count == 1
-            ? "1 device connected"
-            : $"{allDevices.Count} devices connected";
+
+        ConnectedCountText = allDevices.Count == 1 ? "1 connected" : $"{allDevices.Count} connected";
+        SelectedCountText = selected.Count == 1 ? "1 in group" : $"{selected.Count} in group";
+        FooterConnectionText = ConnectedCountText;
 
         HomeDeviceChips.Clear();
         var chipSource = selected.Count > 0 ? selected : allDevices;
@@ -222,49 +352,37 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             HomeDeviceChips.Add(d.Name);
         }
 
-        if (allDevices.Count == 0)
+        ListeningGroupDevices.Clear();
+        foreach (var d in allDevices)
         {
-            HeroTitle = "No outputs connected.";
-            HeroSubtitle = "Pair Bluetooth earbuds or plug in wired headphones in Windows Settings to begin.";
-            StatusBannerMessage = null;
-            HasErrorBanner = false;
+            var vol = _settingsService.Current.PerDeviceVolume.TryGetValue(d.Id, out var saved)
+                ? saved
+                : 1.0f;
+            ListeningGroupDevices.Add(new DeviceItemViewModel(
+                d,
+                (id, sel) => _deviceManager.SetDeviceSelected(id, sel),
+                vol,
+                (id, v) =>
+                {
+                    _settingsService.Current.PerDeviceVolume[id] = v;
+                    _audioEngine.SetOutputVolume(id, v);
+                    _ = _settingsService.SaveAsync();
+                }));
         }
-        else if (IsSharing)
-        {
-            HeroTitle = sharing.State == AudioEngineState.Partial
-                ? sharing.UserMessage
-                : "Playing to everyone.";
 
-            var receiverCount = sharing.ActiveOutputs.Count;
-            var sourceName = sharing.SourceDevice?.Name ?? defaultSource?.Name ?? "your PC";
-            HeroSubtitle = $"{sourceName} keeps playing normally while {receiverCount} additional {(receiverCount == 1 ? "output receives" : "outputs receive")} live synced audio.";
+        var copy = SyncCopy.GetListenCopy(allDevices.Count, selected.Count, sharing, defaultSource);
+        VisualState = copy.State;
+        HeroTitle = copy.Headline;
+        HeroAccent = copy.AccentLine;
+        HeroSubtitle = copy.Subtitle;
+        ShareButtonText = copy.PrimaryAction;
 
-            var firstFailed = sharing.FailedOutputs.FirstOrDefault();
-            HasErrorBanner = sharing.State == AudioEngineState.Partial || !string.IsNullOrWhiteSpace(sharing.ErrorMessage) || firstFailed is not null;
-            StatusBannerMessage = firstFailed is not null
-                ? $"{firstFailed.DeviceName}: {firstFailed.ErrorMessage ?? "Disconnected"}"
-                : HasErrorBanner ? (sharing.ErrorMessage ?? sharing.UserMessage) : null;
-        }
-        else
-        {
-            HeroTitle = "Ready to share.";
-            if (selected.Count == 0)
-            {
-                HeroSubtitle = "Pick who hears in Outputs, then press Start sharing.";
-            }
-            else if (defaultSource is not null && selected.Count == 1 &&
-                     string.Equals(selected[0].Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
-            {
-                HeroSubtitle = $"{defaultSource.Name} is already your primary Windows output. Add one more headphone to share together.";
-            }
-            else
-            {
-                HeroSubtitle = $"{selected.Count} {(selected.Count == 1 ? "output" : "outputs")} armed. Play YouTube, Spotify, Netflix, or any game.";
-            }
-
-            HasErrorBanner = !string.IsNullOrWhiteSpace(sharing.ErrorMessage);
-            StatusBannerMessage = sharing.ErrorMessage;
-        }
+        var firstFailed = sharing.FailedOutputs.FirstOrDefault();
+        HasErrorBanner = IsSharing && (sharing.State == AudioEngineState.Partial || firstFailed is not null)
+                         || (!IsSharing && !string.IsNullOrWhiteSpace(sharing.ErrorMessage));
+        StatusBannerMessage = firstFailed is not null
+            ? $"{firstFailed.DeviceName}: {firstFailed.ErrorMessage ?? "Disconnected"}"
+            : HasErrorBanner ? (sharing.ErrorMessage ?? sharing.UserMessage) : null;
 
         ToggleSharingCommand.RaiseCanExecuteChanged();
     }

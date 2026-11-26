@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:SyncSound.App.Controls">
-    <Grid Margin="44,46,44,32">
+    <Grid Margin="42,46,42,30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -10,23 +10,25 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <DockPanel Grid.Row="0" Margin="0,0,0,24">
+        <DockPanel Grid.Row="0" Margin="0,0,0,22">
             <StackPanel DockPanel.Dock="Left">
-                <TextBlock Text="AUDIO OUTPUTS"
-                           FontFamily="{StaticResource Font.Mono}"
-                           FontSize="10.5"
-                           FontWeight="SemiBold"
-                           Foreground="{StaticResource Brush.Accent.Primary}"
-                           Margin="0,0,0,4" />
-                <TextBlock Text="Choose who hears."
+                <TextBlock Text="Your headphones. Your listening group."
                            FontFamily="{StaticResource Font.Display}"
                            FontSize="30"
                            FontWeight="Bold"
-                           Foreground="{StaticResource Brush.Ink.Primary}" />
-                <TextBlock Text="{Binding SelectionSummary}"
-                           FontSize="13.5"
-                           Foreground="{StaticResource Brush.Ink.Secondary}"
-                           Margin="0,4,0,0" />
+                           Foreground="{DynamicResource Brush.Ink.Primary}" />
+                <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                    <TextBlock Text="Choose who joins the sound."
+                               FontSize="14.5"
+                               Foreground="{DynamicResource Brush.Ink.Secondary}" />
+                    <TextBlock Text="  ·  "
+                               FontSize="14.5"
+                               Foreground="{DynamicResource Brush.Ink.Muted}" />
+                    <TextBlock Text="{Binding SelectionSummary}"
+                               FontSize="14.5"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource Brush.Accent.Primary}" />
+                </StackPanel>
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Right"
@@ -41,7 +43,7 @@
                         Style="{StaticResource SecondaryPillButtonStyle}"
                         Command="{Binding SelectAllCommand}"
                         Margin="0,0,8,0" />
-                <Button Content="Pair device"
+                <Button Content="Add headphones"
                         Style="{StaticResource PrimaryPillButtonStyle}"
                         Padding="20,10"
                         FontSize="13.5"
@@ -49,10 +51,10 @@
             </StackPanel>
         </DockPanel>
 
-        <!-- Optional Notice -->
+        <!-- Truthful Handoff / Notice Banner -->
         <Border Grid.Row="1"
-                Background="{StaticResource Brush.Accent.Soft}"
-                BorderBrush="{StaticResource Brush.Accent.Border}"
+                Background="{DynamicResource Brush.Accent.Soft}"
+                BorderBrush="{DynamicResource Brush.Accent.Border}"
                 BorderThickness="1"
                 CornerRadius="14"
                 Padding="14,10"
@@ -61,10 +63,10 @@
             <TextBlock Text="{Binding BannerMessage}"
                        FontSize="13"
                        FontWeight="Medium"
-                       Foreground="{StaticResource Brush.Accent.Pressed}" />
+                       Foreground="{DynamicResource Brush.Accent.Primary}" />
         </Border>
 
-        <!-- Device Cards -->
+        <!-- Device Collection -->
         <ScrollViewer Grid.Row="2"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Disabled"
@@ -75,15 +77,15 @@
                         <Border Padding="20,16"
                                 Margin="0,0,0,12"
                                 CornerRadius="20"
-                                Background="{StaticResource Brush.Surface.GlassCard}"
-                                Effect="{StaticResource Shadow.SoftCard}">
+                                Background="{DynamicResource Brush.Surface.ElevatedCard}"
+                                Effect="{DynamicResource Shadow.SoftCard}">
                             <Border.Style>
                                 <Style TargetType="Border">
-                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Hairline}" />
                                     <Setter Property="BorderThickness" Value="1" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Primary}" />
+                                            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
                                             <Setter Property="BorderThickness" Value="1.5" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -98,41 +100,41 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Device Icon Tile -->
+                                <!-- Vector Device Silhouette -->
                                 <Border Grid.Column="0"
-                                        Width="50"
-                                        Height="50"
+                                        Width="52"
+                                        Height="52"
                                         CornerRadius="15"
                                         Margin="0,0,16,0"
                                         VerticalAlignment="Center"
                                         BorderThickness="1">
                                     <Border.Style>
                                         <Style TargetType="Border">
-                                            <Setter Property="Background" Value="{StaticResource Brush.Canvas.Subtle}" />
-                                            <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
+                                            <Setter Property="Background" Value="{DynamicResource Brush.Canvas.Subtle}" />
+                                            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Hairline}" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                    <Setter Property="Background" Value="{StaticResource Brush.Accent.Soft}" />
-                                                    <Setter Property="BorderBrush" Value="{StaticResource Brush.Accent.Border}" />
+                                                    <Setter Property="Background" Value="{DynamicResource Brush.Accent.Soft}" />
+                                                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Border}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    <Path Data="{StaticResource Icon.Headphones}"
+                                    <Path Data="{Binding DeviceIconGeometry}"
                                           StrokeThickness="1.8"
                                           StrokeStartLineCap="Round"
                                           StrokeEndLineCap="Round"
-                                          Width="22"
-                                          Height="22"
+                                          Width="23"
+                                          Height="23"
                                           Stretch="Uniform"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center">
                                         <Path.Style>
                                             <Style TargetType="Path">
-                                                <Setter Property="Stroke" Value="{StaticResource Brush.Ink.Secondary}" />
+                                                <Setter Property="Stroke" Value="{DynamicResource Brush.Ink.Secondary}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                        <Setter Property="Stroke" Value="{StaticResource Brush.Accent.Primary}" />
+                                                        <Setter Property="Stroke" Value="{DynamicResource Brush.Accent.Primary}" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -140,45 +142,61 @@
                                     </Path>
                                 </Border>
 
-                                <!-- Name & Clean Status -->
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,12,0">
+                                <!-- Friendly Name, Category, Real Battery & Status -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Name}"
-                                                   FontSize="15.5"
+                                                   FontSize="16.5"
                                                    FontWeight="SemiBold"
-                                                   Foreground="{StaticResource Brush.Ink.Primary}"
+                                                   Foreground="{DynamicResource Brush.Ink.Primary}"
                                                    VerticalAlignment="Center" />
-                                        <Border Background="{StaticResource Brush.Accent.Soft}"
-                                                BorderBrush="{StaticResource Brush.Accent.Border}"
+                                        <Border Background="{DynamicResource Brush.Accent.Soft}"
+                                                BorderBrush="{DynamicResource Brush.Accent.Border}"
                                                 BorderThickness="1"
                                                 CornerRadius="8"
                                                 Padding="8,3"
                                                 Margin="10,0,0,0"
                                                 Visibility="{Binding IsDefault, Converter={StaticResource BoolToVisibilityConverter}}">
-                                            <TextBlock Text="Windows Default"
-                                                       FontFamily="{StaticResource Font.Mono}"
-                                                       FontSize="10"
+                                            <TextBlock Text="Original sound"
+                                                       FontSize="11.5"
                                                        FontWeight="SemiBold"
-                                                       Foreground="{StaticResource Brush.Accent.Pressed}" />
+                                                       Foreground="{DynamicResource Brush.Accent.Primary}" />
+                                        </Border>
+                                        <Border Background="{DynamicResource Brush.Status.SuccessSoft}"
+                                                CornerRadius="8"
+                                                Padding="8,3"
+                                                Margin="8,0,0,0"
+                                                Visibility="{Binding HasBattery, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Path Data="{StaticResource Icon.Battery}"
+                                                      Stroke="{DynamicResource Brush.Status.Success}"
+                                                      StrokeThickness="1.5"
+                                                      Width="13" Height="13" Stretch="Uniform"
+                                                      Margin="0,0,5,0" />
+                                                <TextBlock Text="{Binding BatteryText}"
+                                                           FontSize="11.5"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource Brush.Status.Success}" />
+                                            </StackPanel>
                                         </Border>
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                        <Ellipse Width="6.5" Height="6.5" Fill="{StaticResource Brush.Status.Success}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Status.Success}" VerticalAlignment="Center" Margin="0,0,7,0" />
                                         <TextBlock Text="{Binding StatusBadge}"
-                                                   FontSize="12.5"
-                                                   Foreground="{StaticResource Brush.Ink.Secondary}" />
+                                                   FontSize="13"
+                                                   Foreground="{DynamicResource Brush.Ink.Secondary}" />
                                         <TextBlock Text=" · "
-                                                   FontSize="12.5"
-                                                   Foreground="{StaticResource Brush.Ink.Muted}" />
+                                                   FontSize="13"
+                                                   Foreground="{DynamicResource Brush.Ink.Muted}" />
                                         <TextBlock Text="{Binding CategoryLabel}"
-                                                   FontSize="12.5"
-                                                   Foreground="{StaticResource Brush.Ink.Muted}" />
+                                                   FontSize="13"
+                                                   Foreground="{DynamicResource Brush.Ink.Muted}" />
                                     </StackPanel>
 
                                     <TextBlock Text="{Binding ErrorMessage}"
-                                               FontSize="12"
-                                               Foreground="{StaticResource Brush.Status.Error}"
+                                               FontSize="12.5"
+                                               Foreground="{DynamicResource Brush.Status.Error}"
                                                Margin="0,4,0,0"
                                                Visibility="{Binding HasError, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 </StackPanel>
@@ -212,13 +230,13 @@
                 <Border Width="72"
                         Height="72"
                         CornerRadius="22"
-                        Background="{StaticResource Brush.Canvas.Subtle}"
-                        BorderBrush="{StaticResource Brush.Border.Hairline}"
+                        Background="{DynamicResource Brush.Canvas.Subtle}"
+                        BorderBrush="{DynamicResource Brush.Border.Hairline}"
                         BorderThickness="1"
                         HorizontalAlignment="Center"
                         Margin="0,0,0,18">
                     <Path Data="{StaticResource Icon.Headphones}"
-                          Stroke="{StaticResource Brush.Ink.Muted}"
+                          Stroke="{DynamicResource Brush.Ink.Muted}"
                           StrokeThickness="1.75"
                           Width="32"
                           Height="32"
@@ -226,19 +244,19 @@
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center" />
                 </Border>
-                <TextBlock Text="No headphones detected."
+                <TextBlock Text="Your listening group starts here."
                            FontFamily="{StaticResource Font.Display}"
                            FontSize="22"
                            FontWeight="Bold"
-                           Foreground="{StaticResource Brush.Ink.Primary}"
+                           Foreground="{DynamicResource Brush.Ink.Primary}"
                            TextAlignment="Center" />
-                <TextBlock Text="Pair Bluetooth earbuds or plug in wired headphones in Windows Settings, then click Refresh."
-                           FontSize="13.5"
-                           Foreground="{StaticResource Brush.Ink.Secondary}"
+                <TextBlock Text="Connect headphones to Windows, then find them here."
+                           FontSize="14"
+                           Foreground="{DynamicResource Brush.Ink.Secondary}"
                            TextAlignment="Center"
                            TextWrapping="Wrap"
                            Margin="0,8,0,22" />
-                <Button Content="Open Bluetooth Settings"
+                <Button Content="Add headphones"
                         Style="{StaticResource PrimaryPillButtonStyle}"
                         Command="{Binding AddHeadphonesCommand}"
                         HorizontalAlignment="Center" />

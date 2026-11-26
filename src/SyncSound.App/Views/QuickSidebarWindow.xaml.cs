@@ -16,14 +16,27 @@ public partial class QuickSidebarWindow : Window
 
     public void ShowAnimated()
     {
+        var area = SystemParameters.WorkArea;
         if (DataContext is QuickSidebarViewModel vm)
         {
             Topmost = vm.AlwaysOnTop;
+            var s = vm.SettingsService.Current;
+            if (s.SidebarLeft.HasValue && s.SidebarTop.HasValue)
+            {
+                Left = Math.Clamp(s.SidebarLeft.Value, area.Left, Math.Max(area.Left, area.Right - Width));
+                Top = Math.Clamp(s.SidebarTop.Value, area.Top, Math.Max(area.Top, area.Bottom - Height));
+            }
+            else
+            {
+                Left = area.Right - Width - 12;
+                Top = area.Top + Math.Max(16, (area.Height - Height) / 2);
+            }
         }
-
-        var area = SystemParameters.WorkArea;
-        Left = area.Right - Width - 8;
-        Top = area.Top + Math.Max(16, (area.Height - Height) / 2);
+        else
+        {
+            Left = area.Right - Width - 12;
+            Top = area.Top + Math.Max(16, (area.Height - Height) / 2);
+        }
 
         if (!SystemParameters.ClientAreaAnimation)
         {
@@ -35,14 +48,14 @@ public partial class QuickSidebarWindow : Window
         }
 
         Opacity = 0;
-        SlideTransform.X = 28;
+        SlideTransform.X = 24;
         Show();
         Activate();
 
         var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
-        BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)) { EasingFunction = ease });
+        BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)) { EasingFunction = ease });
         SlideTransform.BeginAnimation(System.Windows.Media.TranslateTransform.XProperty,
-            new DoubleAnimation(28, 0, TimeSpan.FromMilliseconds(200)) { EasingFunction = ease });
+            new DoubleAnimation(24, 0, TimeSpan.FromMilliseconds(240)) { EasingFunction = ease });
     }
 
     public void HideAnimated()
@@ -53,6 +66,22 @@ public partial class QuickSidebarWindow : Window
         }
 
         Hide();
+    }
+
+    private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ButtonState != MouseButtonState.Pressed)
+        {
+            return;
+        }
+
+        DragMove();
+        if (DataContext is QuickSidebarViewModel vm)
+        {
+            vm.SettingsService.Current.SidebarLeft = Left;
+            vm.SettingsService.Current.SidebarTop = Top;
+            _ = vm.SettingsService.SaveAsync();
+        }
     }
 
     private void Window_PreviewKeyDown(object sender, KeyEventArgs e)

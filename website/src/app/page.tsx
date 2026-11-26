@@ -2,9 +2,9 @@ import InteractiveStage from "../components/InteractiveStage";
 import SyncSoundLogo from "../components/SyncSoundLogo";
 
 const DOWNLOAD_EXE_URL =
-  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.1.0/SYNC-SOUND-x64.exe";
+  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.2.0/SYNC-SOUND-x64.exe";
 const DOWNLOAD_ZIP_URL =
-  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.1.0/SYNC-SOUND-Portable-x64.zip";
+  "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v3.2.0/SYNC-SOUND-Portable-x64.zip";
 const GITHUB_URL = "https://github.com/theraghavkrishna/SYNC-SOUND";
 
 export default function HomePage() {
@@ -54,7 +54,7 @@ export default function HomePage() {
               boxShadow: "0 6px 18px -4px rgba(232,93,63,0.45)",
             }}
           >
-            Download v3.1.0
+            Download v3.2.0
           </a>
         </nav>
       </header>
@@ -65,7 +65,7 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-[#E4DFD3] shadow-xs mb-8">
             <span className="w-2 h-2 rounded-full bg-[#E85D3F]" />
             <span className="font-mono-tech text-[11px] uppercase tracking-widest text-[#52525B] font-medium">
-              Windows 11 · v3.1.0 · Free &amp; Open Source
+              Windows 11 · v3.2.0 · Free &amp; Open Source
             </span>
           </div>
 
@@ -203,7 +203,7 @@ export default function HomePage() {
                       "linear-gradient(135deg, #F06E51 0%, #D94B2D 100%)",
                   }}
                 >
-                  Download v3.1.0.1 (.exe)
+                  Download v3.2.0.1 (.exe)
                 </a>
                 <a
                   href={GITHUB_URL}
@@ -270,7 +270,7 @@ export default function HomePage() {
                 boxShadow: "0 12px 30px -6px rgba(232,93,63,0.45)",
               }}
             >
-              Download SYNC SOUND v3.1.0
+              Download SYNC SOUND v3.2.0
             </a>
           </div>
         </section>
@@ -281,7 +281,7 @@ export default function HomePage() {
           <span>SYNC SOUND · Windows 11</span>
           <div className="flex items-center gap-6">
             <a href={DOWNLOAD_EXE_URL} className="hover:text-[#141417]">
-              v3.1.0 EXE
+              v3.2.0 EXE
             </a>
             <a href={DOWNLOAD_ZIP_URL} className="hover:text-[#141417]">
               Portable ZIP

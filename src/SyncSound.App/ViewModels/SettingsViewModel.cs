@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
+using SyncSound.App.Services;
 using SyncSound.Core.Interfaces;
 using SyncSound.Core.Models;
 using SyncSound.Windows.Bluetooth;
@@ -12,6 +13,7 @@ namespace SyncSound.App.ViewModels;
 public sealed class SettingsViewModel : ViewModelBase, IDisposable
 {
     private readonly ISettingsService _settingsService;
+    private readonly ThemeService _themeService;
     private readonly IGlobalHotkeyService _hotkeyService;
     private readonly IStartupRegistrationService _startupService;
     private readonly IWindowsSettingsLauncher _windowsLauncher;
@@ -31,6 +33,7 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
 
     public SettingsViewModel(
         ISettingsService settingsService,
+        ThemeService themeService,
         IGlobalHotkeyService hotkeyService,
         IStartupRegistrationService startupService,
         IWindowsSettingsLauncher windowsLauncher,
@@ -38,6 +41,7 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         IDeviceManagerService deviceManager)
     {
         _settingsService = settingsService;
+        _themeService = themeService;
         _hotkeyService = hotkeyService;
         _startupService = startupService;
         _windowsLauncher = windowsLauncher;
@@ -56,6 +60,17 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         ApplyShortcutCommand = new RelayCommand(ApplyShortcut);
         OpenLogsFolderCommand = new RelayCommand(() => _windowsLauncher.OpenLogsFolder());
         OpenSoundSettingsCommand = new RelayCommand(() => _windowsLauncher.OpenSoundSettings());
+        SelectThemeCommand = new RelayCommand(p =>
+        {
+            if (p is string s && Enum.TryParse<AppThemeMode>(s, true, out var mode))
+            {
+                ThemeMode = mode;
+            }
+            else if (p is AppThemeMode m)
+            {
+                ThemeMode = m;
+            }
+        });
 
         _audioEngine.StatusChanged += OnEngineStatusChanged;
         _deviceManager.DevicesUpdated += OnDevicesUpdated;
@@ -68,6 +83,43 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
     public RelayCommand ApplyShortcutCommand { get; }
     public RelayCommand OpenLogsFolderCommand { get; }
     public RelayCommand OpenSoundSettingsCommand { get; }
+    public RelayCommand SelectThemeCommand { get; }
+
+    public AppThemeMode ThemeMode
+    {
+        get => _settingsService.Current.ThemeMode;
+        set
+        {
+            if (_settingsService.Current.ThemeMode != value)
+            {
+                _settingsService.Current.ThemeMode = value;
+                _themeService.ApplyTheme(value);
+                _ = _settingsService.SaveAsync();
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsLightTheme));
+                OnPropertyChanged(nameof(IsDarkTheme));
+                OnPropertyChanged(nameof(IsSystemTheme));
+            }
+        }
+    }
+
+    public bool IsLightTheme
+    {
+        get => ThemeMode == AppThemeMode.Light;
+        set { if (value) ThemeMode = AppThemeMode.Light; }
+    }
+
+    public bool IsDarkTheme
+    {
+        get => ThemeMode == AppThemeMode.Dark;
+        set { if (value) ThemeMode = AppThemeMode.Dark; }
+    }
+
+    public bool IsSystemTheme
+    {
+        get => ThemeMode == AppThemeMode.System;
+        set { if (value) ThemeMode = AppThemeMode.System; }
+    }
 
     public string AppVersion { get; } =
         $"SYNC SOUND v{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0"}";

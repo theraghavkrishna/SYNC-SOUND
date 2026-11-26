@@ -25,39 +25,27 @@
               VerticalAlignment="Center">
             <!-- Background 270-degree Track Arc -->
             <Path x:Name="TrackArc"
-                  Stroke="#DFD9CC"
+                  Stroke="{DynamicResource Brush.Surface.ControlTrack}"
                   StrokeThickness="3.2"
                   StrokeStartLineCap="Round"
                   StrokeEndLineCap="Round" />
 
             <!-- Active Burnt Orange Value Arc -->
             <Path x:Name="ValueArc"
-                  Stroke="{StaticResource Brush.Accent.Primary}"
+                  Stroke="{DynamicResource Brush.Accent.Primary}"
                   StrokeThickness="3.2"
                   StrokeStartLineCap="Round"
-                  StrokeEndLineCap="Round">
-                <Path.Effect>
-                    <DropShadowEffect BlurRadius="6" ShadowDepth="0" Opacity="0.4" Color="#E85D3F" />
-                </Path.Effect>
-            </Path>
+                  StrokeEndLineCap="Round" />
 
-            <!-- Tactile Brushed Studio-Black Dial Cap -->
+            <!-- Tactile Dial Cap -->
             <Ellipse Width="28"
                      Height="28"
                      HorizontalAlignment="Center"
                      VerticalAlignment="Center"
-                     Stroke="#3A3A40"
-                     StrokeThickness="1">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop Color="#2B2B31" Offset="0" />
-                        <GradientStop Color="#121215" Offset="1" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-                <Ellipse.Effect>
-                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Opacity="0.32" Color="#141417" />
-                </Ellipse.Effect>
-            </Ellipse>
+                     Fill="{DynamicResource Brush.Surface.DialCap}"
+                     Stroke="{DynamicResource Brush.Border.Hairline}"
+                     StrokeThickness="1"
+                     Effect="{DynamicResource Shadow.Dial}" />
 
             <!-- Rotating Burnt Orange Indicator Tick -->
             <Grid Width="28"
@@ -71,7 +59,7 @@
                 <Border Width="2.5"
                         Height="7"
                         CornerRadius="1.25"
-                        Background="{StaticResource Brush.Accent.Primary}"
+                        Background="{DynamicResource Brush.Accent.Primary}"
                         VerticalAlignment="Top"
                         Margin="0,3.5,0,0" />
             </Grid>
@@ -81,9 +69,10 @@
         <TextBlock x:Name="PercentLabel"
                    Grid.Row="1"
                    Text="100%"
+                   FontFamily="{StaticResource Font.Mono}"
                    FontSize="10"
                    FontWeight="SemiBold"
-                   Foreground="{StaticResource Brush.Ink.Secondary}"
+                   Foreground="{DynamicResource Brush.Ink.Secondary}"
                    HorizontalAlignment="Center"
                    Margin="0,1,0,0" />
     </Grid>

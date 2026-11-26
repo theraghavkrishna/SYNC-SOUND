@@ -38,15 +38,26 @@ public sealed record SharingState(
     string UserMessage,
     string? ErrorMessage = null);
 
+public enum AppThemeMode
+{
+    System = 0,
+    Light = 1,
+    Dark = 2
+}
+
 public sealed class AppSettings
 {
+    public AppThemeMode ThemeMode { get; set; } = AppThemeMode.System;
     public string Hotkey { get; set; } = "Ctrl+Shift+S";
     public bool StartWithWindows { get; set; }
     public bool StartMinimized { get; set; }
     public bool CloseToTray { get; set; } = true;
     public bool SidebarAlwaysOnTop { get; set; } = true;
     public bool SidebarClickOutsideToClose { get; set; } = true;
+    public double? SidebarLeft { get; set; }
+    public double? SidebarTop { get; set; }
     public bool AutoSelectPreferredDevices { get; set; } = true;
+    public float MasterVolume { get; set; } = 1.0f;
     public float PlayerVolume { get; set; } = 0.85f;
     public List<string> SelectedDeviceIds { get; set; } = [];
     public List<string> PreferredDeviceIds { get; set; } = [];

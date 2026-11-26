@@ -39,6 +39,7 @@ public sealed class WindowsAudioDeviceEnumerator : IAudioDeviceEnumerator
                 : DeviceState.Active;
 
             var collection = _enumerator.EnumerateAudioEndPoints(DataFlow.Render, mask);
+            var batteryMap = BluetoothBatteryReader.GetBatteryLevelsByDeviceName();
             var devices = new List<AudioDevice>(collection.Count);
             var seenIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -51,7 +52,7 @@ public sealed class WindowsAudioDeviceEnumerator : IAudioDeviceEnumerator
                         continue;
                     }
 
-                    devices.Add(MapDevice(mmDevice, defaultId));
+                    devices.Add(MapDevice(mmDevice, defaultId, batteryMap));
                 }
             }
 
@@ -125,11 +126,17 @@ public sealed class WindowsAudioDeviceEnumerator : IAudioDeviceEnumerator
         }
     }
 
-    private static AudioDevice MapDevice(MMDevice mmDevice, string? defaultId)
+    private static AudioDevice MapDevice(
+        MMDevice mmDevice,
+        string? defaultId,
+        IReadOnlyDictionary<string, int>? batteryMap = null)
     {
         var friendlyName = SafeGetFriendlyName(mmDevice);
         var state = MapState(mmDevice.State);
         var type = InferDeviceType(friendlyName, mmDevice);
+        var battery = batteryMap is not null
+            ? BluetoothBatteryReader.MatchBatteryForEndpoint(friendlyName, batteryMap)
+            : null;
 
         return new AudioDevice
         {
@@ -139,6 +146,7 @@ public sealed class WindowsAudioDeviceEnumerator : IAudioDeviceEnumerator
             EndpointState = state,
             IsDefault = string.Equals(mmDevice.ID, defaultId, StringComparison.OrdinalIgnoreCase),
             IsHealthy = state == AudioEndpointState.Active,
+            BatteryPercentage = battery,
             LastSeen = DateTimeOffset.UtcNow
         };
     }

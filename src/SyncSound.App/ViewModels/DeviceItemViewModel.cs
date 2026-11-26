@@ -1,3 +1,5 @@
+using System.Windows;
+using System.Windows.Media;
 using SyncSound.Core.Models;
 
 namespace SyncSound.App.ViewModels;
@@ -31,6 +33,27 @@ public sealed class DeviceItemViewModel : ViewModelBase
     public bool IsHandsFreeProfile => Model.IsHandsFreeProfile;
     public bool IsAvailable => Model.IsAvailable;
     public AudioDeviceType DeviceType => Model.DeviceType;
+
+    public bool HasBattery => Model.BatteryPercentage.HasValue;
+    public int? BatteryPercentage => Model.BatteryPercentage;
+    public string BatteryText => Model.BatteryPercentage.HasValue ? $"{Model.BatteryPercentage.Value}%" : string.Empty;
+
+    public Geometry? DeviceIconGeometry
+    {
+        get
+        {
+            var key = Model.DeviceType switch
+            {
+                AudioDeviceType.Speakers => "Icon.Speaker",
+                AudioDeviceType.DigitalDisplay => "Icon.Display",
+                AudioDeviceType.Headphones when Name.Contains("Bud", StringComparison.OrdinalIgnoreCase)
+                    || Name.Contains("Pod", StringComparison.OrdinalIgnoreCase)
+                    || Name.Contains("Ear", StringComparison.OrdinalIgnoreCase) => "Icon.Earbuds",
+                _ => "Icon.Headphones"
+            };
+            return Application.Current?.TryFindResource(key) as Geometry;
+        }
+    }
 
     public string CategoryLabel => Model.DeviceType switch
     {

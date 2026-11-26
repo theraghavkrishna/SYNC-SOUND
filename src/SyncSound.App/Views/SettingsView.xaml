@@ -2,30 +2,159 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="44,46,44,36" MaxWidth="760">
-            <TextBlock Text="PREFERENCES"
-                       FontFamily="{StaticResource Font.Mono}"
-                       FontSize="10.5"
-                       FontWeight="SemiBold"
-                       Foreground="{StaticResource Brush.Accent.Primary}"
-                       Margin="0,0,0,4" />
-            <TextBlock Text="Settings"
+        <StackPanel Margin="42,46,42,36" MaxWidth="780">
+            <TextBlock Text="Preferences"
                        FontFamily="{StaticResource Font.Display}"
-                       FontSize="30"
+                       FontSize="32"
                        FontWeight="Bold"
-                       Foreground="{StaticResource Brush.Ink.Primary}"
-                       Margin="0,0,0,24" />
+                       Foreground="{DynamicResource Brush.Ink.Primary}" />
+            <TextBlock Text="Personalize your appearance, shortcut, and listening behavior."
+                       FontSize="14.5"
+                       Foreground="{DynamicResource Brush.Ink.Secondary}"
+                       Margin="0,4,0,24" />
 
-            <!-- Quick Sidebar & Shortcut -->
+            <!-- Appearance (Light / Dark / System with Visual Theme Previews) -->
+            <Border Style="{StaticResource SurfaceCardStyle}" Padding="24" Margin="0,0,0,18">
+                <StackPanel>
+                    <TextBlock Text="Appearance"
+                               FontFamily="{StaticResource Font.Display}"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource Brush.Ink.Primary}" />
+                    <TextBlock Text="Choose how SYNC SOUND looks across windows and your Quick Sidebar."
+                               FontSize="13.5"
+                               Foreground="{DynamicResource Brush.Ink.Secondary}"
+                               Margin="0,3,0,18" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Light Theme Card -->
+                        <RadioButton Grid.Column="0"
+                                     GroupName="ThemeMode"
+                                     IsChecked="{Binding IsLightTheme, Mode=TwoWay}"
+                                     Cursor="Hand">
+                            <RadioButton.Template>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border x:Name="Card"
+                                            Background="{DynamicResource Brush.Canvas.Subtle}"
+                                            BorderBrush="{DynamicResource Brush.Border.Hairline}"
+                                            BorderThickness="1.5"
+                                            CornerRadius="16"
+                                            Padding="14">
+                                        <StackPanel>
+                                            <Border Height="54" CornerRadius="10" Background="#F4EFE6" BorderBrush="#DFD8CA" BorderThickness="1" Margin="0,0,0,10">
+                                                <StackPanel Margin="10" VerticalAlignment="Center">
+                                                    <Border Height="7" Width="56" CornerRadius="3.5" Background="#191817" HorizontalAlignment="Left" Margin="0,0,0,6" />
+                                                    <Border Height="6" Width="36" CornerRadius="3" Background="#C65D32" HorizontalAlignment="Left" />
+                                                </StackPanel>
+                                            </Border>
+                                            <TextBlock Text="Light" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                                            <TextBlock Text="Warm cream" FontSize="12" Foreground="{DynamicResource Brush.Ink.Secondary}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
+                                            <Setter TargetName="Card" Property="Background" Value="{DynamicResource Brush.Accent.Soft}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </RadioButton.Template>
+                        </RadioButton>
+
+                        <!-- Dark Theme Card -->
+                        <RadioButton Grid.Column="2"
+                                     GroupName="ThemeMode"
+                                     IsChecked="{Binding IsDarkTheme, Mode=TwoWay}"
+                                     Cursor="Hand">
+                            <RadioButton.Template>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border x:Name="Card"
+                                            Background="{DynamicResource Brush.Canvas.Subtle}"
+                                            BorderBrush="{DynamicResource Brush.Border.Hairline}"
+                                            BorderThickness="1.5"
+                                            CornerRadius="16"
+                                            Padding="14">
+                                        <StackPanel>
+                                            <Border Height="54" CornerRadius="10" Background="#191817" BorderBrush="#34302C" BorderThickness="1" Margin="0,0,0,10">
+                                                <StackPanel Margin="10" VerticalAlignment="Center">
+                                                    <Border Height="7" Width="56" CornerRadius="3.5" Background="#F4EFE6" HorizontalAlignment="Left" Margin="0,0,0,6" />
+                                                    <Border Height="6" Width="36" CornerRadius="3" Background="#C65D32" HorizontalAlignment="Left" />
+                                                </StackPanel>
+                                            </Border>
+                                            <TextBlock Text="Dark" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                                            <TextBlock Text="Deep charcoal" FontSize="12" Foreground="{DynamicResource Brush.Ink.Secondary}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
+                                            <Setter TargetName="Card" Property="Background" Value="{DynamicResource Brush.Accent.Soft}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </RadioButton.Template>
+                        </RadioButton>
+
+                        <!-- System Theme Card -->
+                        <RadioButton Grid.Column="4"
+                                     GroupName="ThemeMode"
+                                     IsChecked="{Binding IsSystemTheme, Mode=TwoWay}"
+                                     Cursor="Hand">
+                            <RadioButton.Template>
+                                <ControlTemplate TargetType="RadioButton">
+                                    <Border x:Name="Card"
+                                            Background="{DynamicResource Brush.Canvas.Subtle}"
+                                            BorderBrush="{DynamicResource Brush.Border.Hairline}"
+                                            BorderThickness="1.5"
+                                            CornerRadius="16"
+                                            Padding="14">
+                                        <StackPanel>
+                                            <Border Height="54" CornerRadius="10" BorderBrush="#DFD8CA" BorderThickness="1" Margin="0,0,0,10" ClipToBounds="True">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.Column="0" Background="#F4EFE6" />
+                                                    <Border Grid.Column="1" Background="#191817" />
+                                                    <Border Grid.ColumnSpan="2" Width="28" Height="8" CornerRadius="4" Background="#C65D32" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </Border>
+                                            <TextBlock Text="System" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                                            <TextBlock Text="Follow Windows" FontSize="12" Foreground="{DynamicResource Brush.Ink.Secondary}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
+                                            <Setter TargetName="Card" Property="Background" Value="{DynamicResource Brush.Accent.Soft}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </RadioButton.Template>
+                        </RadioButton>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Quick Access & Sidebar -->
             <Border Style="{StaticResource SurfaceCardStyle}" Padding="24" Margin="0,0,0,18">
                 <StackPanel>
                     <TextBlock Text="Quick Sidebar"
-                               FontSize="16"
+                               FontFamily="{StaticResource Font.Display}"
+                               FontSize="18"
                                FontWeight="Bold"
-                               Foreground="{StaticResource Brush.Ink.Primary}"
+                               Foreground="{DynamicResource Brush.Ink.Primary}"
                                Margin="0,0,0,16" />
 
-                    <!-- Global Shortcut -->
                     <Grid Margin="0,0,0,16">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -34,33 +163,33 @@
 
                         <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
                             <TextBlock Text="Global keyboard shortcut"
-                                       FontSize="14"
+                                       FontSize="14.5"
                                        FontWeight="SemiBold"
-                                       Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Summon or hide the Quick Sidebar from any app (e.g. Ctrl+Shift+S)"
-                                       FontSize="12.5"
-                                       Foreground="{StaticResource Brush.Ink.Secondary}"
+                                       Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Open or hide the Quick Sidebar from any app (e.g. Ctrl+Shift+S)"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource Brush.Ink.Secondary}"
                                        Margin="0,2,0,0" />
                             <TextBlock Text="{Binding ShortcutStatusMessage}"
-                                       FontSize="12"
-                                       Foreground="{StaticResource Brush.Accent.Pressed}"
+                                       FontSize="12.5"
+                                       Foreground="{DynamicResource Brush.Accent.Primary}"
                                        Margin="0,4,0,0"
                                        Visibility="{Binding HasShortcutStatus, Converter={StaticResource BoolToVisibilityConverter}}" />
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBox Text="{Binding ShortcutInput, UpdateSourceTrigger=PropertyChanged}"
-                                     Width="148"
+                                     Width="150"
                                      Padding="12,8"
                                      FontFamily="{StaticResource Font.Mono}"
-                                     FontSize="12.5"
+                                     FontSize="13"
                                      FontWeight="SemiBold"
-                                     Foreground="{StaticResource Brush.Ink.Primary}"
-                                     CaretBrush="{StaticResource Brush.Accent.Primary}"
+                                     Foreground="{DynamicResource Brush.Ink.Primary}"
+                                     CaretBrush="{DynamicResource Brush.Accent.Primary}"
                                      VerticalContentAlignment="Center"
-                                     BorderBrush="{StaticResource Brush.Border.Hairline}"
+                                     BorderBrush="{DynamicResource Brush.Border.Hairline}"
                                      BorderThickness="1.2"
-                                     Background="#FFFFFF"
+                                     Background="{DynamicResource Brush.Surface.Card}"
                                      Margin="0,0,8,0" />
                             <Button Content="Apply"
                                     Style="{StaticResource SecondaryPillButtonStyle}"
@@ -69,13 +198,12 @@
                         </StackPanel>
                     </Grid>
 
-                    <Border Height="1" Background="{StaticResource Brush.Border.Hairline}" Margin="0,0,0,16" />
+                    <Border Height="1" Background="{DynamicResource Brush.Border.Hairline}" Margin="0,0,0,16" />
 
-                    <!-- Always on Top -->
                     <DockPanel Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Keep sidebar on top" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Float above fullscreen video and games while open" FontSize="12.5" Foreground="{StaticResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
+                            <TextBlock Text="Keep sidebar on top" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Float above movies and games while open" FontSize="13" Foreground="{DynamicResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
                         </StackPanel>
                         <CheckBox DockPanel.Dock="Right"
                                   HorizontalAlignment="Right"
@@ -83,11 +211,10 @@
                                   IsChecked="{Binding SidebarAlwaysOnTop, Mode=TwoWay}" />
                     </DockPanel>
 
-                    <!-- Click Outside -->
                     <DockPanel>
                         <StackPanel>
-                            <TextBlock Text="Auto-dismiss on click outside" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Automatically tuck away when you return to your app" FontSize="12.5" Foreground="{StaticResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
+                            <TextBlock Text="Close when clicking outside" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Automatically tuck away when you return to your app" FontSize="13" Foreground="{DynamicResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
                         </StackPanel>
                         <CheckBox DockPanel.Dock="Right"
                                   HorizontalAlignment="Right"
@@ -97,19 +224,20 @@
                 </StackPanel>
             </Border>
 
-            <!-- Audio & System Behavior -->
+            <!-- Listening & Application Behavior -->
             <Border Style="{StaticResource SurfaceCardStyle}" Padding="24" Margin="0,0,0,18">
                 <StackPanel>
-                    <TextBlock Text="Audio &amp; System"
-                               FontSize="16"
+                    <TextBlock Text="Listening &amp; behavior"
+                               FontFamily="{StaticResource Font.Display}"
+                               FontSize="18"
                                FontWeight="Bold"
-                               Foreground="{StaticResource Brush.Ink.Primary}"
+                               Foreground="{DynamicResource Brush.Ink.Primary}"
                                Margin="0,0,0,16" />
 
                     <DockPanel Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Remember preferred headphones" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Automatically arm your saved headphones whenever they connect" FontSize="12.5" Foreground="{StaticResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
+                            <TextBlock Text="Remember preferred headphones" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Automatically include your saved headphones when they connect" FontSize="13" Foreground="{DynamicResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
                         </StackPanel>
                         <CheckBox DockPanel.Dock="Right"
                                   HorizontalAlignment="Right"
@@ -117,12 +245,12 @@
                                   IsChecked="{Binding AutoSelectPreferredDevices, Mode=TwoWay}" />
                     </DockPanel>
 
-                    <Border Height="1" Background="{StaticResource Brush.Border.Hairline}" Margin="0,0,0,16" />
+                    <Border Height="1" Background="{DynamicResource Brush.Border.Hairline}" Margin="0,0,0,16" />
 
                     <DockPanel Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Close to system tray" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Keep audio sharing and your global shortcut active in the background" FontSize="12.5" Foreground="{StaticResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
+                            <TextBlock Text="Close to system tray" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Keep listening and your global shortcut active in the background" FontSize="13" Foreground="{DynamicResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
                         </StackPanel>
                         <CheckBox DockPanel.Dock="Right"
                                   HorizontalAlignment="Right"
@@ -132,8 +260,8 @@
 
                     <DockPanel Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Launch at Windows sign-in" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Start SYNC SOUND automatically when you turn on your PC" FontSize="12.5" Foreground="{StaticResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
+                            <TextBlock Text="Start with Windows" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Launch SYNC SOUND automatically when you sign in" FontSize="13" Foreground="{DynamicResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
                         </StackPanel>
                         <CheckBox DockPanel.Dock="Right"
                                   HorizontalAlignment="Right"
@@ -143,8 +271,8 @@
 
                     <DockPanel>
                         <StackPanel>
-                            <TextBlock Text="Start minimized to tray" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Open silently in the notification area on startup" FontSize="12.5" Foreground="{StaticResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
+                            <TextBlock Text="Start minimized to tray" FontSize="14.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" />
+                            <TextBlock Text="Open quietly in the notification area on startup" FontSize="13" Foreground="{DynamicResource Brush.Ink.Secondary}" Margin="0,2,0,0" />
                         </StackPanel>
                         <CheckBox DockPanel.Dock="Right"
                                   HorizontalAlignment="Right"
@@ -154,18 +282,18 @@
                 </StackPanel>
             </Border>
 
-            <!-- Sync & Diagnostics (Hidden Behind Expander) -->
+            <!-- Diagnostics (Collapsed by Default) -->
             <Border Style="{StaticResource SurfaceCardStyle}" Padding="24">
                 <Expander IsExpanded="{Binding DiagnosticsExpanded, Mode=TwoWay}"
-                          Header="Sync &amp; Diagnostics"
-                          FontSize="15"
+                          Header="Diagnostics &amp; Sync Calibration"
+                          FontSize="15.5"
                           FontWeight="Bold"
-                          Foreground="{StaticResource Brush.Ink.Primary}">
+                          Foreground="{DynamicResource Brush.Ink.Primary}">
                     <StackPanel Margin="0,16,0,0">
-                        <TextBlock Text="Fine-tune per-device delay compensation if wired speakers play ahead of Bluetooth earbuds, or inspect live audio engine metrics."
-                                   FontSize="12.5"
+                        <TextBlock Text="Fine-tune per-device delay compensation if wired speakers play ahead of Bluetooth earbuds, or inspect live metrics."
+                                   FontSize="13"
                                    FontWeight="Normal"
-                                   Foreground="{StaticResource Brush.Ink.Secondary}"
+                                   Foreground="{DynamicResource Brush.Ink.Secondary}"
                                    TextWrapping="Wrap"
                                    Margin="0,0,0,14" />
 
@@ -179,9 +307,9 @@
                                             <ColumnDefinition Width="56" />
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding DeviceName}"
-                                                   FontSize="13"
+                                                   FontSize="13.5"
                                                    FontWeight="Medium"
-                                                   Foreground="{StaticResource Brush.Ink.Primary}"
+                                                   Foreground="{DynamicResource Brush.Ink.Primary}"
                                                    TextTrimming="CharacterEllipsis"
                                                    VerticalAlignment="Center" />
                                         <Slider Grid.Column="1"
@@ -193,9 +321,9 @@
                                         <TextBlock Grid.Column="2"
                                                    Text="{Binding DelayLabel}"
                                                    FontFamily="{StaticResource Font.Mono}"
-                                                   FontSize="11.5"
+                                                   FontSize="12"
                                                    FontWeight="SemiBold"
-                                                   Foreground="{StaticResource Brush.Ink.Secondary}"
+                                                   Foreground="{DynamicResource Brush.Ink.Secondary}"
                                                    HorizontalAlignment="Right"
                                                    VerticalAlignment="Center" />
                                     </Grid>
@@ -206,23 +334,23 @@
                         <ItemsControl ItemsSource="{Binding DiagnosticOutputs}" Margin="0,0,0,14">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{StaticResource Brush.Canvas.Subtle}"
-                                            BorderBrush="{StaticResource Brush.Border.Hairline}"
+                                    <Border Background="{DynamicResource Brush.Canvas.Subtle}"
+                                            BorderBrush="{DynamicResource Brush.Border.Hairline}"
                                             BorderThickness="1"
                                             CornerRadius="12"
                                             Padding="12,9"
                                             Margin="0,0,0,6">
                                         <StackPanel>
-                                            <TextBlock FontSize="12.5" FontWeight="SemiBold" Foreground="{StaticResource Brush.Ink.Primary}">
+                                            <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}">
                                                 <Run Text="{Binding Name}" />
-                                                <Run Text=" · " Foreground="{StaticResource Brush.Ink.Muted}" />
-                                                <Run Text="{Binding State}" Foreground="{StaticResource Brush.Accent.Pressed}" />
+                                                <Run Text=" · " Foreground="{DynamicResource Brush.Ink.Muted}" />
+                                                <Run Text="{Binding State}" Foreground="{DynamicResource Brush.Accent.Primary}" />
                                             </TextBlock>
                                             <TextBlock Text="{Binding Metrics}"
                                                        FontFamily="{StaticResource Font.Mono}"
-                                                       FontSize="11"
+                                                       FontSize="11.5"
                                                        FontWeight="Normal"
-                                                       Foreground="{StaticResource Brush.Ink.Secondary}" />
+                                                       Foreground="{DynamicResource Brush.Ink.Secondary}" />
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
@@ -243,9 +371,9 @@
                             <TextBlock DockPanel.Dock="Right"
                                        Text="{Binding AppVersion}"
                                        FontFamily="{StaticResource Font.Mono}"
-                                       FontSize="11.5"
+                                       FontSize="12"
                                        FontWeight="Normal"
-                                       Foreground="{StaticResource Brush.Ink.Muted}"
+                                       Foreground="{DynamicResource Brush.Ink.Muted}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Right" />
                         </DockPanel>

@@ -1,0 +1,81 @@
+<UserControl x:Class="SyncSound.App.Controls.SyncDial"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="DialRoot"
+             Width="156"
+             Height="156"
+             Focusable="True"
+             Cursor="Hand"
+             ToolTip="Drag or scroll to adjust listening volume. Press M or click Mute below."
+             MouseLeftButtonDown="OnMouseLeftButtonDown"
+             MouseMove="OnMouseMove"
+             MouseLeftButtonUp="OnMouseLeftButtonUp"
+             MouseWheel="OnMouseWheel"
+             LostMouseCapture="OnLostMouseCapture"
+             KeyDown="OnKeyDown">
+    <Grid Width="148" Height="148" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <!-- Fine Hardware Tick Marks -->
+        <Canvas x:Name="TickCanvas" Width="148" Height="148" IsHitTestVisible="False" />
+
+        <!-- Background 270-degree Track Arc -->
+        <Path x:Name="TrackArc"
+              Stroke="{DynamicResource Brush.Surface.ControlTrack}"
+              StrokeThickness="4"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round"
+              IsHitTestVisible="False" />
+
+        <!-- Burnt Orange Active Value Arc -->
+        <Path x:Name="ValueArc"
+              Stroke="{DynamicResource Brush.Accent.Primary}"
+              StrokeThickness="4.5"
+              StrokeStartLineCap="Round"
+              StrokeEndLineCap="Round"
+              IsHitTestVisible="False" />
+
+        <!-- Tactile Physical Dial Cap -->
+        <Ellipse Width="96"
+                 Height="96"
+                 Fill="{DynamicResource Brush.Surface.DialCap}"
+                 Stroke="{DynamicResource Brush.Border.Hairline}"
+                 StrokeThickness="1.2"
+                 Effect="{DynamicResource Shadow.Dial}" />
+
+        <!-- Rotating Indicator Needle -->
+        <Grid Width="96"
+              Height="96"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              RenderTransformOrigin="0.5,0.5"
+              IsHitTestVisible="False">
+            <Grid.RenderTransform>
+                <RotateTransform x:Name="IndicatorRotation" Angle="-135" />
+            </Grid.RenderTransform>
+            <Border Width="3"
+                    Height="12"
+                    CornerRadius="1.5"
+                    Background="{DynamicResource Brush.Accent.Primary}"
+                    VerticalAlignment="Top"
+                    Margin="0,7,0,0" />
+        </Grid>
+
+        <!-- Center Tabular Numeric Readout -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
+            <TextBlock x:Name="PercentLabel"
+                       Text="100%"
+                       FontFamily="{StaticResource Font.Display}"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource Brush.Ink.Primary}"
+                       HorizontalAlignment="Center" />
+            <TextBlock x:Name="StateLabel"
+                       Text="VOLUME"
+                       FontFamily="{StaticResource Font.Mono}"
+                       FontSize="9"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource Brush.Ink.Muted}"
+                       HorizontalAlignment="Center"
+                       Margin="0,1,0,0" />
+        </StackPanel>
+    </Grid>
+</UserControl>

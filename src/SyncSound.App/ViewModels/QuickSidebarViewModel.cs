@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
+using SyncSound.App.Services;
 using SyncSound.Core.Interfaces;
 using SyncSound.Core.Models;
 
@@ -12,11 +13,15 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
     private readonly IAudioEngine _audioEngine;
     private readonly ISettingsService _settingsService;
 
-    private string _statusHeadline = "Ready to listen.";
+    private string _statusHeadline = "Everyone's here.";
     private string _statusDetail = "Select headphones to share your sound.";
-    private string _shareButtonText = "Start sharing";
+    private string _shareButtonText = "Start listening";
+    private string _countBadgeText = "0 selected";
     private bool _isSharing;
     private bool _canToggleSharing;
+    private double _masterVolume = 1.0;
+    private double _preMuteVolume = 1.0;
+    private bool _isMuted;
 
     public QuickSidebarViewModel(
         IDeviceManagerService deviceManager,
@@ -29,7 +34,12 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         _audioEngine = audioEngine;
         _settingsService = settingsService;
 
+        _masterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
+        _preMuteVolume = _masterVolume > 0.01 ? _masterVolume : 0.85;
+        _isMuted = _masterVolume <= 0.005;
+
         ToggleSharingCommand = new AsyncRelayCommand(ToggleSharingAsync, () => CanToggleSharing || IsSharing);
+        ToggleMuteCommand = new RelayCommand(ToggleMute);
         OpenMainAppCommand = new RelayCommand(() => OpenMainAppRequested?.Invoke(this, EventArgs.Empty));
         CloseSidebarCommand = new RelayCommand(() => CloseRequested?.Invoke(this, EventArgs.Empty));
 
@@ -41,14 +51,17 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
     public ObservableCollection<DeviceItemViewModel> Devices { get; } = [];
 
     public AsyncRelayCommand ToggleSharingCommand { get; }
+    public RelayCommand ToggleMuteCommand { get; }
     public RelayCommand OpenMainAppCommand { get; }
     public RelayCommand CloseSidebarCommand { get; }
 
     public event EventHandler? OpenMainAppRequested;
     public event EventHandler? CloseRequested;
+    public event EventHandler? MasterVolumeSynced;
 
     public bool AlwaysOnTop => _settingsService.Current.SidebarAlwaysOnTop;
     public bool ClickOutsideToClose => _settingsService.Current.SidebarClickOutsideToClose;
+    public ISettingsService SettingsService => _settingsService;
 
     public string StatusHeadline
     {
@@ -68,6 +81,12 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         private set => SetProperty(ref _shareButtonText, value);
     }
 
+    public string CountBadgeText
+    {
+        get => _countBadgeText;
+        private set => SetProperty(ref _countBadgeText, value);
+    }
+
     public bool IsSharing
     {
         get => _isSharing;
@@ -80,6 +99,56 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         private set => SetProperty(ref _canToggleSharing, value);
     }
 
+    public double MasterVolume
+    {
+        get => _masterVolume;
+        set
+        {
+            var clamped = Math.Clamp(value, 0.0, 1.0);
+            if (Math.Abs(_masterVolume - clamped) > 0.001)
+            {
+                _masterVolume = clamped;
+                if (clamped > 0.01)
+                {
+                    _preMuteVolume = clamped;
+                    IsMuted = false;
+                }
+                else
+                {
+                    IsMuted = true;
+                }
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MasterVolumePercentText));
+
+                _audioEngine.SetMasterVolume((float)clamped);
+                _settingsService.Current.MasterVolume = (float)clamped;
+                _ = _settingsService.SaveAsync();
+                MasterVolumeSynced?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
+    public string MasterVolumePercentText => $"{(int)Math.Round(_masterVolume * 100)}%";
+
+    public bool IsMuted
+    {
+        get => _isMuted;
+        private set => SetProperty(ref _isMuted, value);
+    }
+
+    public void SyncMasterVolumeFromSettings()
+    {
+        var saved = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
+        if (Math.Abs(_masterVolume - saved) > 0.001)
+        {
+            _masterVolume = saved;
+            IsMuted = saved <= 0.005;
+            OnPropertyChanged(nameof(MasterVolume));
+            OnPropertyChanged(nameof(MasterVolumePercentText));
+        }
+    }
+
     public void NotifyPreferencesChanged()
     {
         OnPropertyChanged(nameof(AlwaysOnTop));
@@ -88,6 +157,7 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
 
     public void SyncVolumesFromSettings()
     {
+        SyncMasterVolumeFromSettings();
         foreach (var item in Devices)
         {
             var vol = _settingsService.Current.PerDeviceVolume.TryGetValue(item.Id, out var saved)
@@ -101,6 +171,19 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
     {
         _deviceManager.DevicesUpdated -= OnDevicesOrSharingChanged;
         _sharingService.StateChanged -= OnSharingStateChanged;
+    }
+
+    private void ToggleMute()
+    {
+        if (IsMuted || _masterVolume <= 0.005)
+        {
+            MasterVolume = _preMuteVolume > 0.05 ? _preMuteVolume : 0.85;
+        }
+        else
+        {
+            _preMuteVolume = _masterVolume;
+            MasterVolume = 0.0;
+        }
     }
 
     private Task ToggleSharingAsync() =>
@@ -142,29 +225,13 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         var selected = Devices.Count(d => d.IsSelected);
 
         IsSharing = sharing.IsSharing;
-        CanToggleSharing = connected > 0 && selected > 0;
-        ShareButtonText = IsSharing ? "Stop sharing" : "Start sharing";
+        CanToggleSharing = connected > 1 && selected > 0;
+        CountBadgeText = $"{selected} of {connected} in group";
 
-        if (connected == 0)
-        {
-            StatusHeadline = "No outputs found.";
-            StatusDetail = "Pair headphones in Windows Settings.";
-        }
-        else if (IsSharing)
-        {
-            StatusHeadline = sharing.State == AudioEngineState.Partial ? sharing.UserMessage : "Playing to everyone.";
-            StatusDetail = $"{sharing.ActiveOutputs.Count} receiving live synced audio";
-        }
-        else if (selected == 0)
-        {
-            StatusHeadline = "Pick who listens.";
-            StatusDetail = $"{connected} connected";
-        }
-        else
-        {
-            StatusHeadline = "Ready to share.";
-            StatusDetail = $"{selected} armed · {connected} connected";
-        }
+        var copy = SyncCopy.GetListenCopy(connected, selected, sharing, _deviceManager.DefaultDevice);
+        StatusHeadline = copy.Headline;
+        StatusDetail = copy.AccentLine;
+        ShareButtonText = IsSharing ? "Stop listening" : "Start listening";
 
         ToggleSharingCommand.RaiseCanExecuteChanged();
     }

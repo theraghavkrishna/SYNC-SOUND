@@ -42,6 +42,8 @@ public sealed class AudioDevice
     public bool IsHealthy { get; set; } = true;
     public DateTimeOffset LastSeen { get; set; } = DateTimeOffset.UtcNow;
     public string? ErrorState { get; set; }
+    public int? BatteryPercentage { get; init; }
+    public bool? IsCharging { get; init; }
 
     public bool IsAvailable => EndpointState == AudioEndpointState.Active;
     public bool IsHandsFreeProfile => DeviceType == AudioDeviceType.HeadsetHandsFree;

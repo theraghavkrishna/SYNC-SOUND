@@ -90,7 +90,7 @@ public sealed class DevicesViewModel : ViewModelBase
     {
         if (!_settingsLauncher.OpenBluetoothSettings())
         {
-            BannerMessage = "Open Windows Settings -> Bluetooth & devices to pair headphones.";
+            BannerMessage = "Let's add another headphone. Pair your headphones in Windows Settings -> Bluetooth & devices.";
         }
     }
 
@@ -134,8 +134,8 @@ public sealed class DevicesViewModel : ViewModelBase
         OnPropertyChanged(nameof(SelectedCount));
 
         SelectionSummary = Devices.Count == 0
-            ? "Let's connect some headphones."
-            : $"{SelectedCount} selected · {ConnectedCount} connected";
+            ? "Your listening group starts here."
+            : $"{SelectedCount} of {ConnectedCount} in group";
 
         SelectAllCommand.RaiseCanExecuteChanged();
         ClearSelectionCommand.RaiseCanExecuteChanged();

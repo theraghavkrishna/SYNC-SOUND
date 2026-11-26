@@ -1,0 +1,70 @@
+<UserControl x:Class="SyncSound.App.Controls.SyncOrb"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="OrbRoot"
+             Width="148"
+             Height="148">
+    <Grid>
+        <!-- Outer Atmospheric Breathe Halo -->
+        <Ellipse x:Name="BreatheHalo"
+                 Width="136"
+                 Height="136"
+                 Fill="{DynamicResource Brush.Accent.Soft}"
+                 Stroke="{DynamicResource Brush.Accent.Border}"
+                 StrokeThickness="1.2"
+                 RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <ScaleTransform x:Name="HaloScale" ScaleX="1" ScaleY="1" />
+            </Ellipse.RenderTransform>
+        </Ellipse>
+
+        <!-- Active Signal Pulse Wave (Visible only when Listening or Recovering) -->
+        <Ellipse x:Name="SignalRing"
+                 Width="112"
+                 Height="112"
+                 Stroke="{DynamicResource Brush.Accent.Primary}"
+                 StrokeThickness="1.75"
+                 Opacity="0"
+                 RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <ScaleTransform x:Name="SignalScale" ScaleX="0.82" ScaleY="0.82" />
+            </Ellipse.RenderTransform>
+        </Ellipse>
+
+        <!-- Precision Outer Hairline Ring -->
+        <Ellipse Width="114"
+                 Height="114"
+                 Stroke="{DynamicResource Brush.Border.Hairline}"
+                 StrokeThickness="1" />
+
+        <!-- Signature 3D Specular Hardware Sphere -->
+        <Ellipse x:Name="CoreSphere"
+                 Width="88"
+                 Height="88"
+                 Fill="{DynamicResource Brush.Surface.OrbCore}"
+                 Stroke="#3DF4EFE6"
+                 StrokeThickness="1.2"
+                 Effect="{DynamicResource Shadow.Dial}" />
+
+        <!-- 5-Bar Acoustic Signature (Morphs between Calm Emblem & Live Listening) -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Border x:Name="Bar1" Width="3.5" Height="11" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Primary}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
+            </Border>
+            <Border x:Name="Bar2" Width="3.5" Height="20" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Hover}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
+            </Border>
+            <Border x:Name="Bar3" Width="3.5" Height="28" CornerRadius="1.75" Background="#F4EFE6" Margin="2,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
+            </Border>
+            <Border x:Name="Bar4" Width="3.5" Height="20" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Hover}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
+            </Border>
+            <Border x:Name="Bar5" Width="3.5" Height="11" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Primary}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>
