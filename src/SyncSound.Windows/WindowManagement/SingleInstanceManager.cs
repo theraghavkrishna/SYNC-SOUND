@@ -14,6 +14,7 @@ public sealed class SingleInstanceManager : IDisposable
     private readonly CancellationTokenSource _cts = new();
     private readonly bool _ownsMutex;
     private Task? _listenerTask;
+    private bool _disposed;
 
     private SingleInstanceManager(Mutex mutex, EventWaitHandle activationEvent, bool ownsMutex)
     {
@@ -26,7 +27,19 @@ public sealed class SingleInstanceManager : IDisposable
 
     public static SingleInstanceManager Acquire(out bool isPrimaryInstance)
     {
-        var mutex = new Mutex(initiallyOwned: true, MutexName, out var createdNew);
+        Mutex mutex;
+        bool createdNew;
+        try
+        {
+            mutex = new Mutex(initiallyOwned: true, MutexName, out createdNew);
+        }
+        catch (AbandonedMutexException)
+        {
+            // Previous instance terminated unexpectedly without releasing the mutex. We now own it.
+            createdNew = true;
+            mutex = new Mutex(initiallyOwned: true, MutexName, out _);
+        }
+
         var activationEvent = new EventWaitHandle(false, EventResetMode.AutoReset, ActivationEventName);
         isPrimaryInstance = createdNew;
         return new SingleInstanceManager(mutex, activationEvent, createdNew);
@@ -86,18 +99,25 @@ public sealed class SingleInstanceManager : IDisposable
 
     public void Dispose()
     {
-        _cts.Cancel();
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
+
         try
         {
-            _listenerTask?.Wait(500);
+            _cts.Cancel();
+            _listenerTask?.Wait(300);
         }
         catch
         {
             // Ignore teardown timeout.
         }
 
-        _cts.Dispose();
-        _activationEvent.Dispose();
+        try { _cts.Dispose(); } catch { }
+        try { _activationEvent.Dispose(); } catch { }
 
         if (_ownsMutex)
         {
@@ -111,6 +131,6 @@ public sealed class SingleInstanceManager : IDisposable
             }
         }
 
-        _mutex.Dispose();
+        try { _mutex.Dispose(); } catch { }
     }
 }

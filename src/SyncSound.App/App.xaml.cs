@@ -39,6 +39,11 @@ public partial class App : Application
         // ── Global crash handlers — catch ALL unobserved exceptions ──
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
+            if (_isExiting)
+            {
+                return;
+            }
+
             var ex = args.ExceptionObject as Exception;
             Log.Fatal(ex, "AppDomain unhandled exception (IsTerminating={IsTerminating})", args.IsTerminating);
             Log.CloseAndFlush();
@@ -58,8 +63,10 @@ public partial class App : Application
         _singleInstance = SingleInstanceManager.Acquire(out var isPrimary);
         if (!isPrimary)
         {
+            _isExiting = true;
             _singleInstance.SignalPrimaryInstance();
             _singleInstance.Dispose();
+            _singleInstance = null;
             Shutdown();
             return;
         }
@@ -247,7 +254,18 @@ public partial class App : Application
         }
         finally
         {
-            _singleInstance?.Dispose();
+            if (_singleInstance is not null)
+            {
+                try
+                {
+                    _singleInstance.Dispose();
+                }
+                catch
+                {
+                    // Ignore disposal errors on shutdown
+                }
+                _singleInstance = null;
+            }
             Log.CloseAndFlush();
         }
     }
