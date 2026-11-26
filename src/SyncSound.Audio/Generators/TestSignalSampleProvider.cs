@@ -88,11 +88,15 @@ public sealed class TestSignalSampleProvider : ISampleProvider
         var frameInBeat = _frameIndex % framesPerBeat;
         var timeInBeatSec = (double)frameInBeat / sampleRate;
 
-        // Crisp 130 ms percussive chime with exponential decay so sync skew is obvious
-        var freq = beatNumber == 0 ? 660.0 : 440.0;
-        var harmonic = beatNumber == 0 ? 0.35 : 0.18;
-        var env = timeInBeatSec < 0.18
-            ? Math.Exp(-timeInBeatSec * 22.0) * Math.Min(1.0, timeInBeatSec / 0.004)
+        // Warm 280 ms sustained chord chime with clean 180 ms silent tail (total 500 ms beat)
+        // Ensures wired USB-C DACs and 3.5 mm headphones deliver full, unmistakable RMS loudness.
+        var freq = beatNumber == 0 ? 587.33 : 440.0;
+        var harmonic = beatNumber == 0 ? 0.38 : 0.24;
+        var fadeOut = timeInBeatSec >= 0.25 && timeInBeatSec < 0.30
+            ? (0.30 - timeInBeatSec) / 0.05
+            : 1.0;
+        var env = timeInBeatSec < 0.30
+            ? Math.Exp(-timeInBeatSec * 5.2) * Math.Min(1.0, timeInBeatSec / 0.008) * fadeOut
             : 0.0;
 
         var primary = Math.Sin(_phasePrimary);

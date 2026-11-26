@@ -1,6 +1,7 @@
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Serilog;
 using SyncSound.Core.Models;
 
 namespace SyncSound.Audio.Output;
@@ -29,14 +30,22 @@ public interface IOutputBranchFactory
 
 public sealed class WasapiOutputBranchFactory : IOutputBranchFactory
 {
+    private readonly ILogger _logger;
+
+    public WasapiOutputBranchFactory(ILogger? logger = null)
+    {
+        _logger = logger ?? Log.Logger;
+    }
+
     public IOutputBranch CreateBranch(AudioDevice device, WaveFormat sourceFormat)
     {
-        return new WasapiOutputBranch(device, sourceFormat);
+        return new WasapiOutputBranch(device, sourceFormat, latencyMs: 40, logger: _logger);
     }
 }
 
 /// <summary>
-/// Independent WASAPI shared-mode output branch with its own ring buffer, resampler, and fault boundary.
+/// Independent WASAPI shared-mode output branch with its own ring buffer, resampler,
+/// multi-channel adaptation, and fault boundary.
 /// </summary>
 public sealed class WasapiOutputBranch : IOutputBranch
 {
@@ -44,14 +53,16 @@ public sealed class WasapiOutputBranch : IOutputBranch
     private readonly MMDevice? _mmDevice;
     private readonly WasapiPlayer? _player;
     private readonly BufferedWaveProvider? _buffer;
+    private readonly ILogger _logger;
     private readonly Lock _disposeGate = new();
     private volatile bool _disposed;
     private volatile bool _faulted;
 
-    public WasapiOutputBranch(AudioDevice device, WaveFormat sourceFormat, int latencyMs = 80)
+    public WasapiOutputBranch(AudioDevice device, WaveFormat sourceFormat, int latencyMs = 40, ILogger? logger = null)
     {
         DeviceId = device.Id;
         DeviceName = device.Name;
+        _logger = logger ?? Log.Logger;
 
         _enumerator = new MMDeviceEnumerator();
         try
@@ -66,7 +77,14 @@ public sealed class WasapiOutputBranch : IOutputBranch
             var mixFormat = audioClient.MixFormat;
             FormatSummary = $"{mixFormat.SampleRate} Hz, {mixFormat.Channels}ch, {mixFormat.BitsPerSample}-bit";
 
-            _buffer = new BufferedWaveProvider(sourceFormat, TimeSpan.FromMilliseconds(500))
+            _logger.Information(
+                "TestBranch Resolved Endpoint='{DeviceName}' Id='{DeviceId}' State={State} MixFormat='{MixFormat}'",
+                device.Name,
+                device.Id,
+                _mmDevice.State,
+                FormatSummary);
+
+            _buffer = new BufferedWaveProvider(sourceFormat, TimeSpan.FromMilliseconds(600))
             {
                 DiscardOnBufferOverflow = true,
                 ReadFully = true
@@ -82,6 +100,13 @@ public sealed class WasapiOutputBranch : IOutputBranch
             {
                 sampleChain = new MonoToStereoSampleProvider(sampleChain);
             }
+            else if (mixFormat.Channels > 2 && sourceFormat.Channels == 2)
+            {
+                var mux = new MultiplexingSampleProvider([sampleChain], mixFormat.Channels);
+                mux.ConnectInputToOutput(0, 0);
+                mux.ConnectInputToOutput(1, 1);
+                sampleChain = mux;
+            }
 
             if (sampleChain.WaveFormat.SampleRate != mixFormat.SampleRate)
             {
@@ -92,14 +117,17 @@ public sealed class WasapiOutputBranch : IOutputBranch
                 .WithDevice(_mmDevice)
                 .WithSharedMode()
                 .WithPollingSync()
-                .WithLatency(latencyMs)
+                .WithLatency(Math.Clamp(latencyMs, 20, 150))
                 .WithMmcssThreadPriority("Audio")
                 .Build();
             _player.PlaybackStopped += OnPlaybackStopped;
             _player.Init(new SampleToWaveProvider(sampleChain));
+
+            _logger.Information("TestBranch Initialized '{DeviceName}' ({FormatSummary}, Latency={LatencyMs}ms)", device.Name, FormatSummary, latencyMs);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.Error(ex, "TestBranch Failed initializing '{DeviceName}' ({DeviceId})", device.Name, device.Id);
             Dispose();
             throw;
         }
@@ -120,6 +148,7 @@ public sealed class WasapiOutputBranch : IOutputBranch
         }
 
         _player.Play();
+        _logger.Information("TestBranch Started '{DeviceName}' (PlaybackState={State})", DeviceName, _player.PlaybackState);
     }
 
     public void EnqueueFloatSamples(byte[] buffer, int byteCount)
@@ -135,6 +164,7 @@ public sealed class WasapiOutputBranch : IOutputBranch
         }
         catch (Exception ex)
         {
+            _logger.Warning(ex, "TestBranch Write failed on '{DeviceName}'", DeviceName);
             MarkFaulted(ex.Message);
         }
     }
@@ -203,6 +233,7 @@ public sealed class WasapiOutputBranch : IOutputBranch
 
         if (e.Exception is not null)
         {
+            _logger.Warning(e.Exception, "TestBranch PlaybackStopped fault on '{DeviceName}'", DeviceName);
             MarkFaulted(e.Exception.Message);
         }
     }

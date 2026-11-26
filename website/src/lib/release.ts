@@ -1,20 +1,20 @@
 export const RELEASE = {
-  version: "4.0.0",
-  tag: "v4.0.0",
+  version: "4.0.1",
+  tag: "v4.0.1",
   date: "November 26, 2026",
   architecture: "Windows 10 & 11 (x64)",
   githubUrl: "https://github.com/theraghavkrishna/SYNC-SOUND",
-  releaseUrl: "https://github.com/theraghavkrishna/SYNC-SOUND/releases/tag/v4.0.0",
+  releaseUrl: "https://github.com/theraghavkrishna/SYNC-SOUND/releases/tag/v4.0.1",
   exe: {
     filename: "SYNC-SOUND-x64.exe",
-    url: "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v4.0.0/SYNC-SOUND-x64.exe",
+    url: "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v4.0.1/SYNC-SOUND-x64.exe",
     sizeLabel: "168.5 MB",
-    sha256: "6D49DBBDF0D786FE77B925F5BF4CF0617A316FA65608C2D167442C185EFC1DC0",
+    sha256: "A97F1E725A777736B18C4D707AF763CDE5C4EEBE5B5679776CCB1669D9D3EEFD",
   },
   zip: {
     filename: "SYNC-SOUND-Portable-x64.zip",
-    url: "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v4.0.0/SYNC-SOUND-Portable-x64.zip",
+    url: "https://github.com/theraghavkrishna/SYNC-SOUND/releases/download/v4.0.1/SYNC-SOUND-Portable-x64.zip",
     sizeLabel: "67.4 MB",
-    sha256: "AFCDE6E8265281F6E3F829A3AE1383CAB1B2EFE6EA69A1F80E1A487DC4CE06BA",
+    sha256: "27E2A3F840E00D18C85E445E30CAB4A00BC69F9457416170761FE143085F9AED",
   },
 } as const;

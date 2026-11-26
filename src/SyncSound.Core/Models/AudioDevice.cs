@@ -89,7 +89,8 @@ public sealed class AudioDevice
                 var inner = Name[(openIdx + 1)..closeIdx].Trim();
                 if (prefix.Contains("Headphones", StringComparison.OrdinalIgnoreCase) ||
                     prefix.Contains("Headset", StringComparison.OrdinalIgnoreCase) ||
-                    prefix.Contains("Earphones", StringComparison.OrdinalIgnoreCase))
+                    prefix.Contains("Earphones", StringComparison.OrdinalIgnoreCase) ||
+                    (TransportKind == AudioTransportKind.UsbAudio && prefix.Contains("Speakers", StringComparison.OrdinalIgnoreCase)))
                 {
                     if (!string.IsNullOrWhiteSpace(inner) && !inner.StartsWith("2-", StringComparison.OrdinalIgnoreCase))
                     {

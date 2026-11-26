@@ -6,7 +6,7 @@ Share your Windows PC's audio across multiple supported headphones simultaneousl
 
 ---
 
-## Product Architecture (`v4.0`)
+## Product Architecture (`v4.0.1`)
 
 - **`src/`** — Native Windows Desktop Application (`C# / .NET 10 / WPF / MVVM / NAudio`)
   - `SyncSound.Core` — Domain models, `AudioDevice`, `AudioTransportKind`, `AppSettings`, notification & reduced-motion preferences

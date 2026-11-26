@@ -131,6 +131,24 @@ public sealed class HardwareCompatibilityMatrixTests
         }
     }
 
+    [Fact]
+    public void UsbTypeCDacNamedSpeakers_DisplaysCleanNameWithoutBlocking()
+    {
+        var usbDac = new AudioDevice
+        {
+            Id = "usb-ab13x",
+            Name = "Speakers (AB13X USB Audio)",
+            DeviceType = AudioDeviceType.Speakers,
+            TransportKind = AudioTransportKind.UsbAudio,
+            EndpointState = AudioEndpointState.Active,
+            IsDefault = true
+        };
+
+        Assert.Equal("AB13X USB Audio", usbDac.DisplayName);
+        Assert.False(usbDac.IsHandsFreeProfile);
+        Assert.True(usbDac.IsAvailable);
+    }
+
     private sealed class MatrixEnumerator(params AudioDevice[] devices) : IAudioDeviceEnumerator
     {
         public event EventHandler<AudioDeviceChangedEventArgs>? DeviceChanged;

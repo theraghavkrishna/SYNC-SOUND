@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using NAudio.Wave;
+using Serilog;
 using SyncSound.Audio.Generators;
 using SyncSound.Audio.Output;
 using SyncSound.Core.Interfaces;
@@ -8,7 +9,7 @@ using SyncSound.Core.Models;
 namespace SyncSound.Audio.Playback;
 
 /// <summary>
-/// Phase 0 multi-output test engine: generates a test signal and fans it out to
+/// Multi-output test engine: generates an audible test signal and fans it out to
 /// multiple independent WASAPI endpoints while isolating per-device failures.
 /// </summary>
 public sealed class MultiOutputTestEngine : IMultiOutputTestPlayer
@@ -19,6 +20,7 @@ public sealed class MultiOutputTestEngine : IMultiOutputTestPlayer
 
     private readonly IAudioDeviceEnumerator _deviceEnumerator;
     private readonly IOutputBranchFactory _branchFactory;
+    private readonly ILogger _logger;
     private readonly Lock _stateGate = new();
     private readonly List<IOutputBranch> _branches = [];
     private readonly List<OutputBranchStatus> _statuses = [];
@@ -28,10 +30,14 @@ public sealed class MultiOutputTestEngine : IMultiOutputTestPlayer
     private bool _isPlaying;
     private bool _disposed;
 
-    public MultiOutputTestEngine(IAudioDeviceEnumerator deviceEnumerator, IOutputBranchFactory? branchFactory = null)
+    public MultiOutputTestEngine(
+        IAudioDeviceEnumerator deviceEnumerator,
+        IOutputBranchFactory? branchFactory = null,
+        ILogger? logger = null)
     {
         _deviceEnumerator = deviceEnumerator ?? throw new ArgumentNullException(nameof(deviceEnumerator));
-        _branchFactory = branchFactory ?? new WasapiOutputBranchFactory();
+        _logger = logger ?? Log.Logger;
+        _branchFactory = branchFactory ?? new WasapiOutputBranchFactory(_logger);
         _deviceEnumerator.DeviceChanged += OnSystemDeviceChanged;
     }
 
@@ -128,14 +134,24 @@ public sealed class MultiOutputTestEngine : IMultiOutputTestPlayer
                 SummaryMessage: "We couldn't start audio on the selected devices.");
         }
 
-        var generator = new TestSignalSampleProvider(mode, SampleRate, Channels);
+        var generator = new TestSignalSampleProvider(mode, SampleRate, Channels, gain: 0.42f);
         var framesPerChunk = SampleRate * ChunkMs / 1000;
         var floatCount = framesPerChunk * Channels;
         var floatBuffer = new float[floatCount];
         var byteBuffer = new byte[floatCount * sizeof(float)];
+        var warmupZeroBytes = new byte[floatCount * sizeof(float)];
 
-        // Pre-fill 3 chunks (60 ms) before starting playback so branches launch aligned.
-        for (var prefill = 0; prefill < 3; prefill++)
+        // Pre-fill 120 ms warm-up silence (plus 40 ms signal) so wired USB-C DACs & Realtek amps wake
+        // cleanly before the first chime attack hits, avoiding 80ms WASAPI initial pull starvation.
+        for (var prefill = 0; prefill < 6; prefill++)
+        {
+            foreach (var branch in createdBranches)
+            {
+                branch.EnqueueFloatSamples(warmupZeroBytes, warmupZeroBytes.Length);
+            }
+        }
+
+        for (var prefill = 0; prefill < 2; prefill++)
         {
             FillChunk(generator, floatBuffer, byteBuffer, floatCount);
             foreach (var branch in createdBranches)
@@ -143,6 +159,12 @@ public sealed class MultiOutputTestEngine : IMultiOutputTestPlayer
                 branch.EnqueueFloatSamples(byteBuffer, byteBuffer.Length);
             }
         }
+
+        _logger.Information(
+            "Starting TestAudio ({Mode}) across {Count} branch(es): {Targets}",
+            mode,
+            createdBranches.Count,
+            string.Join(", ", createdBranches.Select(b => $"{b.DeviceName} [{b.FormatSummary}]")));
 
         foreach (var branch in createdBranches)
         {

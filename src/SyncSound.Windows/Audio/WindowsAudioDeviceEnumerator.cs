@@ -186,12 +186,13 @@ public sealed class WindowsAudioDeviceEnumerator : IAudioDeviceEnumerator
 
         var isUsb =
             enumeratorName.Equals("USB", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("USB", StringComparison.OrdinalIgnoreCase);
+            name.Contains("USB", StringComparison.OrdinalIgnoreCase) ||
+            infSection.Contains("IntcAudModel", StringComparison.OrdinalIgnoreCase);
 
-        var isOnboardCodec =
+        var isOnboardCodec = !isUsb && (
             enumeratorName.Equals("INTELAUDIO", StringComparison.OrdinalIgnoreCase) ||
             enumeratorName.Equals("HDAUDIO", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("Realtek", StringComparison.OrdinalIgnoreCase);
+            name.Contains("Realtek", StringComparison.OrdinalIgnoreCase));
 
         var transport = isBluetoothA2dp ? AudioTransportKind.BluetoothA2dp
             : isUsb ? AudioTransportKind.UsbAudio

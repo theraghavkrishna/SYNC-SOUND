@@ -446,6 +446,12 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             return;
         }
 
+        if (IsMuted)
+        {
+            TestSoundStatusText = "Session is muted — unmute to hear the test chime.";
+            return;
+        }
+
         IsTestingSound = true;
         TestSoundStatusText = "Playing chime on selected outputs…";
 
