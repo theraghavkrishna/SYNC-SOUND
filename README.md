@@ -2,44 +2,44 @@
 
 **One sound. Everyone listening.**
 
-Connect multiple Bluetooth, wired, and other audio devices to your Windows 11 PC and listen together—with a calm native desktop app, a built-in local music player, and an instant **`Ctrl + Shift + S`** Quick Sidebar.
+Share your Windows PC's audio across multiple supported headphones. Choose who's listening. Press play.
 
 ---
 
-## What's Inside This Repository
+## Product Architecture
 
-- **`src/`** — Windows 11 desktop application (`C# / .NET 10 / WPF / MVVM / NAudio 3.3.0`)
-  - `SyncSound.Core` — Domain models, state machine, interfaces
-  - `SyncSound.Audio` — Reusable multi-output `AudioEngine`, `WasapiLoopbackAudioSource`, `LocalAudioFileSource`, `DelayLineSampleProvider`
-  - `SyncSound.Windows` — Core Audio endpoint discovery, JSON settings, Win32 global hotkeys, tray icon, startup registration, single-instance guard
-  - `SyncSound.App` — Main WPF app (`Home`, `Devices`, `Player`, `Settings`) + floating Quick Sidebar
+- **`src/`** — Native Windows Desktop Application (`C# / .NET 10 / WPF / MVVM / NAudio 3.3.0`)
+  - `SyncSound.Core` — Domain models, `AudioDevice`, `AppSettings` (`AppThemeMode`, per-device & session volume), state interfaces
+  - `SyncSound.Audio` — Multi-output WASAPI loopback capture & fan-out (`AudioEngine`, `WasapiLoopbackAudioSource`, drift-protected `WasapiAudioOutput`, `DelayLineSampleProvider`)
+  - `SyncSound.Windows` — Core Audio endpoint discovery, PnP Bluetooth battery queries (`BluetoothBatteryReader`), JSON persistence, Win32 global hotkeys, tray icon, single-instance guard
+  - `SyncSound.App` — Per-Monitor DPI v2 aware UI (`Listen`, `Headphones`, `Preferences` + `QuickSidebarWindow`) in Warm Cream (`#F4EFE6`), Black (`#191817`), and Burnt Orange (`#C65D32`) with Light, Dark, and System themes
   - `SyncSound.Tests` — Automated xUnit tests
-- **`website/`** — Standalone Vercel-ready Next.js landing page (`Root Directory: website`)
+- **`website/`** — Next.js landing page sharing the exact SYNC SOUND visual design system (`Root Directory: website`)
 
 ---
 
-## Features
+## Key Features
 
-- **System Audio Sharing:** Captures your Windows default output via WASAPI loopback and fans it out to selected additional headphones while letting the default output continue playing normally (no feedback loops).
-- **Quick Sidebar (`Ctrl + Shift + S`):** Floating compact companion accessible from any app, with Escape/click-outside dismissal and Windows system tray integration.
-- **Built-in Music Player:** Drag-and-drop MP3, WAV, FLAC, M4A, AAC, and WMA tracks with embedded album artwork, metadata, seek bar, queue, and simultaneous multi-headphone output.
-- **Fault Isolation & Recovery:** If one Bluetooth pair disconnects mid-session, healthy headphones keep listening and reconnect automatically when back online.
-- **Local & Private:** No account, no cloud, no telemetry. Settings and logs stay on your device under `%LocalAppData%\SyncSound`.
+- **Connect → Choose → Listen:** Discover Bluetooth and wired headphones paired with Windows, pick your listening group, and share system audio seamlessly.
+- **Tactile Volume & Compatibility Guard:** Precision **Sync Dial** session volume + per-headphone rotary dials, real Bluetooth battery indicators where exposed by Windows, and speaker/headphone mutual-exclusivity protection to prevent echo.
+- **Quick Sidebar (`Ctrl + Shift + S`):** Draggable floating control instrument with remembered screen position, always-on-top support, and instant Start/Stop listening.
+- **Fault Isolation & Auto-Recovery:** If a headphone disconnects out of range, healthy headphones stay active and reconnect automatically when back online.
+- **Light, Dark & System Modes:** Instant, persistent theme switching across the app and Quick Sidebar.
 
 ---
 
-## Build & Run Locally
+## Build, Test & Publish
 
-### Desktop App (Windows 11, .NET 10 SDK)
+### Desktop App (Windows 10/11, .NET 10 SDK)
 
 ```powershell
 dotnet restore SyncSound.sln
 dotnet build SyncSound.sln -c Release
-dotnet test SyncSound.sln
+dotnet test SyncSound.sln -c Release
 dotnet run --project src/SyncSound.App/SyncSound.App.csproj
 ```
 
-Publish self-contained portable x64 build:
+Publish self-contained single-file x64 release:
 
 ```powershell
 dotnet publish src/SyncSound.App/SyncSound.App.csproj -c Release -r win-x64 --self-contained true -o publish/app
@@ -53,4 +53,4 @@ npm install
 npm run build
 ```
 
-Deploy to **Vercel** by importing the GitHub repository (`theraghavkrishna/SYNC-SOUND`) and setting **Root Directory** to `website`.
+Deploy to **Vercel** from `theraghavkrishna/SYNC-SOUND` with **Root Directory** set to `website`.

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const serif = Instrument_Serif({
@@ -9,7 +9,7 @@ const serif = Instrument_Serif({
   variable: "--font-serif",
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const manrope = Manrope({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-body",
@@ -24,7 +24,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "SYNC SOUND — One sound. Everyone listening.",
   description:
-    "Windows only plays to one pair of headphones. SYNC SOUND plays to everyone. Per-headphone rotary volume, Ctrl+Shift+S Quick Sidebar, zero clutter.",
+    "Share your Windows PC's audio across multiple supported headphones. Choose who's listening. Press play.",
   icons: {
     icon: "/app-icon.png",
   },
@@ -38,9 +38,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${serif.variable} ${jakarta.variable} ${jetbrains.variable}`}
+      className={`${serif.variable} ${manrope.variable} ${jetbrains.variable}`}
     >
-      <body className="bg-[#F7F4ED] text-[#141417] antialiased selection:bg-[#E85D3F]/20 selection:text-[#141417]">
+      <body className="bg-[#F4EFE6] text-[#191817] antialiased selection:bg-[#C65D32]/20 selection:text-[#191817]">
         {children}
       </body>
     </html>

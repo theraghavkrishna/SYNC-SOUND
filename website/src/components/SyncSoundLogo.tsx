@@ -5,8 +5,7 @@ interface SyncSoundLogoProps {
 }
 
 /**
- * Pure 8K-crisp vector squircle logo matching the SYNC SOUND hardware aesthetic.
- * Renders at infinite resolution with zero pixelation on any display.
+ * Crisp vector squircle mark matching the SYNC SOUND desktop application lockup.
  */
 export default function SyncSoundLogo({
   className = "w-8 h-8",
@@ -28,8 +27,8 @@ export default function SyncSoundLogo({
           y2="64"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#242429" />
-          <stop offset="100%" stopColor="#111114" />
+          <stop offset="0%" stopColor="#262422" />
+          <stop offset="100%" stopColor="#161514" />
         </linearGradient>
         <linearGradient
           id="syncOrangeBar"
@@ -39,12 +38,11 @@ export default function SyncSoundLogo({
           y2="50"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0%" stopColor="#F06E51" />
-          <stop offset="100%" stopColor="#D94B2D" />
+          <stop offset="0%" stopColor="#D56A3E" />
+          <stop offset="100%" stopColor="#C65D32" />
         </linearGradient>
       </defs>
 
-      {/* Tactile Dark Squircle Base */}
       <rect
         x="1"
         y="1"
@@ -52,14 +50,13 @@ export default function SyncSoundLogo({
         height="62"
         rx="16"
         fill="url(#syncSquircleBg)"
-        stroke="rgba(255,255,255,0.16)"
+        stroke="rgba(244,239,230,0.16)"
         strokeWidth="1.5"
       />
 
-      {/* 5 Crisp Equalizer Bars */}
       <rect x="14.5" y="25" width="4.5" height="14" rx="2.25" fill="url(#syncOrangeBar)" />
       <rect x="22" y="19" width="4.5" height="26" rx="2.25" fill="url(#syncOrangeBar)" />
-      <rect x="29.75" y="13" width="4.5" height="38" rx="2.25" fill="#F7F4ED" />
+      <rect x="29.75" y="13" width="4.5" height="38" rx="2.25" fill="#F4EFE6" />
       <rect x="37.5" y="19" width="4.5" height="26" rx="2.25" fill="url(#syncOrangeBar)" />
       <rect x="45" y="25" width="4.5" height="14" rx="2.25" fill="url(#syncOrangeBar)" />
     </svg>

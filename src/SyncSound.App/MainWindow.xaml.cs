@@ -34,6 +34,21 @@ public partial class MainWindow : Window
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Fit comfortably inside the monitor work area across 100%-200% Windows scaling
+        var area = SystemParameters.WorkArea;
+        if (Width > area.Width - 20)
+        {
+            Width = Math.Max(MinWidth, area.Width - 20);
+        }
+
+        if (Height > area.Height - 20)
+        {
+            Height = Math.Max(MinHeight, area.Height - 20);
+        }
+
+        Left = area.Left + Math.Max(0, (area.Width - Width) / 2);
+        Top = area.Top + Math.Max(0, (area.Height - Height) / 2);
+
         if (SystemParameters.ClientAreaAnimation)
         {
             Opacity = 0;

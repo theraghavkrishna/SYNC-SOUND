@@ -120,10 +120,17 @@ public partial class App : Application
         _sidebarWindow.DataContext = mainVm.QuickSidebarViewModel;
 
         mainVm.OpenSidebarRequested += (_, _) => ToggleSidebar();
+        mainVm.SettingsViewModel.OpenSidebarPreviewRequested += (_, _) => ToggleSidebar();
         mainVm.QuickSidebarViewModel.MasterVolumeSynced += (_, _) => mainVm.SyncMasterVolumeFromSettings();
         mainVm.QuickSidebarViewModel.OpenMainAppRequested += (_, _) =>
         {
             _sidebarWindow.HideAnimated();
+            ShowMainWindow();
+        };
+        mainVm.QuickSidebarViewModel.OpenPreferencesRequested += (_, _) =>
+        {
+            _sidebarWindow.HideAnimated();
+            mainVm.CurrentSection = AppSection.Settings;
             ShowMainWindow();
         };
         mainVm.QuickSidebarViewModel.CloseRequested += (_, _) => _sidebarWindow.HideAnimated();

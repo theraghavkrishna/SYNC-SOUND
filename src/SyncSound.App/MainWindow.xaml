@@ -6,16 +6,16 @@
         xmlns:vm="clr-namespace:SyncSound.App.ViewModels"
         Title="SYNC SOUND"
         Icon="Assets/SyncSound.ico"
-        Width="1140"
-        Height="760"
-        MinWidth="920"
-        MinHeight="640"
+        Width="1040"
+        Height="660"
+        MinWidth="840"
+        MinHeight="560"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
         WindowStartupLocation="CenterScreen">
     <shell:WindowChrome.WindowChrome>
-        <shell:WindowChrome CaptionHeight="46"
+        <shell:WindowChrome CaptionHeight="44"
                             CornerRadius="22"
                             GlassFrameThickness="0"
                             ResizeBorderThickness="6"
@@ -39,7 +39,6 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource Brush.Ink.Secondary}" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="12.5" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
             <Setter Property="Template">
@@ -78,7 +77,7 @@
         </Style>
     </Window.Resources>
 
-    <Border Margin="10"
+    <Border Margin="8"
             CornerRadius="22"
             Background="{DynamicResource Brush.Canvas.Primary}"
             BorderBrush="{DynamicResource Brush.Border.Hairline}"
@@ -87,7 +86,7 @@
             Effect="{DynamicResource Shadow.Window}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="238" />
+                <ColumnDefinition Width="216" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -96,37 +95,37 @@
                     Background="{DynamicResource Brush.Surface.Rail}"
                     BorderBrush="{DynamicResource Brush.Border.Hairline}"
                     BorderThickness="0,0,1,0"
-                    Padding="18,24,18,20">
+                    Padding="16,22,16,18">
                 <DockPanel>
                     <!-- Crisp Vector Logo Lockup -->
-                    <StackPanel DockPanel.Dock="Top" Margin="4,4,0,28">
+                    <StackPanel DockPanel.Dock="Top" Margin="4,4,0,26">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Border Width="34"
-                                    Height="34"
-                                    CornerRadius="10"
+                            <Border Width="32"
+                                    Height="32"
+                                    CornerRadius="9"
                                     Background="{DynamicResource Brush.Surface.SignatureCard}"
                                     BorderBrush="#2CF4EFE6"
                                     BorderThickness="1"
-                                    Margin="0,0,11,0">
+                                    Margin="0,0,10,0">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Border Width="2.5" Height="8" CornerRadius="1.25" Background="{DynamicResource Brush.Accent.Primary}" Margin="1.1,0" />
-                                    <Border Width="2.5" Height="14" CornerRadius="1.25" Background="{DynamicResource Brush.Accent.Hover}" Margin="1.1,0" />
-                                    <Border Width="2.5" Height="19" CornerRadius="1.25" Background="#F4EFE6" Margin="1.1,0" />
-                                    <Border Width="2.5" Height="14" CornerRadius="1.25" Background="{DynamicResource Brush.Accent.Hover}" Margin="1.1,0" />
-                                    <Border Width="2.5" Height="8" CornerRadius="1.25" Background="{DynamicResource Brush.Accent.Primary}" Margin="1.1,0" />
+                                    <Border Width="2.2" Height="7" CornerRadius="1.1" Background="{DynamicResource Brush.Accent.Primary}" Margin="1,0" />
+                                    <Border Width="2.2" Height="13" CornerRadius="1.1" Background="{DynamicResource Brush.Accent.Hover}" Margin="1,0" />
+                                    <Border Width="2.2" Height="18" CornerRadius="1.1" Background="#F4EFE6" Margin="1,0" />
+                                    <Border Width="2.2" Height="13" CornerRadius="1.1" Background="{DynamicResource Brush.Accent.Hover}" Margin="1,0" />
+                                    <Border Width="2.2" Height="7" CornerRadius="1.1" Background="{DynamicResource Brush.Accent.Primary}" Margin="1,0" />
                                 </StackPanel>
                             </Border>
 
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="SYNC SOUND"
                                            FontFamily="{StaticResource Font.Display}"
-                                           FontSize="15.5"
+                                           FontSize="14.5"
                                            FontWeight="Bold"
                                            Foreground="{DynamicResource Brush.Ink.Primary}" />
                                 <TextBlock Text="Everyone listening."
                                            FontFamily="{StaticResource Font.Editorial}"
                                            FontStyle="Italic"
-                                           FontSize="11"
+                                           FontSize="10.5"
                                            Foreground="{DynamicResource Brush.Ink.Secondary}"
                                            Margin="0,1,0,0" />
                             </StackPanel>
@@ -136,11 +135,11 @@
                     <!-- Footer Connection Summary -->
                     <Border DockPanel.Dock="Bottom"
                             Style="{StaticResource SurfaceCardStyle}"
-                            CornerRadius="16"
-                            Padding="13,11">
+                            CornerRadius="14"
+                            Padding="12,10">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Ellipse Width="8" Height="8" VerticalAlignment="Center" Margin="0,0,8,0">
+                                <Ellipse Width="7.5" Height="7.5" VerticalAlignment="Center" Margin="0,0,8,0">
                                     <Ellipse.Style>
                                         <Style TargetType="Ellipse">
                                             <Setter Property="Fill" Value="{DynamicResource Brush.Ink.Muted}" />
@@ -163,11 +162,11 @@
                             <TextBlock Text="{Binding SelectedCountText}"
                                        FontSize="11.5"
                                        Foreground="{DynamicResource Brush.Ink.Muted}"
-                                       Margin="16,2,0,0" />
+                                       Margin="15,2,0,0" />
                         </StackPanel>
                     </Border>
 
-                    <!-- Primary 3 Destinations: 01. Listen, 02. Headphones, 03. Preferences -->
+                    <!-- Primary 3 Destinations -->
                     <StackPanel Margin="0,4,0,0">
                         <RadioButton Style="{StaticResource RailNavRadioStyle}"
                                      GroupName="MainNav"
@@ -181,7 +180,7 @@
                                       Width="16"
                                       Height="16"
                                       Stretch="Uniform"
-                                      Margin="0,0,11,0" />
+                                      Margin="0,0,10,0" />
                                 <TextBlock Text="Listen" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
@@ -198,7 +197,7 @@
                                       Width="16"
                                       Height="16"
                                       Stretch="Uniform"
-                                      Margin="0,0,11,0" />
+                                      Margin="0,0,10,0" />
                                 <TextBlock Text="Headphones" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
@@ -215,7 +214,7 @@
                                       Width="16"
                                       Height="16"
                                       Stretch="Uniform"
-                                      Margin="0,0,11,0" />
+                                      Margin="0,0,10,0" />
                                 <TextBlock Text="Preferences" VerticalAlignment="Center" />
                             </StackPanel>
                         </RadioButton>
@@ -223,29 +222,40 @@
                 </DockPanel>
             </Border>
 
-            <!-- Active View Host with Custom Caption Bar + Warm Ambient Glow -->
+            <!-- Active View Host with Crisp Vector Window Controls -->
             <Grid Grid.Column="1" Background="{DynamicResource Brush.Canvas.Primary}">
                 <Rectangle Fill="{DynamicResource Brush.Canvas.AmbientGlow}" IsHitTestVisible="False" />
 
-                <!-- Custom Window Controls -->
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
                             Margin="0,12,14,0"
                             Panel.ZIndex="10">
                     <Button Style="{StaticResource CaptionButtonStyle}"
-                            Content="─"
                             ToolTip="Minimize"
-                            Click="OnMinimizeClick" />
+                            Click="OnMinimizeClick">
+                        <Path Data="{StaticResource Icon.WinMinimize}"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                              StrokeThickness="1.4"
+                              Width="10" Height="10" Stretch="Uniform" />
+                    </Button>
                     <Button Style="{StaticResource CaptionButtonStyle}"
-                            Content="□"
                             ToolTip="Maximize / Restore"
                             Click="OnMaximizeClick"
-                            Margin="3,0" />
+                            Margin="3,0">
+                        <Path Data="{StaticResource Icon.WinMaximize}"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                              StrokeThickness="1.4"
+                              Width="10" Height="10" Stretch="Uniform" />
+                    </Button>
                     <Button Style="{StaticResource CloseCaptionButtonStyle}"
-                            Content="✕"
                             ToolTip="Close"
-                            Click="OnCloseClick" />
+                            Click="OnCloseClick">
+                        <Path Data="{StaticResource Icon.WinClose}"
+                              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                              StrokeThickness="1.5"
+                              Width="10" Height="10" Stretch="Uniform" />
+                    </Button>
                 </StackPanel>
 
                 <views:HomeView Visibility="{Binding IsHomeSelected, Converter={StaticResource BoolToVisibilityConverter}}" />

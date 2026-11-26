@@ -1,18 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --bg-cream: #f7f4ed;
-  --bg-cream-rail: #efece3;
-  --ink-black: #141417;
-  --ink-secondary: #52525b;
-  --ink-muted: #84848e;
-  --accent-orange: #e85d3f;
+  --bg-cream: #F4EFE6;
+  --bg-cream-rail: #EDE7DC;
+  --bg-porcelain: #FCFBF8;
+  --ink-black: #191817;
+  --ink-secondary: #595550;
+  --ink-muted: #878179;
+  --accent-orange: #C65D32;
+  --accent-orange-hover: #D56A3E;
+  --border-warm: #DFD8CA;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: var(--font-body), system-ui, sans-serif;
+    font-family: var(--font-body), "Segoe UI Variable Text", system-ui, sans-serif;
     background-color: var(--bg-cream);
     color: var(--ink-black);
   }
@@ -24,78 +27,69 @@
 
 .font-mono-tech {
   font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Tactile Warm Cream Hardware Card */
+.tabular-nums-tech {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tactile Warm Cream Hardware Surface */
 .cream-card {
-  background: linear-gradient(180deg, #ffffff 0%, #faf8f2 100%);
-  border: 1px solid #e4dfd3;
+  background: linear-gradient(180deg, #FCFBF8 0%, #F6F2EA 100%);
+  border: 1px solid #DFD8CA;
   box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 20px 50px -18px rgba(20, 20, 23, 0.12);
+    inset 0 1px 0 #FFFFFF,
+    0 20px 46px -18px rgba(25, 24, 23, 0.11);
 }
 
-.cream-card-active {
-  background: linear-gradient(180deg, #ffffff 0%, #fdf6f3 100%);
-  border: 1.5px solid rgba(232, 93, 63, 0.55);
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 18px 42px -14px rgba(232, 93, 63, 0.18);
-}
-
-/* Dark Hardware Accent Surface */
+/* Signature Black Hardware Surface */
 .ink-card {
-  background: linear-gradient(180deg, #1f1f24 0%, #111114 100%);
-  border: 1px solid #2e2e36;
+  background: linear-gradient(180deg, #23211F 0%, #161514 100%);
+  border: 1px solid #34302C;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 28px 64px -18px rgba(20, 20, 23, 0.45);
+    inset 0 1px 0 rgba(244, 239, 230, 0.08),
+    0 28px 64px -18px rgba(25, 24, 23, 0.42);
 }
 
-/* Subtle Warm Paper Texture */
-.paper-grain {
-  background-image: radial-gradient(rgba(20, 20, 23, 0.04) 1px, transparent 0);
-  background-size: 22px 22px;
+/* Shared SYNC SOUND Motion Grammar: BREATHE · SIGNAL · FLOW · SETTLE · MORPH */
+@keyframes sync-breathe {
+  0%, 100% { transform: scale(0.96); }
+  50% { transform: scale(1.04); }
 }
 
-@keyframes orbit-cw {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes sync-signal {
+  0% { transform: scale(0.82); opacity: 0.72; }
+  100% { transform: scale(1.36); opacity: 0; }
 }
 
-@keyframes orbit-ccw {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+@keyframes sync-eq {
+  0%, 100% { transform: scaleY(0.55); }
+  50% { transform: scaleY(1.28); }
 }
 
-@keyframes sonar-pulse {
-  0% { transform: scale(0.76); opacity: 0.72; }
-  100% { transform: scale(1.48); opacity: 0; }
+.animate-sync-breathe {
+  animation: sync-breathe 3.2s ease-in-out infinite;
 }
 
-@keyframes eq-dance {
-  0%, 100% { transform: scaleY(0.45); }
-  50% { transform: scaleY(1.25); }
+.animate-sync-signal {
+  animation: sync-signal 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
-.animate-orbit-cw { animation: orbit-cw 24s linear infinite; }
-.animate-orbit-ccw { animation: orbit-ccw 15s linear infinite; }
-.animate-sonar { animation: sonar-pulse 1.9s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
-.animate-eq-1 { animation: eq-dance 0.65s ease-in-out infinite; }
-.animate-eq-2 { animation: eq-dance 0.52s ease-in-out 0.1s infinite; }
-.animate-eq-3 { animation: eq-dance 0.48s ease-in-out 0.2s infinite; }
-.animate-eq-4 { animation: eq-dance 0.58s ease-in-out 0.15s infinite; }
-.animate-eq-5 { animation: eq-dance 0.7s ease-in-out 0.05s infinite; }
+.animate-sync-eq-1 { animation: sync-eq 0.70s ease-in-out infinite; }
+.animate-sync-eq-2 { animation: sync-eq 0.56s ease-in-out 0.10s infinite; }
+.animate-sync-eq-3 { animation: sync-eq 0.50s ease-in-out 0.18s infinite; }
+.animate-sync-eq-4 { animation: sync-eq 0.60s ease-in-out 0.12s infinite; }
+.animate-sync-eq-5 { animation: sync-eq 0.74s ease-in-out 0.04s infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-orbit-cw,
-  .animate-orbit-ccw,
-  .animate-sonar,
-  .animate-eq-1,
-  .animate-eq-2,
-  .animate-eq-3,
-  .animate-eq-4,
-  .animate-eq-5 {
+  .animate-sync-breathe,
+  .animate-sync-signal,
+  .animate-sync-eq-1,
+  .animate-sync-eq-2,
+  .animate-sync-eq-3,
+  .animate-sync-eq-4,
+  .animate-sync-eq-5 {
     animation: none !important;
   }
 }

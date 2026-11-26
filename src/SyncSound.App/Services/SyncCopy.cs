@@ -9,29 +9,31 @@ public enum SyncVisualState
     Ready,
     Starting,
     Listening,
+    Muted,
     Disconnected,
     Recovering
 }
 
 /// <summary>
-/// Centralized, state-aware editorial copy system for SYNC SOUND.
-/// Keeps technical diagnostics out of the emotional center of the product.
+/// Centralized, truthful, state-aware copywriting system for SYNC SOUND.
+/// Uses accurate device selection & engine status so copy never misrepresents state.
 /// </summary>
 public static class SyncCopy
 {
     public static (SyncVisualState State, string Headline, string AccentLine, string Subtitle, string PrimaryAction) GetListenCopy(
-        int totalCount,
-        int selectedCount,
+        IReadOnlyList<AudioDevice> allDevices,
+        IReadOnlyList<AudioDevice> selectedDevices,
         SharingState sharing,
-        AudioDevice? defaultSource)
+        AudioDevice? defaultSource,
+        bool isMuted)
     {
-        if (totalCount == 0)
+        if (allDevices.Count == 0)
         {
             return (
                 SyncVisualState.NoAdditionalHeadphones,
                 "Let's get everyone connected.",
-                "Your listening group starts here.",
-                "Connect headphones or speakers to Windows and they'll appear automatically.",
+                "Nothing connected yet.",
+                "Connect your headphones to Windows, then bring them here.",
                 "Add headphones"
             );
         }
@@ -42,54 +44,80 @@ public static class SyncCopy
             {
                 return (
                     SyncVisualState.Recovering,
-                    "One headphone disconnected.",
-                    "Getting everyone back together…",
+                    "One went quiet.",
+                    "Bringing everyone back.",
                     $"{sharing.ActiveOutputs.Count} still listening while we reconnect.",
                     "Stop listening"
                 );
             }
 
-            var listeners = sharing.ActiveOutputs.Count + (sharing.SourceDevice is not null ? 1 : 0);
+            if (isMuted)
+            {
+                return (
+                    SyncVisualState.Muted,
+                    "Session muted.",
+                    "Everyone's on pause.",
+                    "Raise the dial or tap Unmute whenever you're ready.",
+                    "Stop listening"
+                );
+            }
+
+            var totalListeners = sharing.ActiveOutputs.Count + (sharing.SourceDevice is not null ? 1 : 0);
             return (
                 SyncVisualState.Listening,
                 "You're all listening.",
                 "Everyone's in.",
-                $"{listeners} {(listeners == 1 ? "device" : "devices")} sharing your Windows sound.",
+                $"{totalListeners} {(totalListeners == 1 ? "device" : "devices")} sharing your sound.",
                 "Stop listening"
             );
         }
 
-        if (totalCount == 1)
+        var headphoneTargets = selectedDevices.Where(d => !d.IsSpeakerDevice).ToList();
+        var onlySpeakerSelected = selectedDevices.Count > 0 && headphoneTargets.Count == 0;
+        var hasSecondaryFanout = defaultSource is not null
+            ? selectedDevices.Any(d => !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
+            : selectedDevices.Count >= 2;
+
+        if (allDevices.Count == 1)
         {
             return (
                 SyncVisualState.OneDeviceConnected,
-                "One headphone connected.",
-                "Add another to listen together.",
-                "Pair a second pair in Windows, then choose who joins.",
+                "One's ready.",
+                "Add another headphone.",
+                "Connect a second pair in Windows to listen together.",
                 "Add headphones"
             );
         }
 
-        if (selectedCount == 0)
+        if (onlySpeakerSelected)
         {
             return (
                 SyncVisualState.OneDeviceConnected,
-                "Choose who joins the sound.",
-                "Pick your listening group.",
-                $"{totalCount} audio devices connected. Select who hears.",
+                "Playing on speakers.",
+                "Choose headphones to share.",
+                "Select your Bluetooth or wired headphones below to listen together.",
                 "Choose headphones"
             );
         }
 
-        if (defaultSource is not null && selectedCount == 1 &&
-            sharing.SelectedDevices.Count == 1 &&
-            string.Equals(sharing.SelectedDevices[0].Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
+        if (selectedDevices.Count == 0)
         {
             return (
                 SyncVisualState.OneDeviceConnected,
-                "One headphone ready.",
-                "Add another to listen together.",
-                $"{defaultSource.Name} is already playing. Select one more to share.",
+                "Choose who's listening.",
+                "Listen together.",
+                $"{allDevices.Count} devices available. Pick who joins your session.",
+                "Choose headphones"
+            );
+        }
+
+        if (!hasSecondaryFanout)
+        {
+            return (
+                SyncVisualState.OneDeviceConnected,
+                "One's ready.",
+                "Add another headphone.",
+                $"{selectedDevices[0].DisplayName} is your default audio. Select one more device to listen together.",
                 "Choose headphones"
             );
         }
@@ -97,8 +125,8 @@ public static class SyncCopy
         return (
             SyncVisualState.Ready,
             "Everyone's here.",
-            "Your headphones are ready.",
-            $"{selectedCount} {(selectedCount == 1 ? "device" : "devices")} selected. Press Start listening whenever you're ready.",
+            "Listen together.",
+            $"{selectedDevices.Count} {(selectedDevices.Count == 1 ? "device" : "devices")} in your group. Press Start listening to play.",
             "Start listening"
         );
     }

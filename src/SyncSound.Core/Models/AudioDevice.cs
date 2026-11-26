@@ -47,4 +47,45 @@ public sealed class AudioDevice
 
     public bool IsAvailable => EndpointState == AudioEndpointState.Active;
     public bool IsHandsFreeProfile => DeviceType == AudioDeviceType.HeadsetHandsFree;
+    public bool IsSpeakerDevice => DeviceType == AudioDeviceType.Speakers;
+
+    /// <summary>
+    /// Extracts a clean consumer-friendly name (e.g. "Headphones (OnePlus Nord Buds 3 Pro)" -> "OnePlus Nord Buds 3 Pro").
+    /// Preserves the raw Windows name on <see cref="Name"/> for tooltips and diagnostics.
+    /// </summary>
+    public string DisplayName
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                return "Audio Device";
+            }
+
+            if (DeviceType == AudioDeviceType.Speakers &&
+                Name.Contains("Realtek", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Laptop Speakers";
+            }
+
+            var openIdx = Name.IndexOf('(');
+            var closeIdx = Name.LastIndexOf(')');
+            if (openIdx > 0 && closeIdx > openIdx + 1)
+            {
+                var prefix = Name[..openIdx].Trim();
+                var inner = Name[(openIdx + 1)..closeIdx].Trim();
+                if (prefix.Contains("Headphones", StringComparison.OrdinalIgnoreCase) ||
+                    prefix.Contains("Headset", StringComparison.OrdinalIgnoreCase) ||
+                    prefix.Contains("Speakers", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!string.IsNullOrWhiteSpace(inner) && !inner.StartsWith("2-", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return inner;
+                    }
+                }
+            }
+
+            return Name;
+        }
+    }
 }

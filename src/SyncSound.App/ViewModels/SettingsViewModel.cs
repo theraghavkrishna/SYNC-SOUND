@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using SyncSound.App.Services;
@@ -9,6 +10,15 @@ using SyncSound.Windows.Hotkeys;
 using SyncSound.Windows.Startup;
 
 namespace SyncSound.App.ViewModels;
+
+public enum PreferencesCategory
+{
+    Appearance = 0,
+    QuickAccess,
+    Listening,
+    Windows,
+    About
+}
 
 public sealed class SettingsViewModel : ViewModelBase, IDisposable
 {
@@ -30,6 +40,7 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
     private bool _sidebarClickOutsideToClose;
     private bool _autoSelectPreferredDevices;
     private bool _diagnosticsExpanded;
+    private PreferencesCategory _selectedCategory = PreferencesCategory.Appearance;
 
     public SettingsViewModel(
         ISettingsService settingsService,
@@ -60,9 +71,21 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         ApplyShortcutCommand = new RelayCommand(ApplyShortcut);
         OpenLogsFolderCommand = new RelayCommand(() => _windowsLauncher.OpenLogsFolder());
         OpenSoundSettingsCommand = new RelayCommand(() => _windowsLauncher.OpenSoundSettings());
+        OpenSidebarPreviewCommand = new RelayCommand(() => OpenSidebarPreviewRequested?.Invoke(this, EventArgs.Empty));
+        OpenGitHubCommand = new RelayCommand(() =>
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo("https://github.com/theraghavkrishna/SYNC-SOUND") { UseShellExecute = true });
+            }
+            catch
+            {
+                // Ignore shell launch errors.
+            }
+        });
         SelectThemeCommand = new RelayCommand(p =>
         {
-            if (p is string s && Enum.TryParse<AppThemeMode>(s, true, out var mode))
+            if (p is string str && Enum.TryParse<AppThemeMode>(str, true, out var mode))
             {
                 ThemeMode = mode;
             }
@@ -83,7 +106,57 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
     public RelayCommand ApplyShortcutCommand { get; }
     public RelayCommand OpenLogsFolderCommand { get; }
     public RelayCommand OpenSoundSettingsCommand { get; }
+    public RelayCommand OpenSidebarPreviewCommand { get; }
+    public RelayCommand OpenGitHubCommand { get; }
     public RelayCommand SelectThemeCommand { get; }
+
+    public event EventHandler? OpenSidebarPreviewRequested;
+
+    public PreferencesCategory SelectedCategory
+    {
+        get => _selectedCategory;
+        set
+        {
+            if (SetProperty(ref _selectedCategory, value))
+            {
+                OnPropertyChanged(nameof(IsAppearanceCategory));
+                OnPropertyChanged(nameof(IsQuickAccessCategory));
+                OnPropertyChanged(nameof(IsListeningCategory));
+                OnPropertyChanged(nameof(IsWindowsCategory));
+                OnPropertyChanged(nameof(IsAboutCategory));
+            }
+        }
+    }
+
+    public bool IsAppearanceCategory
+    {
+        get => _selectedCategory == PreferencesCategory.Appearance;
+        set { if (value) SelectedCategory = PreferencesCategory.Appearance; }
+    }
+
+    public bool IsQuickAccessCategory
+    {
+        get => _selectedCategory == PreferencesCategory.QuickAccess;
+        set { if (value) SelectedCategory = PreferencesCategory.QuickAccess; }
+    }
+
+    public bool IsListeningCategory
+    {
+        get => _selectedCategory == PreferencesCategory.Listening;
+        set { if (value) SelectedCategory = PreferencesCategory.Listening; }
+    }
+
+    public bool IsWindowsCategory
+    {
+        get => _selectedCategory == PreferencesCategory.Windows;
+        set { if (value) SelectedCategory = PreferencesCategory.Windows; }
+    }
+
+    public bool IsAboutCategory
+    {
+        get => _selectedCategory == PreferencesCategory.About;
+        set { if (value) SelectedCategory = PreferencesCategory.About; }
+    }
 
     public AppThemeMode ThemeMode
     {

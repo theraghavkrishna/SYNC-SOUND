@@ -254,6 +254,32 @@ public sealed class WasapiAudioOutput : IAudioOutput
                 Interlocked.Increment(ref _underrunCount);
             }
 
+            // Gentle clock-drift protection: if a Bluetooth endpoint accumulates excessive queued audio (> 260 ms),
+            // trim oldest excess frames to keep multi-headphone sessions tightly aligned without pitch artifacts.
+            if (_buffer.BufferedDuration.TotalMilliseconds > 260 && _state == AudioOutputState.Playing)
+            {
+                var bytesPerSecond = _buffer.WaveFormat.AverageBytesPerSecond;
+                var targetBytesToKeep = (int)(bytesPerSecond * 0.09); // ~90 ms steady-state cushion
+                var excessBytes = _buffer.BufferedBytes - targetBytesToKeep;
+                var blockAlign = Math.Max(4, _buffer.WaveFormat.BlockAlign);
+                excessBytes = (excessBytes / blockAlign) * blockAlign;
+                if (excessBytes > 0)
+                {
+                    var discard = new byte[Math.Min(excessBytes, 32768)];
+                    var remaining = excessBytes;
+                    while (remaining > 0)
+                    {
+                        var read = _buffer.Read(discard.AsSpan(0, Math.Min(remaining, discard.Length)));
+                        if (read <= 0)
+                        {
+                            break;
+                        }
+
+                        remaining -= read;
+                    }
+                }
+            }
+
             _buffer.AddSamples(targetBytes, 0, byteCount);
         }
         catch (Exception ex)

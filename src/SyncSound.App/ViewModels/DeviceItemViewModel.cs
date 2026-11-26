@@ -24,15 +24,20 @@ public sealed class DeviceItemViewModel : ViewModelBase
         _onVolumeChanged = onVolumeChanged;
         _isSelected = model.IsSelected;
         _volume = Math.Clamp(initialVolume, 0.0, 1.0);
+        ToggleCommand = new RelayCommand(() => IsSelected = !IsSelected);
     }
 
     public AudioDevice Model { get; }
     public string Id => Model.Id;
-    public string Name => Model.Name;
+    public string Name => Model.DisplayName;
+    public string FullSystemName => Model.Name;
     public bool IsDefault => Model.IsDefault;
+    public bool IsSpeakerDevice => Model.IsSpeakerDevice;
     public bool IsHandsFreeProfile => Model.IsHandsFreeProfile;
     public bool IsAvailable => Model.IsAvailable;
     public AudioDeviceType DeviceType => Model.DeviceType;
+
+    public RelayCommand ToggleCommand { get; }
 
     public bool HasBattery => Model.BatteryPercentage.HasValue;
     public int? BatteryPercentage => Model.BatteryPercentage;
@@ -46,9 +51,9 @@ public sealed class DeviceItemViewModel : ViewModelBase
             {
                 AudioDeviceType.Speakers => "Icon.Speaker",
                 AudioDeviceType.DigitalDisplay => "Icon.Display",
-                AudioDeviceType.Headphones when Name.Contains("Bud", StringComparison.OrdinalIgnoreCase)
-                    || Name.Contains("Pod", StringComparison.OrdinalIgnoreCase)
-                    || Name.Contains("Ear", StringComparison.OrdinalIgnoreCase) => "Icon.Earbuds",
+                AudioDeviceType.Headphones when FullSystemName.Contains("Bud", StringComparison.OrdinalIgnoreCase)
+                    || FullSystemName.Contains("Pod", StringComparison.OrdinalIgnoreCase)
+                    || FullSystemName.Contains("Ear", StringComparison.OrdinalIgnoreCase) => "Icon.Earbuds",
                 _ => "Icon.Headphones"
             };
             return Application.Current?.TryFindResource(key) as Geometry;
@@ -58,18 +63,12 @@ public sealed class DeviceItemViewModel : ViewModelBase
     public string CategoryLabel => Model.DeviceType switch
     {
         AudioDeviceType.Headphones => "Headphones",
-        AudioDeviceType.HeadsetHandsFree => "Hands-Free · Voice quality",
+        AudioDeviceType.HeadsetHandsFree => "Hands-Free",
         AudioDeviceType.Speakers => "Speakers",
         AudioDeviceType.DigitalDisplay => "Display Audio",
         AudioDeviceType.LineOut => "Line Out",
         _ => "Audio Device"
     };
-
-    public string RoleNote => Model.IsDefault
-        ? "Playing original sound"
-        : Model.IsHandsFreeProfile
-            ? "Use stereo Headphones for best music quality"
-            : "Ready to join";
 
     public bool IsSelected
     {
@@ -78,10 +77,21 @@ public sealed class DeviceItemViewModel : ViewModelBase
         {
             if (SetProperty(ref _isSelected, value))
             {
+                OnPropertyChanged(nameof(StateLabel));
                 _onSelectionToggled(Id, value);
             }
         }
     }
+
+    public void SyncSelectedSilently(bool isSelected)
+    {
+        if (SetProperty(ref _isSelected, isSelected, nameof(IsSelected)))
+        {
+            OnPropertyChanged(nameof(StateLabel));
+        }
+    }
+
+    public string StateLabel => IsSelected ? "In group" : "Connected";
 
     public double Volume
     {

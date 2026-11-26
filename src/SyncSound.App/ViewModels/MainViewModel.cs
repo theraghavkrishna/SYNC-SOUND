@@ -23,12 +23,12 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     private AppSection _currentSection = AppSection.Home;
     private SyncVisualState _visualState = SyncVisualState.Ready;
     private string _heroTitle = "Everyone's here.";
-    private string _heroAccent = "Your headphones are ready.";
-    private string _heroSubtitle = "Press Start listening whenever you're ready.";
+    private string _heroAccent = "Listen together.";
+    private string _heroSubtitle = "Choose who's listening, then press Start listening.";
     private string _shareButtonText = "Start listening";
     private string _footerConnectionText = "0 connected";
     private string _connectedCountText = "0 connected";
-    private string _selectedCountText = "0 selected";
+    private string _selectedCountText = "0 in group";
     private string _shortcutHint = "Ctrl+Shift+S";
     private bool _isSharing;
     private bool _hasErrorBanner;
@@ -56,10 +56,18 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         SettingsViewModel = settingsViewModel;
         QuickSidebarViewModel = quickSidebarViewModel;
 
-        _masterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
-        _preMuteVolume = _masterVolume > 0.01 ? _masterVolume : 0.85;
-        _isMuted = _masterVolume <= 0.005;
-        _audioEngine.SetMasterVolume((float)_masterVolume);
+        // Guarantee SYNC SOUND never opens silently muted from a stale 0% save
+        var initialVol = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
+        if (initialVol <= 0.01f)
+        {
+            initialVol = 1.0f;
+            _settingsService.Current.MasterVolume = 1.0f;
+        }
+
+        _masterVolume = initialVol;
+        _preMuteVolume = initialVol;
+        _isMuted = false;
+        _audioEngine.SetMasterVolume(initialVol);
 
         NavigateCommand = new RelayCommand(p =>
         {
@@ -90,7 +98,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
     public SettingsViewModel SettingsViewModel { get; }
     public QuickSidebarViewModel QuickSidebarViewModel { get; }
 
-    public ObservableCollection<string> HomeDeviceChips { get; } = [];
     public ObservableCollection<DeviceItemViewModel> ListeningGroupDevices { get; } = [];
 
     public RelayCommand NavigateCommand { get; }
@@ -243,6 +250,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
                 _ = _settingsService.SaveAsync();
 
                 QuickSidebarViewModel.SyncMasterVolumeFromSettings();
+                RefreshCopyOnly();
             }
         }
     }
@@ -264,6 +272,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             IsMuted = saved <= 0.005;
             OnPropertyChanged(nameof(MasterVolume));
             OnPropertyChanged(nameof(MasterVolumePercentText));
+            RefreshCopyOnly();
         }
     }
 
@@ -303,10 +312,11 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
         var selected = _deviceManager.SelectedDevices;
         var defaultSource = _deviceManager.DefaultDevice;
-        var hasAdditional = selected.Any(d =>
-            defaultSource is null || !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase));
+        var hasSecondaryTarget = defaultSource is not null
+            ? selected.Any(d => !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase) && !d.IsSpeakerDevice)
+            : selected.Count(d => !d.IsSpeakerDevice) >= 2;
 
-        if (!hasAdditional)
+        if (!hasSecondaryTarget)
         {
             CurrentSection = AppSection.Devices;
             return Task.CompletedTask;
@@ -331,6 +341,21 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         }
     }
 
+    private void RefreshCopyOnly()
+    {
+        var copy = SyncCopy.GetListenCopy(
+            _deviceManager.Devices,
+            _deviceManager.SelectedDevices,
+            _sharingService.CurrentState,
+            _deviceManager.DefaultDevice,
+            IsMuted);
+        VisualState = copy.State;
+        HeroTitle = copy.Headline;
+        HeroAccent = copy.AccentLine;
+        HeroSubtitle = copy.Subtitle;
+        ShareButtonText = copy.PrimaryAction;
+    }
+
     private void RefreshHomeState()
     {
         var allDevices = _deviceManager.Devices;
@@ -345,13 +370,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         SelectedCountText = selected.Count == 1 ? "1 in group" : $"{selected.Count} in group";
         FooterConnectionText = ConnectedCountText;
 
-        HomeDeviceChips.Clear();
-        var chipSource = selected.Count > 0 ? selected : allDevices;
-        foreach (var d in chipSource.Take(4))
-        {
-            HomeDeviceChips.Add(d.Name);
-        }
-
         ListeningGroupDevices.Clear();
         foreach (var d in allDevices)
         {
@@ -360,7 +378,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
                 : 1.0f;
             ListeningGroupDevices.Add(new DeviceItemViewModel(
                 d,
-                (id, sel) => _deviceManager.SetDeviceSelected(id, sel),
+                OnListeningGroupDeviceToggled,
                 vol,
                 (id, v) =>
                 {
@@ -370,12 +388,7 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
                 }));
         }
 
-        var copy = SyncCopy.GetListenCopy(allDevices.Count, selected.Count, sharing, defaultSource);
-        VisualState = copy.State;
-        HeroTitle = copy.Headline;
-        HeroAccent = copy.AccentLine;
-        HeroSubtitle = copy.Subtitle;
-        ShareButtonText = copy.PrimaryAction;
+        RefreshCopyOnly();
 
         var firstFailed = sharing.FailedOutputs.FirstOrDefault();
         HasErrorBanner = IsSharing && (sharing.State == AudioEngineState.Partial || firstFailed is not null)
@@ -385,5 +398,37 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
             : HasErrorBanner ? (sharing.ErrorMessage ?? sharing.UserMessage) : null;
 
         ToggleSharingCommand.RaiseCanExecuteChanged();
+    }
+
+    private void OnListeningGroupDeviceToggled(string deviceId, bool isSelected)
+    {
+        var clicked = _deviceManager.Devices.FirstOrDefault(d => string.Equals(d.Id, deviceId, StringComparison.OrdinalIgnoreCase));
+        if (clicked is null)
+        {
+            return;
+        }
+
+        if (isSelected)
+        {
+            if (clicked.IsSpeakerDevice)
+            {
+                var otherHeadphones = _deviceManager.SelectedDevices.Where(d => !d.IsSpeakerDevice).ToList();
+                if (otherHeadphones.Count > 0)
+                {
+                    DevicesViewModel.RequestSpeakerSwitch(clicked);
+                    CurrentSection = AppSection.Devices;
+                    return;
+                }
+            }
+            else
+            {
+                foreach (var spk in _deviceManager.SelectedDevices.Where(d => d.IsSpeakerDevice))
+                {
+                    _deviceManager.SetDeviceSelected(spk.Id, false);
+                }
+            }
+        }
+
+        _deviceManager.SetDeviceSelected(deviceId, isSelected);
     }
 }

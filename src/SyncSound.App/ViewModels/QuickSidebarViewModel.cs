@@ -14,9 +14,10 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
     private readonly ISettingsService _settingsService;
 
     private string _statusHeadline = "Everyone's here.";
-    private string _statusDetail = "Select headphones to share your sound.";
+    private string _statusDetail = "Listen together.";
     private string _shareButtonText = "Start listening";
-    private string _countBadgeText = "0 selected";
+    private string _countBadgeText = "0 in group";
+    private SyncVisualState _visualState = SyncVisualState.Ready;
     private bool _isSharing;
     private bool _canToggleSharing;
     private double _masterVolume = 1.0;
@@ -34,13 +35,20 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         _audioEngine = audioEngine;
         _settingsService = settingsService;
 
-        _masterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
-        _preMuteVolume = _masterVolume > 0.01 ? _masterVolume : 0.85;
-        _isMuted = _masterVolume <= 0.005;
+        var initialVol = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f);
+        if (initialVol <= 0.01f)
+        {
+            initialVol = 1.0f;
+        }
+
+        _masterVolume = initialVol;
+        _preMuteVolume = initialVol;
+        _isMuted = false;
 
         ToggleSharingCommand = new AsyncRelayCommand(ToggleSharingAsync, () => CanToggleSharing || IsSharing);
         ToggleMuteCommand = new RelayCommand(ToggleMute);
         OpenMainAppCommand = new RelayCommand(() => OpenMainAppRequested?.Invoke(this, EventArgs.Empty));
+        OpenPreferencesCommand = new RelayCommand(() => OpenPreferencesRequested?.Invoke(this, EventArgs.Empty));
         CloseSidebarCommand = new RelayCommand(() => CloseRequested?.Invoke(this, EventArgs.Empty));
 
         _deviceManager.DevicesUpdated += OnDevicesOrSharingChanged;
@@ -53,11 +61,19 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
     public AsyncRelayCommand ToggleSharingCommand { get; }
     public RelayCommand ToggleMuteCommand { get; }
     public RelayCommand OpenMainAppCommand { get; }
+    public RelayCommand OpenPreferencesCommand { get; }
     public RelayCommand CloseSidebarCommand { get; }
 
     public event EventHandler? OpenMainAppRequested;
+    public event EventHandler? OpenPreferencesRequested;
     public event EventHandler? CloseRequested;
     public event EventHandler? MasterVolumeSynced;
+
+    public SyncVisualState VisualState
+    {
+        get => _visualState;
+        private set => SetProperty(ref _visualState, value);
+    }
 
     public bool AlwaysOnTop => _settingsService.Current.SidebarAlwaysOnTop;
     public bool ClickOutsideToClose => _settingsService.Current.SidebarClickOutsideToClose;
@@ -221,14 +237,20 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
         }
 
         var sharing = _sharingService.CurrentState;
-        var connected = Devices.Count;
-        var selected = Devices.Count(d => d.IsSelected);
+        var allDevices = _deviceManager.Devices;
+        var selectedDevices = _deviceManager.SelectedDevices;
+        var defaultDevice = _deviceManager.DefaultDevice;
 
         IsSharing = sharing.IsSharing;
-        CanToggleSharing = connected > 1 && selected > 0;
-        CountBadgeText = $"{selected} of {connected} in group";
+        var hasSecondaryTarget = defaultDevice is not null
+            ? selectedDevices.Any(d => !string.Equals(d.Id, defaultDevice.Id, StringComparison.OrdinalIgnoreCase) && !d.IsSpeakerDevice)
+            : selectedDevices.Count(d => !d.IsSpeakerDevice) >= 2;
 
-        var copy = SyncCopy.GetListenCopy(connected, selected, sharing, _deviceManager.DefaultDevice);
+        CanToggleSharing = allDevices.Count > 1 && hasSecondaryTarget;
+        CountBadgeText = $"{selectedDevices.Count} of {allDevices.Count} in group";
+
+        var copy = SyncCopy.GetListenCopy(allDevices, selectedDevices, sharing, defaultDevice, IsMuted);
+        VisualState = copy.State;
         StatusHeadline = copy.Headline;
         StatusDetail = copy.AccentLine;
         ShareButtonText = IsSharing ? "Stop listening" : "Start listening";
