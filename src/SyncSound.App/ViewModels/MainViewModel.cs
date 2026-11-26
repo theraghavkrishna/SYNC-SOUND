@@ -313,8 +313,8 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
         var selected = _deviceManager.SelectedDevices;
         var defaultSource = _deviceManager.DefaultDevice;
         var hasSecondaryTarget = defaultSource is not null
-            ? selected.Any(d => !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase) && !d.IsSpeakerDevice)
-            : selected.Count(d => !d.IsSpeakerDevice) >= 2;
+            ? selected.Any(d => !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
+            : selected.Count >= 2;
 
         if (!hasSecondaryTarget)
         {
@@ -402,33 +402,6 @@ public sealed class MainViewModel : ViewModelBase, IDisposable
 
     private void OnListeningGroupDeviceToggled(string deviceId, bool isSelected)
     {
-        var clicked = _deviceManager.Devices.FirstOrDefault(d => string.Equals(d.Id, deviceId, StringComparison.OrdinalIgnoreCase));
-        if (clicked is null)
-        {
-            return;
-        }
-
-        if (isSelected)
-        {
-            if (clicked.IsSpeakerDevice)
-            {
-                var otherHeadphones = _deviceManager.SelectedDevices.Where(d => !d.IsSpeakerDevice).ToList();
-                if (otherHeadphones.Count > 0)
-                {
-                    DevicesViewModel.RequestSpeakerSwitch(clicked);
-                    CurrentSection = AppSection.Devices;
-                    return;
-                }
-            }
-            else
-            {
-                foreach (var spk in _deviceManager.SelectedDevices.Where(d => d.IsSpeakerDevice))
-                {
-                    _deviceManager.SetDeviceSelected(spk.Id, false);
-                }
-            }
-        }
-
         _deviceManager.SetDeviceSelected(deviceId, isSelected);
     }
 }

@@ -21,7 +21,7 @@ Share your Windows PC's audio across multiple supported headphones. Choose who's
 ## Key Features
 
 - **Connect → Choose → Listen:** Discover Bluetooth and wired headphones paired with Windows, pick your listening group, and share system audio seamlessly.
-- **Tactile Volume & Compatibility Guard:** Precision **Sync Dial** session volume + per-headphone rotary dials, real Bluetooth battery indicators where exposed by Windows, and speaker/headphone mutual-exclusivity protection to prevent echo.
+- **Tactile Volume & Wired + Bluetooth Freedom:** Precision **Sync Dial** session volume + per-headphone rotary dials, real Bluetooth battery indicators where exposed by Windows, and seamless simultaneous routing across 3.5 mm wired Realtek headphones, USB headsets, and Bluetooth TWS earbuds.
 - **Quick Sidebar (`Ctrl + Shift + S`):** Draggable floating control instrument with remembered screen position, always-on-top support, and instant Start/Stop listening.
 - **Fault Isolation & Auto-Recovery:** If a headphone disconnects out of range, healthy headphones stay active and reconnect automatically when back online.
 - **Light, Dark & System Modes:** Instant, persistent theme switching across the app and Quick Sidebar.

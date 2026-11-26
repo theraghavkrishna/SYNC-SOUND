@@ -243,8 +243,8 @@ public sealed class QuickSidebarViewModel : ViewModelBase, IDisposable
 
         IsSharing = sharing.IsSharing;
         var hasSecondaryTarget = defaultDevice is not null
-            ? selectedDevices.Any(d => !string.Equals(d.Id, defaultDevice.Id, StringComparison.OrdinalIgnoreCase) && !d.IsSpeakerDevice)
-            : selectedDevices.Count(d => !d.IsSpeakerDevice) >= 2;
+            ? selectedDevices.Any(d => !string.Equals(d.Id, defaultDevice.Id, StringComparison.OrdinalIgnoreCase))
+            : selectedDevices.Count >= 2;
 
         CanToggleSharing = allDevices.Count > 1 && hasSecondaryTarget;
         CountBadgeText = $"{selectedDevices.Count} of {allDevices.Count} in group";

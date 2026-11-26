@@ -33,10 +33,10 @@ const INITIAL_DEVICES: SimDevice[] = [
   },
   {
     id: "speakers",
-    name: "Laptop Speakers",
+    name: "Realtek Audio (Wired / Speakers)",
     category: "Speakers",
     selected: false,
-    volume: 0.65,
+    volume: 0.72,
   },
 ];
 
@@ -73,38 +73,14 @@ export default function InteractiveStage() {
   const [isMuted, setIsMuted] = useState(false);
   const [previewDark, setPreviewDark] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [speakerPrompt, setSpeakerPrompt] = useState(false);
 
-  const selectedHeadphones = devices.filter((d) => d.selected && d.category !== "Speakers");
   const selectedDevices = devices.filter((d) => d.selected);
-  const onlySpeakers = selectedDevices.length === 1 && selectedDevices[0].category === "Speakers";
+  const selectedHeadphones = selectedDevices;
 
   const toggleDevice = (id: string) => {
-    const target = devices.find((d) => d.id === id);
-    if (!target) return;
-
-    if (!target.selected && target.category === "Speakers" && selectedHeadphones.length > 0) {
-      setSpeakerPrompt(true);
-      return;
-    }
-
     setDevices((prev) =>
-      prev.map((d) => {
-        if (d.id === id) return { ...d, selected: !d.selected };
-        if (!target.selected && target.category !== "Speakers" && d.category === "Speakers") {
-          return { ...d, selected: false };
-        }
-        return d;
-      })
+      prev.map((d) => (d.id === id ? { ...d, selected: !d.selected } : d))
     );
-  };
-
-  const confirmSwitchToSpeakers = () => {
-    setIsListening(false);
-    setDevices((prev) =>
-      prev.map((d) => ({ ...d, selected: d.category === "Speakers" }))
-    );
-    setSpeakerPrompt(false);
   };
 
   const handlePrimaryAction = () => {
@@ -112,7 +88,7 @@ export default function InteractiveStage() {
       setIsListening(false);
       return;
     }
-    if (selectedHeadphones.length < 2) {
+    if (selectedDevices.length < 2) {
       setActiveTab("headphones");
       return;
     }
@@ -132,30 +108,22 @@ export default function InteractiveStage() {
       return {
         headline: "You're all listening.",
         accent: "Everyone's in.",
-        sub: `${selectedHeadphones.length} headphones sharing your Windows sound.`,
+        sub: `${selectedDevices.length} outputs sharing your Windows sound.`,
         cta: "Stop listening",
       };
     }
-    if (onlySpeakers) {
-      return {
-        headline: "Playing on speakers.",
-        accent: "Choose headphones to share.",
-        sub: "Select your Bluetooth headphones to listen together.",
-        cta: "Choose headphones",
-      };
-    }
-    if (selectedHeadphones.length < 2) {
+    if (selectedDevices.length < 2) {
       return {
         headline: "One's ready.",
-        accent: "Add another headphone.",
-        sub: "Join a second pair of headphones below to listen together.",
+        accent: "Add another output.",
+        sub: "Mix Bluetooth TWS, 3.5 mm wired headphones, or USB headsets together.",
         cta: "Choose headphones",
       };
     }
     return {
       headline: "Everyone's here.",
       accent: "Listen together.",
-      sub: `${selectedHeadphones.length} devices in your group. Press Start listening to play.`,
+      sub: `${selectedDevices.length} outputs in your group. Press Start listening to play.`,
       cta: "Start listening",
     };
   })();
@@ -491,32 +459,6 @@ export default function InteractiveStage() {
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-            )}
-
-            {/* Compatibility Confirmation Overlay inside Interactive Preview */}
-            {speakerPrompt && (
-              <div className="absolute inset-0 bg-[#191817]/60 backdrop-blur-[2px] flex items-center justify-center p-4 z-20">
-                <div className={`rounded-[20px] border p-6 max-w-sm w-full shadow-2xl space-y-4 ${cardBg}`}>
-                  <h4 className="text-base font-bold">Switch to laptop speakers?</h4>
-                  <p className={`text-xs leading-relaxed ${mutedText}`}>
-                    This will remove your Bluetooth headphones from the listening group so audio never echoes.
-                  </p>
-                  <div className="flex justify-end gap-2">
-                    <button
-                      onClick={() => setSpeakerPrompt(false)}
-                      className={`px-4 py-2 rounded-full text-xs font-semibold border cursor-pointer ${cardBg}`}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={confirmSwitchToSpeakers}
-                      className="px-4 py-2 rounded-full text-xs font-semibold bg-[#C65D32] text-[#FCFBF8] cursor-pointer"
-                    >
-                      Switch outputs
-                    </button>
-                  </div>
                 </div>
               </div>
             )}

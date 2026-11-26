@@ -112,6 +112,13 @@ public sealed class WasapiAudioOutput : IAudioOutput
             {
                 sampleChain = new MonoToStereoSampleProvider(sampleChain);
             }
+            else if (mixFormat.Channels > 2 && sourceFormat.Channels == 2)
+            {
+                var mux = new MultiplexingSampleProvider([sampleChain], mixFormat.Channels);
+                mux.ConnectInputToOutput(0, 0);
+                mux.ConnectInputToOutput(1, 1);
+                sampleChain = mux;
+            }
 
             if (sampleChain.WaveFormat.SampleRate != mixFormat.SampleRate)
             {

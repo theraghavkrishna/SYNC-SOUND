@@ -16,7 +16,7 @@ public enum SyncVisualState
 
 /// <summary>
 /// Centralized, truthful, state-aware copywriting system for SYNC SOUND.
-/// Uses accurate device selection & engine status so copy never misrepresents state.
+/// Supports any combination of wired, USB, and Bluetooth endpoints without blanket exclusions.
 /// </summary>
 public static class SyncCopy
 {
@@ -33,7 +33,7 @@ public static class SyncCopy
                 SyncVisualState.NoAdditionalHeadphones,
                 "Let's get everyone connected.",
                 "Nothing connected yet.",
-                "Connect your headphones to Windows, then bring them here.",
+                "Connect your wired or Bluetooth headphones to Windows, then bring them here.",
                 "Add headphones"
             );
         }
@@ -67,13 +67,11 @@ public static class SyncCopy
                 SyncVisualState.Listening,
                 "You're all listening.",
                 "Everyone's in.",
-                $"{totalListeners} {(totalListeners == 1 ? "device" : "devices")} sharing your sound.",
+                $"{totalListeners} {(totalListeners == 1 ? "device" : "devices")} sharing your Windows sound.",
                 "Stop listening"
             );
         }
 
-        var headphoneTargets = selectedDevices.Where(d => !d.IsSpeakerDevice).ToList();
-        var onlySpeakerSelected = selectedDevices.Count > 0 && headphoneTargets.Count == 0;
         var hasSecondaryFanout = defaultSource is not null
             ? selectedDevices.Any(d => !string.Equals(d.Id, defaultSource.Id, StringComparison.OrdinalIgnoreCase))
             : selectedDevices.Count >= 2;
@@ -83,20 +81,9 @@ public static class SyncCopy
             return (
                 SyncVisualState.OneDeviceConnected,
                 "One's ready.",
-                "Add another headphone.",
-                "Connect a second pair in Windows to listen together.",
+                "Add another device.",
+                "Plug in wired headphones or pair a Bluetooth headset to listen together.",
                 "Add headphones"
-            );
-        }
-
-        if (onlySpeakerSelected)
-        {
-            return (
-                SyncVisualState.OneDeviceConnected,
-                "Playing on speakers.",
-                "Choose headphones to share.",
-                "Select your Bluetooth or wired headphones below to listen together.",
-                "Choose headphones"
             );
         }
 
@@ -116,7 +103,7 @@ public static class SyncCopy
             return (
                 SyncVisualState.OneDeviceConnected,
                 "One's ready.",
-                "Add another headphone.",
+                "Add another device.",
                 $"{selectedDevices[0].DisplayName} is your default audio. Select one more device to listen together.",
                 "Choose headphones"
             );

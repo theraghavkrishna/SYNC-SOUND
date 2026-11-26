@@ -306,42 +306,5 @@
                 </StackPanel>
             </Border>
         </Grid>
-
-        <!-- Output Compatibility Confirmation Dialog Overlay -->
-        <Border Background="#7A191817"
-                Visibility="{Binding HasSpeakerSwitchPrompt, Converter={StaticResource BoolToVisibilityConverter}}"
-                Panel.ZIndex="20">
-            <Border Style="{StaticResource SurfaceCardStyle}"
-                    MaxWidth="400"
-                    Padding="28"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                <StackPanel>
-                    <TextBlock Text="{Binding SpeakerSwitchTitle}"
-                               FontFamily="{StaticResource Font.Display}"
-                               FontSize="20"
-                               FontWeight="Bold"
-                               Foreground="{DynamicResource Brush.Ink.Primary}"
-                               TextWrapping="Wrap" />
-                    <TextBlock Text="This will remove your Bluetooth headphones from the listening group."
-                               FontSize="14"
-                               Foreground="{DynamicResource Brush.Ink.Secondary}"
-                               TextWrapping="Wrap"
-                               LineHeight="21"
-                               Margin="0,8,0,22" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Content="Cancel"
-                                Style="{StaticResource SecondaryPillButtonStyle}"
-                                Command="{Binding CancelSpeakerSwitchCommand}"
-                                Padding="18,10"
-                                Margin="0,0,10,0" />
-                        <Button Content="Switch outputs"
-                                Style="{StaticResource PrimaryPillButtonStyle}"
-                                Command="{Binding ConfirmSpeakerSwitchCommand}"
-                                Padding="20,10" />
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-        </Border>
     </Grid>
 </UserControl>

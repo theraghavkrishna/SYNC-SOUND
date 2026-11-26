@@ -644,6 +644,12 @@ public sealed class AudioEngine : IAudioEngine
         {
             var newOutput = _outputFactory.CreateOutput(deviceSnapshot, activeSource.Format, configSnapshot);
             newOutput.SetDelayCompensationMs(configuredDelay);
+            var prefillFrames = Math.Max(64, activeSource.Format.SampleRate * configSnapshot.ChunkMs / 1000);
+            var prefillSilence = new float[prefillFrames * activeSource.Format.Channels];
+            for (var i = 0; i < Math.Max(1, configSnapshot.PrefillChunks); i++)
+            {
+                newOutput.WriteFloatSamples(prefillSilence, activeSource.Format);
+            }
             newOutput.Faulted += OnOutputFaulted;
 
             AudioEngineStatusSnapshot? snapshot = null;

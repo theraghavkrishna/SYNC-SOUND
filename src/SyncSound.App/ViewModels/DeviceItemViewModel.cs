@@ -32,10 +32,10 @@ public sealed class DeviceItemViewModel : ViewModelBase
     public string Name => Model.DisplayName;
     public string FullSystemName => Model.Name;
     public bool IsDefault => Model.IsDefault;
-    public bool IsSpeakerDevice => Model.IsSpeakerDevice;
     public bool IsHandsFreeProfile => Model.IsHandsFreeProfile;
     public bool IsAvailable => Model.IsAvailable;
     public AudioDeviceType DeviceType => Model.DeviceType;
+    public AudioTransportKind TransportKind => Model.TransportKind;
 
     public RelayCommand ToggleCommand { get; }
 
@@ -60,14 +60,20 @@ public sealed class DeviceItemViewModel : ViewModelBase
         }
     }
 
-    public string CategoryLabel => Model.DeviceType switch
+    public string CategoryLabel => Model.TransportKind switch
     {
-        AudioDeviceType.Headphones => "Headphones",
-        AudioDeviceType.HeadsetHandsFree => "Hands-Free",
-        AudioDeviceType.Speakers => "Speakers",
-        AudioDeviceType.DigitalDisplay => "Display Audio",
-        AudioDeviceType.LineOut => "Line Out",
-        _ => "Audio Device"
+        AudioTransportKind.BluetoothA2dp => "Bluetooth",
+        AudioTransportKind.UsbAudio => "USB Audio",
+        AudioTransportKind.BuiltInOrWiredJack => "Wired / System Audio",
+        AudioTransportKind.DigitalDisplay => "Display Audio",
+        _ => Model.DeviceType switch
+        {
+            AudioDeviceType.Headphones => "Headphones",
+            AudioDeviceType.Speakers => "Speakers",
+            AudioDeviceType.DigitalDisplay => "Display Audio",
+            AudioDeviceType.LineOut => "Line Out",
+            _ => "Audio Output"
+        }
     };
 
     public bool IsSelected

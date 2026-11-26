@@ -252,11 +252,10 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-1.5">
-              <div className="font-bold text-[#191817]">Laptop Speakers Mode</div>
+              <div className="font-bold text-[#191817]">Wired 3.5 mm + Bluetooth TWS</div>
               <p className="leading-relaxed">
-                Built-in laptop speakers have near-zero hardware delay compared to
-                Bluetooth codecs, so SYNC SOUND treats laptop speakers and
-                headphone groups separately to avoid echo.
+                Pair a 3.5 mm wired headset or USB-C DAC right alongside Bluetooth TWS earbuds.
+                Realtek jack endpoints and wireless audio run together on one shared timeline.
               </p>
             </div>
 

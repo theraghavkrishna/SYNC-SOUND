@@ -110,9 +110,9 @@ public sealed class SystemSharingService : ISystemSharingService
             var config = new AudioEngineConfiguration
             {
                 ChunkMs = 10,
-                OutputLatencyMs = 35,
+                OutputLatencyMs = 40,
                 BufferDurationMs = 600,
-                PrefillChunks = 3,
+                PrefillChunks = 10,
                 AutoRecoverOutputs = true,
                 MasterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f),
                 PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs,
