@@ -41,18 +41,33 @@ public sealed class SingleInstanceManager : IDisposable
 
         _listenerTask = Task.Run(() =>
         {
-            var handles = new[] { _activationEvent, _cts.Token.WaitHandle };
-            while (!_cts.IsCancellationRequested)
+            try
             {
-                var signaled = WaitHandle.WaitAny(handles);
-                if (signaled == 0 && !_cts.IsCancellationRequested)
+                var handles = new[] { _activationEvent, _cts.Token.WaitHandle };
+                while (!_cts.IsCancellationRequested)
                 {
-                    SecondInstanceLaunched?.Invoke(this, EventArgs.Empty);
+                    var signaled = WaitHandle.WaitAny(handles);
+                    if (signaled == 0 && !_cts.IsCancellationRequested)
+                    {
+                        SecondInstanceLaunched?.Invoke(this, EventArgs.Empty);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-                else
-                {
-                    break;
-                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // Normal shutdown when cancellation token or wait handle is disposed.
+            }
+            catch (OperationCanceledException)
+            {
+                // Normal cancellation.
+            }
+            catch (Exception)
+            {
+                // Never allow listener task to crash the application on shutdown.
             }
         });
     }

@@ -34,6 +34,8 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        ConfigureLogging();
+
         // ── Global crash handlers — catch ALL unobserved exceptions ──
         AppDomain.CurrentDomain.UnhandledException += (_, args) =>
         {
@@ -61,8 +63,6 @@ public partial class App : Application
             Shutdown();
             return;
         }
-
-        ConfigureLogging();
 
         DispatcherUnhandledException += (_, args) =>
         {

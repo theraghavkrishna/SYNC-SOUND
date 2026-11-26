@@ -1,323 +1,136 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Base Window Style -->
-    <Style TargetType="Window">
-        <Setter Property="FontFamily" Value="{StaticResource Font.Body}" />
-        <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
-    </Style>
+    <!-- =====================================================================
+         SYNC SOUND Design Tokens
+         Palette: 2 Mood Colors (Nocturnal Obsidian + Frosted Graphite Slate)
+                  + 1 Primary Accent (Bioluminescent Cyan)
+         ===================================================================== -->
 
-    <!-- Primary Burnt Orange Pill CTA with Tactile Scale Microinteraction -->
-    <Style x:Key="PrimaryPillButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource Brush.Accent.Gradient}" />
-        <Setter Property="Foreground" Value="#FFFFFF" />
-        <Setter Property="FontFamily" Value="{StaticResource Font.Body}" />
-        <Setter Property="FontSize" Value="14.5" />
-        <Setter Property="FontWeight" Value="SemiBold" />
-        <Setter Property="Padding" Value="28,13" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="#44FFFFFF" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Effect" Value="{StaticResource Shadow.HeroButton}" />
-        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-        <Setter Property="RenderTransform">
-            <Setter.Value>
-                <ScaleTransform ScaleX="1" ScaleY="1" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Root"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="24"
-                            Padding="{TemplateBinding Padding}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.03" Duration="0:0:0.16" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.03" Duration="0:0:0.16" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.18" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.18" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource Brush.Accent.Pressed}" />
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.97" Duration="0:0:0.08" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.97" Duration="0:0:0.08" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Root" Property="Opacity" Value="0.45" />
-                            <Setter Property="Effect" Value="{x:Null}" />
-                            <Setter Property="Cursor" Value="Arrow" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <!-- Mood 1: Nocturnal Obsidian (Deep Canvas & Recessed Surfaces) -->
+    <Color x:Key="Color.Canvas.Primary">#080B12</Color>
+    <Color x:Key="Color.Canvas.Rail">#06080E</Color>
+    <Color x:Key="Color.Canvas.Subtle">#0D111C</Color>
 
-    <!-- Secondary Tactile Cream Pill Button -->
-    <Style x:Key="SecondaryPillButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{StaticResource Brush.Surface.GlassCard}" />
-        <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="FontFamily" Value="{StaticResource Font.Body}" />
-        <Setter Property="FontSize" Value="13.5" />
-        <Setter Property="FontWeight" Value="Medium" />
-        <Setter Property="Padding" Value="18,10" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-        <Setter Property="RenderTransform">
-            <Setter.Value>
-                <ScaleTransform ScaleX="1" ScaleY="1" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="Root"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="20"
-                            Padding="{TemplateBinding Padding}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#FFFFFF" />
-                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource Brush.Accent.Border}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="{StaticResource Brush.Canvas.Subtle}" />
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.97" Duration="0:0:0.08" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.97" Duration="0:0:0.08" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.14" />
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.14" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Root" Property="Opacity" Value="0.45" />
-                            <Setter Property="Cursor" Value="Arrow" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <!-- Mood 2: Frosted Graphite Slate (Elevated Glass Surfaces) -->
+    <Color x:Key="Color.Surface.Card">#121724</Color>
+    <Color x:Key="Color.Surface.CardTop">#181F30</Color>
+    <Color x:Key="Color.Surface.CardBottom">#0E131E</Color>
+    <Color x:Key="Color.Surface.Hover">#1A2234</Color>
+    <Color x:Key="Color.Border.Hairline">#1E273B</Color>
 
-    <!-- Left Rail Navigation Item with Burnt Orange Active Indicator -->
-    <Style x:Key="RailNavRadioStyle" TargetType="RadioButton">
-        <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Secondary}" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="Medium" />
-        <Setter Property="Padding" Value="14,11" />
-        <Setter Property="Margin" Value="0,3" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="RadioButton">
-                    <Border x:Name="Root"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="Transparent"
-                            BorderThickness="1"
-                            CornerRadius="13"
-                            Padding="{TemplateBinding Padding}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Border x:Name="ActivePill"
-                                    Width="3.5"
-                                    Height="16"
-                                    CornerRadius="1.75"
-                                    Background="{StaticResource Brush.Accent.Primary}"
-                                    Margin="0,0,10,0"
-                                    Opacity="0"
-                                    VerticalAlignment="Center" />
-                            <ContentPresenter Grid.Column="1" VerticalAlignment="Center" />
-                        </Grid>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#88FFFFFF" />
-                            <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
-                        </Trigger>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#FFFFFF" />
-                            <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
-                            <Setter TargetName="ActivePill" Property="Opacity" Value="1" />
-                            <Setter Property="Foreground" Value="{StaticResource Brush.Ink.Primary}" />
-                            <Setter Property="FontWeight" Value="SemiBold" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <!-- Ink Hierarchy -->
+    <Color x:Key="Color.Ink.Primary">#F8FAFC</Color>
+    <Color x:Key="Color.Ink.Secondary">#94A3B8</Color>
+    <Color x:Key="Color.Ink.Muted">#64748B</Color>
 
-    <!-- Animated Apple-Inspired Pill Toggle Switch -->
-    <Style x:Key="PillToggleSwitchStyle" TargetType="CheckBox">
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Width" Value="48" />
-        <Setter Property="Height" Value="26" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="CheckBox">
-                    <Border x:Name="Track"
-                            Width="48"
-                            Height="26"
-                            CornerRadius="13"
-                            Background="#D6D1C6"
-                            BorderBrush="#C7C1B5"
-                            BorderThickness="1">
-                        <Border x:Name="Thumb"
-                                Width="20"
-                                Height="20"
-                                CornerRadius="10"
-                                Background="#FFFFFF"
-                                HorizontalAlignment="Left"
-                                Margin="2,0,0,0">
-                            <Border.RenderTransform>
-                                <TranslateTransform x:Name="ThumbSlide" X="0" />
-                            </Border.RenderTransform>
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="6" ShadowDepth="1.5" Opacity="0.22" Color="#141417" />
-                            </Border.Effect>
-                        </Border>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Track" Property="Background" Value="{StaticResource Brush.Accent.Primary}" />
-                            <Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource Brush.Accent.Hover}" />
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ThumbSlide"
-                                                         Storyboard.TargetProperty="X"
-                                                         To="22"
-                                                         Duration="0:0:0.20">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CubicEase EasingMode="EaseOut" />
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ThumbSlide"
-                                                         Storyboard.TargetProperty="X"
-                                                         To="0"
-                                                         Duration="0:0:0.20">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CubicEase EasingMode="EaseOut" />
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Track" Property="Opacity" Value="0.45" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <!-- Accent: Bioluminescent Cyan -->
+    <Color x:Key="Color.Accent.Primary">#22D3EE</Color>
+    <Color x:Key="Color.Accent.Hover">#38E2FB</Color>
+    <Color x:Key="Color.Accent.Pressed">#0891B2</Color>
+    <Color x:Key="Color.Accent.Soft">#1A22D3EE</Color>
+    <Color x:Key="Color.Accent.Border">#5522D3EE</Color>
 
-    <!-- Warm Minimal Track Slider -->
-    <Style x:Key="MinimalSliderStyle" TargetType="Slider">
-        <Setter Property="Height" Value="22" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Slider">
-                    <Grid VerticalAlignment="Center">
-                        <Border Height="5" CornerRadius="2.5" Background="#E4DFD3" VerticalAlignment="Center" />
-                        <Track x:Name="PART_Track">
-                            <Track.DecreaseRepeatButton>
-                                <RepeatButton Command="Slider.DecreaseLarge" IsTabStop="False">
-                                    <RepeatButton.Template>
-                                        <ControlTemplate TargetType="RepeatButton">
-                                            <Border Height="5" CornerRadius="2.5" Background="{StaticResource Brush.Accent.Gradient}" />
-                                        </ControlTemplate>
-                                    </RepeatButton.Template>
-                                </RepeatButton>
-                            </Track.DecreaseRepeatButton>
-                            <Track.IncreaseRepeatButton>
-                                <RepeatButton Command="Slider.IncreaseLarge" IsTabStop="False">
-                                    <RepeatButton.Template>
-                                        <ControlTemplate TargetType="RepeatButton">
-                                            <Border Height="5" Background="Transparent" />
-                                        </ControlTemplate>
-                                    </RepeatButton.Template>
-                                </RepeatButton>
-                            </Track.IncreaseRepeatButton>
-                            <Track.Thumb>
-                                <Thumb Width="15" Height="15">
-                                    <Thumb.Template>
-                                        <ControlTemplate TargetType="Thumb">
-                                            <Ellipse Fill="#FFFFFF" Stroke="{StaticResource Brush.Accent.Primary}" StrokeThickness="2.2">
-                                                <Ellipse.Effect>
-                                                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.24" Color="#141417" />
-                                                </Ellipse.Effect>
-                                            </Ellipse>
-                                        </ControlTemplate>
-                                    </Thumb.Template>
-                                </Thumb>
-                            </Track.Thumb>
-                        </Track>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <!-- Semantic Status -->
+    <Color x:Key="Color.Status.Success">#34D399</Color>
+    <Color x:Key="Color.Status.SuccessSoft">#1A34D399</Color>
+    <Color x:Key="Color.Status.Warning">#FBBF24</Color>
+    <Color x:Key="Color.Status.WarningSoft">#1AFBBF24</Color>
+    <Color x:Key="Color.Status.Error">#FB7185</Color>
+    <Color x:Key="Color.Status.ErrorSoft">#1AFB7185</Color>
 
-    <!-- Tactile Elevated Card Style -->
-    <Style x:Key="SurfaceCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="{StaticResource Brush.Surface.GlassCard}" />
-        <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Hairline}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="18" />
-        <Setter Property="Effect" Value="{StaticResource Shadow.SoftCard}" />
-    </Style>
+    <!-- Solid Brushes -->
+    <SolidColorBrush x:Key="Brush.Canvas.Primary" Color="{StaticResource Color.Canvas.Primary}" />
+    <SolidColorBrush x:Key="Brush.Canvas.Rail" Color="{StaticResource Color.Canvas.Rail}" />
+    <SolidColorBrush x:Key="Brush.Canvas.Subtle" Color="{StaticResource Color.Canvas.Subtle}" />
+    <SolidColorBrush x:Key="Brush.Surface.Card" Color="{StaticResource Color.Surface.Card}" />
+    <SolidColorBrush x:Key="Brush.Surface.Hover" Color="{StaticResource Color.Surface.Hover}" />
+    <SolidColorBrush x:Key="Brush.Border.Hairline" Color="{StaticResource Color.Border.Hairline}" />
+
+    <SolidColorBrush x:Key="Brush.Ink.Primary" Color="{StaticResource Color.Ink.Primary}" />
+    <SolidColorBrush x:Key="Brush.Ink.Secondary" Color="{StaticResource Color.Ink.Secondary}" />
+    <SolidColorBrush x:Key="Brush.Ink.Muted" Color="{StaticResource Color.Ink.Muted}" />
+
+    <SolidColorBrush x:Key="Brush.Accent.Primary" Color="{StaticResource Color.Accent.Primary}" />
+    <SolidColorBrush x:Key="Brush.Accent.Hover" Color="{StaticResource Color.Accent.Hover}" />
+    <SolidColorBrush x:Key="Brush.Accent.Pressed" Color="{StaticResource Color.Accent.Pressed}" />
+    <SolidColorBrush x:Key="Brush.Accent.Soft" Color="{StaticResource Color.Accent.Soft}" />
+    <SolidColorBrush x:Key="Brush.Accent.Border" Color="{StaticResource Color.Accent.Border}" />
+
+    <SolidColorBrush x:Key="Brush.Status.Success" Color="{StaticResource Color.Status.Success}" />
+    <SolidColorBrush x:Key="Brush.Status.SuccessSoft" Color="{StaticResource Color.Status.SuccessSoft}" />
+    <SolidColorBrush x:Key="Brush.Status.Warning" Color="{StaticResource Color.Status.Warning}" />
+    <SolidColorBrush x:Key="Brush.Status.WarningSoft" Color="{StaticResource Color.Status.WarningSoft}" />
+    <SolidColorBrush x:Key="Brush.Status.Error" Color="{StaticResource Color.Status.Error}" />
+    <SolidColorBrush x:Key="Brush.Status.ErrorSoft" Color="{StaticResource Color.Status.ErrorSoft}" />
+
+    <!-- Layered Non-Flat Glass Gradients -->
+    <LinearGradientBrush x:Key="Brush.Surface.GlassCard" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource Color.Surface.CardTop}" Offset="0" />
+        <GradientStop Color="{StaticResource Color.Surface.CardBottom}" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="Brush.Border.GlassRim" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#2EFFFFFF" Offset="0" />
+        <GradientStop Color="#0DFFFFFF" Offset="0.5" />
+        <GradientStop Color="#14FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="Brush.Accent.Gradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#38E8FF" Offset="0" />
+        <GradientStop Color="#06B6D4" Offset="1" />
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="Brush.Canvas.AmbientGlow" Center="0.5,0.28" GradientOrigin="0.5,0.28" RadiusX="0.65" RadiusY="0.65">
+        <GradientStop Color="#1C22D3EE" Offset="0" />
+        <GradientStop Color="#0822D3EE" Offset="0.45" />
+        <GradientStop Color="#00080B12" Offset="1" />
+    </RadialGradientBrush>
+
+    <RadialGradientBrush x:Key="Brush.Surface.SphereGlass" Center="0.35,0.25" GradientOrigin="0.32,0.22" RadiusX="0.75" RadiusY="0.75">
+        <GradientStop Color="#384766" Offset="0" />
+        <GradientStop Color="#1A2234" Offset="0.45" />
+        <GradientStop Color="#0B0F19" Offset="1" />
+    </RadialGradientBrush>
+
+    <LinearGradientBrush x:Key="Brush.Surface.RailGlass" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#0B0F18" Offset="0" />
+        <GradientStop Color="#05070C" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- Typography -->
+    <FontFamily x:Key="Font.Display">Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.Body">Segoe UI Variable Text, Segoe UI</FontFamily>
+
+    <!-- Elevation & Glow Shadows -->
+    <DropShadowEffect x:Key="Shadow.SoftCard"
+                      BlurRadius="26"
+                      ShadowDepth="6"
+                      Direction="270"
+                      Opacity="0.42"
+                      Color="#000000" />
+
+    <DropShadowEffect x:Key="Shadow.HeroButton"
+                      BlurRadius="24"
+                      ShadowDepth="4"
+                      Direction="270"
+                      Opacity="0.45"
+                      Color="#22D3EE" />
+
+    <DropShadowEffect x:Key="Shadow.Sidebar"
+                      BlurRadius="40"
+                      ShadowDepth="10"
+                      Direction="270"
+                      Opacity="0.65"
+                      Color="#000000" />
+
+    <!-- Vector Geometry Icons -->
+    <Geometry x:Key="Icon.Home">M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V14H9V21H4C3.45 21 3 20.55 3 20V10.5Z</Geometry>
+    <Geometry x:Key="Icon.Headphones">M4 13V12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12V13M4 13H6.5C7.33 13 8 13.67 8 14.5V18.5C8 19.33 7.33 20 6.5 20H5C3.9 20 3 19.1 3 18V14C3 13.45 3.45 13 4 13ZM20 13H17.5C16.67 13 16 13.67 16 14.5V18.5C16 19.33 16.67 20 17.5 20H19C20.1 20 21 19.1 21 18V14C21 13.45 20.55 13 20 13Z</Geometry>
+    <Geometry x:Key="Icon.Settings">M12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15ZM19.4 15A1.65 1.65 0 0 0 19.73 16.82L19.79 16.88A2 2 0 1 1 16.96 19.71L16.9 19.65A1.65 1.65 0 0 0 15.08 19.32A1.65 1.65 0 0 0 14 20.83V21A2 2 0 1 1 10 21V20.91A1.65 1.65 0 0 0 8.92 19.4A1.65 1.65 0 0 0 7.1 19.73L7.04 19.79A2 2 0 1 1 4.21 16.96L4.27 16.9A1.65 1.65 0 0 0 4.6 15.08A1.65 1.65 0 0 0 3.09 14H3A2 2 0 1 1 3 10H3.09A1.65 1.65 0 0 0 4.6 8.92A1.65 1.65 0 0 0 4.27 7.1L4.21 7.04A2 2 0 1 1 7.04 4.21L7.1 4.27A1.65 1.65 0 0 0 8.92 4.6H9A1.65 1.65 0 0 0 10 3.09V3A2 2 0 1 1 14 3V3.09A1.65 1.65 0 0 0 15.08 4.6A1.65 1.65 0 0 0 16.9 4.27L16.96 4.21A2 2 0 1 1 19.79 7.04L19.73 7.1A1.65 1.65 0 0 0 19.4 8.92V9A1.65 1.65 0 0 0 20.91 10H21A2 2 0 1 1 21 14H20.91A1.65 1.65 0 0 0 19.4 15Z</Geometry>
+    <Geometry x:Key="Icon.Speaker">M6 3H18C19.1 3 20 3.9 20 5V19C20 20.1 19.1 21 18 21H6C4.9 21 4 20.1 4 19V5C4 3.9 4.9 3 6 3ZM12 17C14.21 17 16 15.21 16 13C16 10.79 14.21 9 12 9C9.79 9 8 10.79 8 13C8 15.21 9.79 17 12 17ZM12 6.5A0.75 0.75 0 1 0 12 8A0.75 0.75 0 1 0 12 6.5Z</Geometry>
+    <Geometry x:Key="Icon.Check">M5 12.5L9.5 17L19 7.5</Geometry>
+    <Geometry x:Key="Icon.Plus">M12 5V19M5 12H19</Geometry>
+    <Geometry x:Key="Icon.Refresh">M20 11A8 8 0 0 0 6.3 5.3L4 7.5M4 4V7.5H7.5M4 13A8 8 0 0 0 17.7 18.7L20 16.5M20 20V16.5H16.5</Geometry>
 
 </ResourceDictionary>

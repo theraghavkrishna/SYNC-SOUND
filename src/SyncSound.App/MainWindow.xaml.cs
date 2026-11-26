@@ -22,7 +22,7 @@ public partial class MainWindow : Window
 
     protected override void OnClosing(CancelEventArgs e)
     {
-        if (!AllowClose && _settingsService.Current.CloseToTray)
+        if (!AllowClose && _settingsService?.Current?.CloseToTray == true)
         {
             e.Cancel = true;
             Hide();
