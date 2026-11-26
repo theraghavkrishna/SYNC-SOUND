@@ -6,7 +6,8 @@ import SyncSoundLogo from "./SyncSoundLogo";
 interface SimDevice {
   id: string;
   name: string;
-  category: "Earbuds" | "Headphones" | "Speakers";
+  category: "Earbuds" | "Headphones" | "Wired";
+  transport: string;
   selected: boolean;
   volume: number;
   battery?: number;
@@ -18,6 +19,7 @@ const INITIAL_DEVICES: SimDevice[] = [
     id: "buds",
     name: "OnePlus Nord Buds 3 Pro",
     category: "Earbuds",
+    transport: "Bluetooth",
     selected: true,
     volume: 0.92,
     battery: 85,
@@ -26,17 +28,19 @@ const INITIAL_DEVICES: SimDevice[] = [
     id: "sony",
     name: "Sony WH-1000XM5",
     category: "Headphones",
+    transport: "Bluetooth",
     selected: true,
     volume: 0.78,
     battery: 72,
     isDefault: true,
   },
   {
-    id: "speakers",
+    id: "wired",
     name: "Realtek Audio (Wired / Speakers)",
-    category: "Speakers",
+    category: "Wired",
+    transport: "Wired / System Audio",
     selected: false,
-    volume: 0.72,
+    volume: 0.74,
   },
 ];
 
@@ -49,12 +53,12 @@ function DeviceIcon({ category, active }: { category: SimDevice["category"]; act
       </svg>
     );
   }
-  if (category === "Speakers") {
+  if (category === "Wired") {
     return (
       <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="6" y="3" width="12" height="18" rx="2" />
-        <circle cx="12" cy="13.5" r="3" />
-        <circle cx="12" cy="7" r="0.6" />
+        <circle cx="8" cy="8" r="3" />
+        <circle cx="16" cy="8" r="3" />
+        <path d="M8 11v3a4 4 0 0 0 8 0v-3M12 18v3" />
       </svg>
     );
   }
@@ -69,17 +73,24 @@ export default function InteractiveStage() {
   const [devices, setDevices] = useState<SimDevice[]>(INITIAL_DEVICES);
   const [activeTab, setActiveTab] = useState<"listen" | "headphones">("listen");
   const [isListening, setIsListening] = useState(false);
+  const [isTestingSound, setIsTestingSound] = useState(false);
   const [masterVol, setMasterVol] = useState(0.88);
   const [isMuted, setIsMuted] = useState(false);
   const [previewDark, setPreviewDark] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedDeviceId, setExpandedDeviceId] = useState<string | null>(null);
 
   const selectedDevices = devices.filter((d) => d.selected);
-  const selectedHeadphones = selectedDevices;
 
   const toggleDevice = (id: string) => {
     setDevices((prev) =>
       prev.map((d) => (d.id === id ? { ...d, selected: !d.selected } : d))
+    );
+  };
+
+  const setDeviceVolume = (id: string, volume: number) => {
+    setDevices((prev) =>
+      prev.map((d) => (d.id === id ? { ...d, volume } : d))
     );
   };
 
@@ -93,6 +104,12 @@ export default function InteractiveStage() {
       return;
     }
     setIsListening(true);
+  };
+
+  const triggerTestSound = () => {
+    if (selectedDevices.length === 0) return;
+    setIsTestingSound(true);
+    setTimeout(() => setIsTestingSound(false), 2200);
   };
 
   const copy = (() => {
@@ -116,7 +133,7 @@ export default function InteractiveStage() {
       return {
         headline: "One's ready.",
         accent: "Add another output.",
-        sub: "Mix Bluetooth TWS, 3.5 mm wired headphones, or USB headsets together.",
+        sub: "Combine Bluetooth TWS, 3.5 mm wired headphones, or USB headsets together.",
         cta: "Choose headphones",
       };
     }
@@ -147,29 +164,30 @@ export default function InteractiveStage() {
   };
 
   const shellBg = previewDark
-    ? "bg-[#191817] border-[#34302C] text-[#F4EFE6]"
-    : "bg-[#F4EFE6] border-[#DFD8CA] text-[#191817]";
+    ? "bg-[#191817] border-[#36322D] text-[#F4EFE6]"
+    : "bg-[#F4EFE6] border-[#DDD5C5] text-[#191817]";
   const railBg = previewDark
-    ? "bg-[#141312] border-[#34302C]"
-    : "bg-[#EDE7DC] border-[#DFD8CA]";
+    ? "bg-[#131211] border-[#36322D]"
+    : "bg-[#ECE5D8] border-[#DDD5C5]";
   const cardBg = previewDark
-    ? "bg-[#22201E] border-[#34302C]"
-    : "bg-[#FCFBF8] border-[#DFD8CA]";
-  const mutedText = previewDark ? "text-[#B8B1A6]" : "text-[#595550]";
+    ? "bg-[#23201E] border-[#36322D]"
+    : "bg-[#FCFBF8] border-[#DDD5C5]";
+  const subtleBg = previewDark ? "bg-[#191817]" : "bg-[#E6DEC9]/65";
+  const mutedText = previewDark ? "text-[#BDB5A9]" : "text-[#57524C]";
 
   const effectiveVol = isMuted ? 0 : masterVol;
   const dialAngle = -135 + effectiveVol * 270;
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-between mb-3 px-1">
-        <span className="font-mono-tech text-[11px] uppercase tracking-[0.14em] text-[#878179]">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 px-1">
+        <span className="font-mono-tech text-[11px] uppercase tracking-[0.14em] text-[#837C73]">
           Interactive Preview · Simulated Windows UI
         </span>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setPreviewDark((d) => !d)}
-            className="font-mono-tech text-[11px] px-3 py-1 rounded-full border border-[#DFD8CA] bg-[#FCFBF8] text-[#191817] hover:border-[#C65D32]/60 transition-colors cursor-pointer"
+            className="font-mono-tech text-[11px] px-3 py-1 rounded-full border border-[#DDD5C5] bg-[#FCFBF8] text-[#191817] hover:border-[#C65D32]/60 transition-colors cursor-pointer"
           >
             {previewDark ? "Switch to Light (Cream)" : "Preview Dark Mode"}
           </button>
@@ -182,10 +200,9 @@ export default function InteractiveStage() {
         </div>
       </div>
 
-      {/* Faithful Replica of the Redesigned v3.3.0 SYNC SOUND App */}
-      <div className={`relative rounded-[24px] border overflow-hidden shadow-[0_28px_70px_-18px_rgba(25,24,23,0.22)] transition-colors duration-300 ${shellBg}`}>
-        <div className="grid md:grid-cols-[200px_1fr]">
-          {/* Compact Left Rail */}
+      <div className={`relative rounded-[26px] border overflow-hidden shadow-[0_30px_76px_-18px_rgba(25,24,23,0.24)] transition-colors duration-300 ${shellBg}`}>
+        <div className="grid md:grid-cols-[204px_1fr]">
+          {/* Left Rail */}
           <aside className={`border-b md:border-b-0 md:border-r p-4 flex flex-col justify-between ${railBg}`}>
             <div className="space-y-6">
               <div className="flex items-center gap-2.5 px-1">
@@ -202,9 +219,7 @@ export default function InteractiveStage() {
                 <button
                   onClick={() => setActiveTab("listen")}
                   className={`flex-1 md:flex-none flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    activeTab === "listen"
-                      ? `${cardBg} border shadow-xs`
-                      : `${mutedText} hover:opacity-80`
+                    activeTab === "listen" ? `${cardBg} border shadow-xs` : `${mutedText} hover:opacity-85`
                   }`}
                 >
                   <span className={`w-1 h-4 rounded-full ${activeTab === "listen" ? "bg-[#C65D32]" : "bg-transparent"}`} />
@@ -213,9 +228,7 @@ export default function InteractiveStage() {
                 <button
                   onClick={() => setActiveTab("headphones")}
                   className={`flex-1 md:flex-none flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    activeTab === "headphones"
-                      ? `${cardBg} border shadow-xs`
-                      : `${mutedText} hover:opacity-80`
+                    activeTab === "headphones" ? `${cardBg} border shadow-xs` : `${mutedText} hover:opacity-85`
                   }`}
                 >
                   <span className={`w-1 h-4 rounded-full ${activeTab === "headphones" ? "bg-[#C65D32]" : "bg-transparent"}`} />
@@ -226,7 +239,7 @@ export default function InteractiveStage() {
 
             <div className={`hidden md:block rounded-xl border p-3 ${cardBg}`}>
               <div className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${isListening ? "bg-[#C65D32]" : "bg-[#2E7D5B]"}`} />
+                <span className={`w-2 h-2 rounded-full ${isListening ? "bg-[#C65D32]" : "bg-[#297553]"}`} />
                 <span className="text-xs font-semibold">{devices.length} connected</span>
               </div>
               <div className={`text-[11px] mt-0.5 pl-4 ${mutedText}`}>
@@ -235,28 +248,52 @@ export default function InteractiveStage() {
             </div>
           </aside>
 
-          {/* Main Stage Area */}
+          {/* Main Stage */}
           <div className="p-6 md:p-8 relative">
             {activeTab === "listen" ? (
               <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-5 items-center">
-                {/* Studio Stage Card */}
-                <div className={`rounded-[20px] border p-6 space-y-5 ${cardBg}`}>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${previewDark ? "border-[#34302C] bg-[#191817]" : "border-[#DFD8CA] bg-[#EDE7DC]"}`}>
+                {/* Listening Theatre */}
+                <div className={`rounded-[22px] border p-6 space-y-5 ${cardBg}`}>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${previewDark ? "border-[#36322D] bg-[#191817]" : "border-[#DDD5C5] bg-[#ECE5D8]"}`}>
                       {devices.length} connected
                     </span>
                     <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#C65D32]/15 border border-[#C65D32]/40 text-[#C65D32]">
                       {selectedDevices.length} in group
                     </span>
+                    {isListening && (
+                      <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-[#C65D32] text-[#FCFBF8]">
+                        Live
+                      </span>
+                    )}
                   </div>
 
-                  {/* Sync Orb */}
-                  <div className="relative w-28 h-28 flex items-center justify-center">
+                  {/* 10-Layer Crystal Sync Orb + Orbital Nodes */}
+                  <div className="relative w-32 h-32 flex items-center justify-center">
                     <div className="absolute inset-0 rounded-full bg-[#C65D32]/10 border border-[#C65D32]/30 animate-sync-breathe" />
+                    <div className={`absolute inset-2 rounded-full border border-dashed ${previewDark ? "border-[#F4EFE6]/15" : "border-[#191817]/15"} ${isListening && !isMuted ? "animate-sync-orbit" : ""}`} />
                     {isListening && !isMuted && (
-                      <div className="absolute inset-2 rounded-full border border-[#C65D32] animate-sync-signal" />
+                      <div className="absolute inset-3 rounded-full border border-[#C65D32] animate-sync-signal" />
                     )}
-                    <div className="relative w-20 h-20 rounded-full bg-gradient-to-b from-[#35322F] to-[#141312] border border-[#F4EFE6]/20 shadow-lg flex items-center justify-center gap-1">
+                    {/* Orbital Nodes */}
+                    {selectedDevices.map((d, i) => {
+                      const angle = (-90 + i * (360 / Math.max(1, selectedDevices.length))) * (Math.PI / 180);
+                      const r = 56;
+                      const x = 64 + r * Math.cos(angle);
+                      const y = 64 + r * Math.sin(angle);
+                      return (
+                        <span
+                          key={d.id}
+                          title={d.name}
+                          style={{ left: `${x - 5}px`, top: `${y - 5}px` }}
+                          className={`absolute w-2.5 h-2.5 rounded-full border border-white transition-colors ${
+                            isListening ? "bg-[#C65D32]" : "bg-[#297553]"
+                          }`}
+                        />
+                      );
+                    })}
+                    <div className="relative w-20 h-20 rounded-full bg-gradient-to-b from-[#3B3733] via-[#221F1D] to-[#121110] border border-[#F4EFE6]/25 shadow-lg flex items-center justify-center gap-1 overflow-hidden">
+                      <div className="absolute -top-6 left-2 w-16 h-10 rounded-full bg-white/15 blur-[2px] pointer-events-none" />
                       <span className={`w-1 h-2.5 rounded-full bg-[#C65D32] ${isListening && !isMuted ? "animate-sync-eq-1" : ""}`} />
                       <span className={`w-1 h-4 rounded-full bg-[#D56A3E] ${isListening && !isMuted ? "animate-sync-eq-2" : ""}`} />
                       <span className={`w-1 h-6 rounded-full bg-[#F4EFE6] ${isListening && !isMuted ? "animate-sync-eq-3" : ""}`} />
@@ -283,17 +320,29 @@ export default function InteractiveStage() {
                       {copy.cta}
                     </button>
                     <button
+                      onClick={triggerTestSound}
+                      className={`px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold border transition-colors cursor-pointer ${cardBg}`}
+                    >
+                      {isTestingSound ? "Testing chime…" : "Test sound"}
+                    </button>
+                    <button
                       onClick={() => setActiveTab("headphones")}
-                      className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold border transition-colors cursor-pointer ${cardBg}`}
+                      className={`px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold border transition-colors cursor-pointer ${cardBg}`}
                     >
                       Headphones
                     </button>
                   </div>
+
+                  {isTestingSound && (
+                    <div className={`text-xs px-3 py-2 rounded-xl border font-semibold text-[#C65D32] ${subtleBg} border-[#C65D32]/30`}>
+                      Simulated chime playing across {selectedDevices.length} selected outputs…
+                    </div>
+                  )}
                 </div>
 
-                {/* Right Column: Sync Dial + Listening Group */}
+                {/* Right Column */}
                 <div className="space-y-4">
-                  {/* Sync Dial Card */}
+                  {/* Sync Dial */}
                   <div className={`rounded-[20px] border p-4 flex items-center gap-4 ${cardBg}`}>
                     <div
                       ref={dialRef}
@@ -302,40 +351,11 @@ export default function InteractiveStage() {
                       title="Drag up/down to adjust listening volume"
                     >
                       <svg viewBox="0 0 100 100" className="w-full h-full">
-                        <circle
-                          cx="50"
-                          cy="50"
-                          r="40"
-                          fill="none"
-                          stroke={previewDark ? "#34302C" : "#DCD5C7"}
-                          strokeWidth="4"
-                          strokeDasharray="188.5 251.3"
-                          strokeLinecap="round"
-                          transform="rotate(135 50 50)"
-                        />
-                        <circle
-                          cx="50"
-                          cy="50"
-                          r="40"
-                          fill="none"
-                          stroke="#C65D32"
-                          strokeWidth="4.5"
-                          strokeDasharray={`${effectiveVol * 188.5} 251.3`}
-                          strokeLinecap="round"
-                          transform="rotate(135 50 50)"
-                        />
+                        <circle cx="50" cy="50" r="40" fill="none" stroke={previewDark ? "#36322D" : "#DAD2C3"} strokeWidth="4" strokeDasharray="188.5 251.3" strokeLinecap="round" transform="rotate(135 50 50)" />
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#C65D32" strokeWidth="4.5" strokeDasharray={`${effectiveVol * 188.5} 251.3`} strokeLinecap="round" transform="rotate(135 50 50)" />
                       </svg>
-                      <div
-                        className={`absolute w-16 h-16 rounded-full border shadow-md flex flex-col items-center justify-center ${
-                          previewDark
-                            ? "bg-gradient-to-b from-[#33302C] to-[#171514] border-[#34302C]"
-                            : "bg-gradient-to-b from-[#FCFBF8] to-[#E2DBCD] border-[#DFD8CA]"
-                        }`}
-                      >
-                        <div
-                          className="absolute inset-0 flex justify-center pt-1.5 pointer-events-none"
-                          style={{ transform: `rotate(${dialAngle}deg)` }}
-                        >
+                      <div className={`absolute w-16 h-16 rounded-full border shadow-md flex flex-col items-center justify-center ${previewDark ? "bg-gradient-to-b from-[#36322E] to-[#161413] border-[#36322D]" : "bg-gradient-to-b from-white to-[#E1D9CA] border-[#DDD5C5]"}`}>
+                        <div className="absolute inset-0 flex justify-center pt-1.5 pointer-events-none" style={{ transform: `rotate(${dialAngle}deg)` }}>
                           <span className="w-0.5 h-2.5 rounded-full bg-[#C65D32]" />
                         </div>
                         <span className="font-mono-tech text-xs font-bold tabular-nums-tech">
@@ -347,82 +367,94 @@ export default function InteractiveStage() {
                     <div className="space-y-2">
                       <div className="text-sm font-bold">Listening volume</div>
                       <p className={`text-[11.5px] leading-snug ${mutedText}`}>
-                        Drag the Sync Dial or toggle mute.
+                        Drag the Sync Dial or click any device row below for individual trim.
                       </p>
-                      <button
-                        onClick={() => setIsMuted((m) => !m)}
-                        className={`text-[11px] font-semibold px-3 py-1 rounded-full border cursor-pointer ${cardBg}`}
-                      >
+                      <button onClick={() => setIsMuted((m) => !m)} className={`text-[11px] font-semibold px-3 py-1 rounded-full border cursor-pointer ${cardBg}`}>
                         {isMuted ? "Unmute" : "Mute"}
                       </button>
                     </div>
                   </div>
 
-                  {/* Listening Group Card */}
+                  {/* Listening Group with Expandable Trim */}
                   <div className={`rounded-[20px] border p-4 space-y-2.5 ${cardBg}`}>
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-bold">Listening group</span>
-                      <button
-                        onClick={() => setActiveTab("headphones")}
-                        className="text-xs font-semibold text-[#C65D32] hover:underline cursor-pointer"
-                      >
+                      <button onClick={() => setActiveTab("headphones")} className="text-xs font-semibold text-[#C65D32] hover:underline cursor-pointer">
                         Manage
                       </button>
                     </div>
 
-                    {devices.map((d) => (
-                      <button
-                        key={d.id}
-                        onClick={() => toggleDevice(d.id)}
-                        className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                          d.selected
-                            ? `${cardBg} border-[#C65D32]/50`
-                            : `${previewDark ? "bg-[#191817] border-transparent" : "bg-[#EDE7DC]/70 border-transparent"}`
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${cardBg}`}>
-                            <DeviceIcon category={d.category} active={d.selected} />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="text-xs font-semibold truncate">{d.name}</div>
-                            <div className={`text-[11px] ${mutedText}`}>
-                              {d.category}
-                              {d.battery ? ` · ${d.battery}%` : ""}
-                            </div>
-                          </div>
-                        </div>
-
-                        <span
-                          className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
-                            d.selected
-                              ? "bg-[#C65D32] border-[#C65D32] text-[#FCFBF8]"
-                              : `${cardBg}`
+                    {devices.map((d) => {
+                      const isExpanded = expandedDeviceId === d.id;
+                      return (
+                        <div
+                          key={d.id}
+                          className={`rounded-xl border transition-all ${
+                            d.selected ? "border-[#C65D32]/50 bg-[#C65D32]/[0.05]" : `border-transparent ${subtleBg}`
                           }`}
                         >
-                          {d.selected && (
-                            <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                              <path d="M5 12.5 9.5 17 19 7.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
+                          <div className="flex items-center justify-between p-2.5">
+                            <button
+                              onClick={() => setExpandedDeviceId(isExpanded ? null : d.id)}
+                              className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer"
+                            >
+                              <div className={`w-8 h-8 rounded-lg border flex items-center justify-center shrink-0 ${cardBg}`}>
+                                <DeviceIcon category={d.category} active={d.selected} />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="text-xs font-semibold truncate">{d.name}</div>
+                                <div className={`text-[11px] ${mutedText}`}>
+                                  {d.transport}
+                                  {d.battery ? ` · ${d.battery}%` : ""}
+                                </div>
+                              </div>
+                            </button>
+
+                            <button
+                              onClick={() => toggleDevice(d.id)}
+                              className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 transition-colors cursor-pointer ${
+                                d.selected ? "bg-[#C65D32] border-[#C65D32] text-[#FCFBF8]" : `${cardBg}`
+                              }`}
+                            >
+                              {d.selected && (
+                                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                  <path d="M5 12.5 9.5 17 19 7.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                              )}
+                            </button>
+                          </div>
+
+                          {isExpanded && (
+                            <div className="px-3 pb-2.5 pt-1 flex items-center gap-2">
+                              <span className={`text-[10px] font-mono-tech ${mutedText}`}>LEVEL</span>
+                              <input
+                                type="range"
+                                min={0}
+                                max={100}
+                                value={Math.round(d.volume * 100)}
+                                onChange={(e) => setDeviceVolume(d.id, Number(e.target.value) / 100)}
+                                className="flex-1 accent-[#C65D32] h-1.5 cursor-pointer"
+                              />
+                              <span className="text-[11px] font-mono-tech font-semibold w-8 text-right">
+                                {Math.round(d.volume * 100)}%
+                              </span>
+                            </div>
                           )}
-                        </span>
-                      </button>
-                    ))}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             ) : (
-              /* Headphones Collection Grid */
+              /* Headphones Collection */
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <h3 className="text-xl font-bold">Your headphones. Your listening group.</h3>
-                    <p className={`text-xs ${mutedText}`}>Choose who joins the sound.</p>
+                    <p className={`text-xs ${mutedText}`}>Wired 3.5 mm, USB-C, and Bluetooth TWS run together on one timeline.</p>
                   </div>
-                  <button
-                    onClick={() => setActiveTab("listen")}
-                    className="text-xs font-semibold px-4 py-2 rounded-full bg-[#C65D32] text-[#FCFBF8] cursor-pointer"
-                  >
+                  <button onClick={() => setActiveTab("listen")} className="text-xs font-semibold px-4 py-2 rounded-full bg-[#C65D32] text-[#FCFBF8] cursor-pointer">
                     Back to Listen
                   </button>
                 </div>
@@ -444,7 +476,7 @@ export default function InteractiveStage() {
                           className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${
                             d.selected
                               ? "bg-[#C65D32] text-[#FCFBF8]"
-                              : `${previewDark ? "bg-[#191817] text-[#B8B1A6]" : "bg-[#EDE7DC] text-[#595550]"}`
+                              : `${previewDark ? "bg-[#191817] text-[#BDB5A9]" : "bg-[#ECE5D8] text-[#57524C]"}`
                           }`}
                         >
                           {d.selected ? "In group" : "Join"}
@@ -453,7 +485,7 @@ export default function InteractiveStage() {
                       <div>
                         <div className="text-sm font-bold">{d.name}</div>
                         <div className={`text-xs mt-0.5 ${mutedText}`}>
-                          {d.category}
+                          {d.transport}
                           {d.battery ? ` · ${d.battery}%` : ""}
                         </div>
                       </div>
@@ -466,40 +498,51 @@ export default function InteractiveStage() {
         </div>
       </div>
 
-      {/* Simulated Quick Sidebar Floating Panel */}
+      {/* Simulated Quick Sidebar Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-50 bg-[#191817]/35 backdrop-blur-xs flex justify-end p-4"
           onClick={() => setSidebarOpen(false)}
         >
           <div
-            className="w-full max-w-[340px] h-fit my-auto cream-card rounded-[22px] p-4 space-y-3 shadow-2xl text-[#191817]"
+            className="w-full max-w-[360px] h-fit my-auto cream-card rounded-[24px] p-4 space-y-3 shadow-2xl text-[#191817]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <SyncSoundLogo className="w-6 h-6 rounded-md" />
-                <span className="text-xs font-extrabold tracking-wide">SYNC SOUND</span>
+                <div>
+                  <div className="text-xs font-extrabold tracking-wide">SYNC SOUND</div>
+                  <div className="text-[10px] text-[#837C73]">{selectedDevices.length} of {devices.length} in group</div>
+                </div>
               </div>
               <button
                 onClick={() => setSidebarOpen(false)}
-                className="text-xs font-semibold text-[#878179] hover:text-[#191817] px-2 py-1 cursor-pointer"
+                className="text-xs font-semibold text-[#837C73] hover:text-[#191817] px-2 py-1 cursor-pointer"
               >
                 Close
               </button>
             </div>
 
-            <div className="ink-card rounded-[16px] p-4 text-[#F4EFE6] space-y-3">
+            <div className="ink-card rounded-[18px] p-4 text-[#F4EFE6] space-y-3">
               <div>
                 <div className="text-base font-bold">{copy.headline}</div>
                 <div className="font-serif-editorial italic text-xs text-[#C65D32]">{copy.accent}</div>
               </div>
-              <button
-                onClick={handlePrimaryAction}
-                className="w-full py-2.5 rounded-full text-xs font-semibold bg-[#C65D32] hover:bg-[#D56A3E] text-[#FCFBF8] cursor-pointer"
-              >
-                {copy.cta}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={handlePrimaryAction}
+                  className="flex-1 py-2.5 rounded-full text-xs font-semibold bg-[#C65D32] hover:bg-[#D56A3E] text-[#FCFBF8] cursor-pointer"
+                >
+                  {copy.cta}
+                </button>
+                <button
+                  onClick={triggerTestSound}
+                  className="px-3 py-2.5 rounded-full text-xs font-semibold bg-white/10 hover:bg-white/15 text-[#F4EFE6] cursor-pointer"
+                >
+                  Test
+                </button>
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -508,7 +551,7 @@ export default function InteractiveStage() {
                   key={d.id}
                   onClick={() => toggleDevice(d.id)}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-xl border text-left cursor-pointer ${
-                    d.selected ? "border-[#C65D32]/50 bg-[#FCFBF8]" : "border-[#DFD8CA] bg-[#EDE7DC]/60"
+                    d.selected ? "border-[#C65D32]/50 bg-[#FCFBF8]" : "border-[#DDD5C5] bg-[#ECE5D8]/60"
                   }`}
                 >
                   <span className="text-xs font-semibold truncate">{d.name}</span>

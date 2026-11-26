@@ -2,14 +2,14 @@
 
 :root {
   --bg-cream: #F4EFE6;
-  --bg-cream-rail: #EDE7DC;
+  --bg-cream-rail: #ECE5D8;
   --bg-porcelain: #FCFBF8;
   --ink-black: #191817;
-  --ink-secondary: #595550;
-  --ink-muted: #878179;
+  --ink-secondary: #57524C;
+  --ink-muted: #837C73;
   --accent-orange: #C65D32;
   --accent-orange-hover: #D56A3E;
-  --border-warm: #DFD8CA;
+  --border-warm: #DDD5C5;
 }
 
 @layer base {
@@ -34,22 +34,22 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Tactile Warm Cream Hardware Surface */
+/* Tactile Warm Cream Hardware Surface (v4 4-level depth) */
 .cream-card {
-  background: linear-gradient(180deg, #FCFBF8 0%, #F6F2EA 100%);
-  border: 1px solid #DFD8CA;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FCFBF8 32%, #F4EFE5 100%);
+  border: 1px solid #DDD5C5;
   box-shadow:
     inset 0 1px 0 #FFFFFF,
-    0 20px 46px -18px rgba(25, 24, 23, 0.11);
+    0 22px 50px -18px rgba(25, 24, 23, 0.12);
 }
 
 /* Signature Black Hardware Surface */
 .ink-card {
-  background: linear-gradient(180deg, #23211F 0%, #161514 100%);
-  border: 1px solid #34302C;
+  background: linear-gradient(145deg, #252220 0%, #191817 100%);
+  border: 1px solid rgba(244, 239, 230, 0.16);
   box-shadow:
-    inset 0 1px 0 rgba(244, 239, 230, 0.08),
-    0 28px 64px -18px rgba(25, 24, 23, 0.42);
+    inset 0 1px 0 rgba(244, 239, 230, 0.10),
+    0 28px 66px -18px rgba(25, 24, 23, 0.45);
 }
 
 /* Shared SYNC SOUND Motion Grammar: BREATHE · SIGNAL · FLOW · SETTLE · MORPH */
@@ -59,21 +59,30 @@
 }
 
 @keyframes sync-signal {
-  0% { transform: scale(0.82); opacity: 0.72; }
-  100% { transform: scale(1.36); opacity: 0; }
+  0% { transform: scale(0.80); opacity: 0.72; }
+  100% { transform: scale(1.32); opacity: 0; }
+}
+
+@keyframes sync-orbit {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes sync-eq {
-  0%, 100% { transform: scaleY(0.55); }
-  50% { transform: scaleY(1.28); }
+  0%, 100% { transform: scaleY(0.52); }
+  50% { transform: scaleY(1.26); }
 }
 
 .animate-sync-breathe {
-  animation: sync-breathe 3.2s ease-in-out infinite;
+  animation: sync-breathe 5.5s ease-in-out infinite;
 }
 
 .animate-sync-signal {
-  animation: sync-signal 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: sync-signal 1.85s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.animate-sync-orbit {
+  animation: sync-orbit 18s linear infinite;
 }
 
 .animate-sync-eq-1 { animation: sync-eq 0.70s ease-in-out infinite; }
@@ -85,6 +94,7 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-sync-breathe,
   .animate-sync-signal,
+  .animate-sync-orbit,
   .animate-sync-eq-1,
   .animate-sync-eq-2,
   .animate-sync-eq-3,

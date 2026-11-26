@@ -37,12 +37,25 @@ public partial class SyncDial : UserControl
             typeof(RoutedEventHandler),
             typeof(SyncDial));
 
+    public static readonly RoutedEvent DetentCrossedEvent =
+        EventManager.RegisterRoutedEvent(
+            nameof(DetentCrossed),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(SyncDial));
+
+    private int _lastDetentBucket = -1;
+
     public SyncDial()
     {
         InitializeComponent();
+        BuildTickMarks();
+        _lastDetentBucket = (int)Math.Round(Value * 10);
+        UpdateVisuals();
         Loaded += (_, _) =>
         {
             BuildTickMarks();
+            _lastDetentBucket = (int)Math.Round(Value * 10);
             UpdateVisuals();
         };
     }
@@ -51,6 +64,12 @@ public partial class SyncDial : UserControl
     {
         add => AddHandler(MuteToggledEvent, value);
         remove => RemoveHandler(MuteToggledEvent, value);
+    }
+
+    public event RoutedEventHandler DetentCrossed
+    {
+        add => AddHandler(DetentCrossedEvent, value);
+        remove => RemoveHandler(DetentCrossedEvent, value);
     }
 
     public double Value
@@ -72,6 +91,12 @@ public partial class SyncDial : UserControl
     {
         if (d is SyncDial dial)
         {
+            var bucket = (int)Math.Round(dial.Value * 10);
+            if (dial.IsLoaded && dial._lastDetentBucket >= 0 && bucket != dial._lastDetentBucket)
+            {
+                dial._lastDetentBucket = bucket;
+                dial.RaiseEvent(new RoutedEventArgs(DetentCrossedEvent));
+            }
             dial.UpdateVisuals();
         }
     }

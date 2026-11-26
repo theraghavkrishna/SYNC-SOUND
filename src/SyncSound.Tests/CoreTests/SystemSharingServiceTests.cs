@@ -50,6 +50,7 @@ public sealed class SystemSharingServiceTests
         public AudioEngineState State => AudioEngineState.Idle;
         public AudioEngineStatusSnapshot Status => new(AudioEngineState.Idle, string.Empty, [], "Ready to listen.");
         public float MasterVolume => 1.0f;
+        public float CurrentSignalLevel => 0f;
 
         public event EventHandler<AudioEngineStatusSnapshot>? StatusChanged;
         public event EventHandler? SourceCompleted;

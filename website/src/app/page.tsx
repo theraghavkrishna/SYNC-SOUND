@@ -177,15 +177,15 @@ export default function HomePage() {
         <section className="grid md:grid-cols-2 gap-5">
           <div className="cream-card rounded-[24px] p-8 space-y-3">
             <span className="font-mono-tech text-[11px] uppercase tracking-[0.14em] text-[#C65D32] font-semibold">
-              Listening Group Control
+              Multi-Output Test Chime &amp; Volume
             </span>
             <h3 className="text-2xl font-bold text-[#191817]">
               Everyone gets their own level.
             </h3>
-            <p className="text-sm text-[#595550] leading-relaxed">
-              Your earbuds run loud while a friend&apos;s over-ear cans run quiet. Adjust
-              the master Sync Dial or tune individual headphones without touching
-              Windows mixer sliders.
+            <p className="text-sm text-[#57524C] leading-relaxed">
+              Your earbuds run loud while a friend&apos;s wired headphones run quiet. Tune
+              the master Sync Dial or expand individual controls — and verify audio
+              across every output with one Test Sound chime.
             </p>
           </div>
 

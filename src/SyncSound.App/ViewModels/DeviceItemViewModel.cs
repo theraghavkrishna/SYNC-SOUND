@@ -8,8 +8,15 @@ public sealed class DeviceItemViewModel : ViewModelBase
 {
     private readonly Action<string, bool> _onSelectionToggled;
     private readonly Action<string, float>? _onVolumeChanged;
+    private readonly Action<string, bool>? _onMuteChanged;
+    private readonly Action<string, int>? _onDelayChanged;
+
     private bool _isSelected;
+    private bool _isDeviceMuted;
+    private bool _isExpanded;
+    private bool _isActivelyPlaying;
     private double _volume;
+    private int _delayMs;
     private string _statusBadge = "Connected";
     private string? _errorMessage;
 
@@ -17,14 +24,25 @@ public sealed class DeviceItemViewModel : ViewModelBase
         AudioDevice model,
         Action<string, bool> onSelectionToggled,
         double initialVolume = 1.0,
-        Action<string, float>? onVolumeChanged = null)
+        Action<string, float>? onVolumeChanged = null,
+        bool initialMuted = false,
+        Action<string, bool>? onMuteChanged = null,
+        int initialDelayMs = 0,
+        Action<string, int>? onDelayChanged = null)
     {
         Model = model;
         _onSelectionToggled = onSelectionToggled;
         _onVolumeChanged = onVolumeChanged;
+        _onMuteChanged = onMuteChanged;
+        _onDelayChanged = onDelayChanged;
         _isSelected = model.IsSelected;
         _volume = Math.Clamp(initialVolume, 0.0, 1.0);
+        _isDeviceMuted = initialMuted;
+        _delayMs = Math.Clamp(initialDelayMs, 0, 300);
+
         ToggleCommand = new RelayCommand(() => IsSelected = !IsSelected);
+        ToggleMuteCommand = new RelayCommand(() => IsDeviceMuted = !IsDeviceMuted);
+        ToggleExpandCommand = new RelayCommand(() => IsExpanded = !IsExpanded);
     }
 
     public AudioDevice Model { get; }
@@ -38,23 +56,36 @@ public sealed class DeviceItemViewModel : ViewModelBase
     public AudioTransportKind TransportKind => Model.TransportKind;
 
     public RelayCommand ToggleCommand { get; }
+    public RelayCommand ToggleMuteCommand { get; }
+    public RelayCommand ToggleExpandCommand { get; }
 
     public bool HasBattery => Model.BatteryPercentage.HasValue;
     public int? BatteryPercentage => Model.BatteryPercentage;
+    public bool IsLowBattery => Model.BatteryPercentage is <= 20;
     public string BatteryText => Model.BatteryPercentage.HasValue ? $"{Model.BatteryPercentage.Value}%" : string.Empty;
 
     public Geometry? DeviceIconGeometry
     {
         get
         {
-            var key = Model.DeviceType switch
+            var key = Model.TransportKind switch
             {
-                AudioDeviceType.Speakers => "Icon.Speaker",
-                AudioDeviceType.DigitalDisplay => "Icon.Display",
-                AudioDeviceType.Headphones when FullSystemName.Contains("Bud", StringComparison.OrdinalIgnoreCase)
+                AudioTransportKind.UsbAudio => "Icon.UsbAudio",
+                AudioTransportKind.DigitalDisplay => "Icon.Display",
+                AudioTransportKind.BuiltInOrWiredJack when FullSystemName.Contains("Headphone", StringComparison.OrdinalIgnoreCase)
+                    || FullSystemName.Contains("Realtek", StringComparison.OrdinalIgnoreCase) => "Icon.WiredJack",
+                AudioTransportKind.BuiltInOrWiredJack => "Icon.Speaker",
+                AudioTransportKind.BluetoothA2dp when FullSystemName.Contains("Bud", StringComparison.OrdinalIgnoreCase)
                     || FullSystemName.Contains("Pod", StringComparison.OrdinalIgnoreCase)
                     || FullSystemName.Contains("Ear", StringComparison.OrdinalIgnoreCase) => "Icon.Earbuds",
-                _ => "Icon.Headphones"
+                AudioTransportKind.BluetoothA2dp => "Icon.Headphones",
+                _ => Model.DeviceType switch
+                {
+                    AudioDeviceType.Speakers => "Icon.Speaker",
+                    AudioDeviceType.DigitalDisplay => "Icon.Display",
+                    AudioDeviceType.Headphones => "Icon.Headphones",
+                    _ => "Icon.WiredJack"
+                }
             };
             return Application.Current?.TryFindResource(key) as Geometry;
         }
@@ -97,7 +128,38 @@ public sealed class DeviceItemViewModel : ViewModelBase
         }
     }
 
-    public string StateLabel => IsSelected ? "In group" : "Connected";
+    public string StateLabel => IsActivelyPlaying ? "Listening" : (IsSelected ? "In group" : "Connected");
+
+    public bool IsActivelyPlaying
+    {
+        get => _isActivelyPlaying;
+        set
+        {
+            if (SetProperty(ref _isActivelyPlaying, value))
+            {
+                OnPropertyChanged(nameof(StateLabel));
+            }
+        }
+    }
+
+    public bool IsDeviceMuted
+    {
+        get => _isDeviceMuted;
+        set
+        {
+            if (SetProperty(ref _isDeviceMuted, value))
+            {
+                OnPropertyChanged(nameof(VolumePercentText));
+                _onMuteChanged?.Invoke(Id, value);
+            }
+        }
+    }
+
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set => SetProperty(ref _isExpanded, value);
+    }
 
     public double Volume
     {
@@ -108,6 +170,13 @@ public sealed class DeviceItemViewModel : ViewModelBase
             if (Math.Abs(_volume - clamped) > 0.001)
             {
                 _volume = clamped;
+                if (clamped > 0.01 && _isDeviceMuted)
+                {
+                    _isDeviceMuted = false;
+                    OnPropertyChanged(nameof(IsDeviceMuted));
+                    _onMuteChanged?.Invoke(Id, false);
+                }
+
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(VolumePercentText));
                 _onVolumeChanged?.Invoke(Id, (float)clamped);
@@ -115,9 +184,9 @@ public sealed class DeviceItemViewModel : ViewModelBase
         }
     }
 
-    public string VolumePercentText => $"{(int)Math.Round(_volume * 100)}%";
+    public string VolumePercentText => IsDeviceMuted ? "MUTED" : $"{(int)Math.Round(_volume * 100)}%";
 
-    public void SyncVolumeSilently(double volume)
+    public void SyncVolumeSilently(double volume, bool? isMuted = null)
     {
         var clamped = Math.Clamp(volume, 0.0, 1.0);
         if (Math.Abs(_volume - clamped) > 0.001)
@@ -126,7 +195,30 @@ public sealed class DeviceItemViewModel : ViewModelBase
             OnPropertyChanged(nameof(Volume));
             OnPropertyChanged(nameof(VolumePercentText));
         }
+
+        if (isMuted.HasValue && _isDeviceMuted != isMuted.Value)
+        {
+            _isDeviceMuted = isMuted.Value;
+            OnPropertyChanged(nameof(IsDeviceMuted));
+            OnPropertyChanged(nameof(VolumePercentText));
+        }
     }
+
+    public int DelayMs
+    {
+        get => _delayMs;
+        set
+        {
+            var clamped = Math.Clamp(value, 0, 300);
+            if (SetProperty(ref _delayMs, clamped))
+            {
+                OnPropertyChanged(nameof(DelayLabel));
+                _onDelayChanged?.Invoke(Id, clamped);
+            }
+        }
+    }
+
+    public string DelayLabel => $"{_delayMs} ms";
 
     public string StatusBadge
     {

@@ -54,13 +54,22 @@ public sealed class AppSettings
     public bool CloseToTray { get; set; } = true;
     public bool SidebarAlwaysOnTop { get; set; } = true;
     public bool SidebarClickOutsideToClose { get; set; } = true;
+    public bool RememberSidebarPosition { get; set; } = true;
     public double? SidebarLeft { get; set; }
     public double? SidebarTop { get; set; }
     public bool AutoSelectPreferredDevices { get; set; } = true;
+    public bool ReducedMotion { get; set; }
+    public bool EnableUiSounds { get; set; } = true;
+    public bool NotifyDeviceConnected { get; set; } = true;
+    public bool NotifyDeviceDisconnected { get; set; } = true;
+    public bool NotifyDeviceRecovered { get; set; } = true;
+    public bool NotifySessionStarted { get; set; } = true;
+    public bool NotifyLowBattery { get; set; } = true;
     public float MasterVolume { get; set; } = 1.0f;
     public float PlayerVolume { get; set; } = 0.85f;
     public List<string> SelectedDeviceIds { get; set; } = [];
     public List<string> PreferredDeviceIds { get; set; } = [];
+    public List<string> MutedDeviceIds { get; set; } = [];
     public Dictionary<string, int> PerDeviceDelayMs { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, float> PerDeviceVolume { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

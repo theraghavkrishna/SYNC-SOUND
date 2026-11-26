@@ -107,6 +107,12 @@ public sealed class SystemSharingService : ISystemSharingService
                 _errorMessage = null;
             }
 
+            var effectiveVolumes = new Dictionary<string, float>(_settingsService.Current.PerDeviceVolume, StringComparer.OrdinalIgnoreCase);
+            foreach (var mutedId in _settingsService.Current.MutedDeviceIds)
+            {
+                effectiveVolumes[mutedId] = 0.0f;
+            }
+
             var config = new AudioEngineConfiguration
             {
                 ChunkMs = 10,
@@ -116,7 +122,7 @@ public sealed class SystemSharingService : ISystemSharingService
                 AutoRecoverOutputs = true,
                 MasterVolume = Math.Clamp(_settingsService.Current.MasterVolume, 0.0f, 1.0f),
                 PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs,
-                PerOutputVolume = _settingsService.Current.PerDeviceVolume
+                PerOutputVolume = effectiveVolumes
             };
 
             var engineStatus = await _engine.StartAsync(source, fanoutTargets, config, cancellationToken).ConfigureAwait(false);

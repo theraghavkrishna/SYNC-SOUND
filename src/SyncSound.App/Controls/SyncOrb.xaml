@@ -2,69 +2,120 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Name="OrbRoot"
-             Width="148"
-             Height="148">
-    <Grid>
-        <!-- Outer Atmospheric Breathe Halo -->
-        <Ellipse x:Name="BreatheHalo"
-                 Width="136"
-                 Height="136"
-                 Fill="{DynamicResource Brush.Accent.Soft}"
-                 Stroke="{DynamicResource Brush.Accent.Border}"
-                 StrokeThickness="1.2"
-                 RenderTransformOrigin="0.5,0.5">
-            <Ellipse.RenderTransform>
-                <ScaleTransform x:Name="HaloScale" ScaleX="1" ScaleY="1" />
-            </Ellipse.RenderTransform>
-        </Ellipse>
+             Width="176"
+             Height="176">
+    <Viewbox Stretch="Uniform">
+        <Grid Width="176" Height="176" SnapsToDevicePixels="True">
+            <!-- Layer 1: Atmospheric Warm Halo -->
+            <Ellipse x:Name="BreatheHalo"
+                     Width="166"
+                     Height="166"
+                     Fill="{DynamicResource Brush.Accent.Soft}"
+                     Stroke="{DynamicResource Brush.Accent.Border}"
+                     StrokeThickness="1"
+                     Opacity="0.65"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform x:Name="HaloScale" ScaleX="1" ScaleY="1" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
 
-        <!-- Active Signal Pulse Wave (Visible only when Listening or Recovering) -->
-        <Ellipse x:Name="SignalRing"
-                 Width="112"
-                 Height="112"
-                 Stroke="{DynamicResource Brush.Accent.Primary}"
-                 StrokeThickness="1.75"
-                 Opacity="0"
-                 RenderTransformOrigin="0.5,0.5">
-            <Ellipse.RenderTransform>
-                <ScaleTransform x:Name="SignalScale" ScaleX="0.82" ScaleY="0.82" />
-            </Ellipse.RenderTransform>
-        </Ellipse>
+            <!-- Layer 2: Outward Expanding Signal Ring (Listening / Starting / Recovering) -->
+            <Ellipse x:Name="SignalRing"
+                     Width="136"
+                     Height="136"
+                     Stroke="{DynamicResource Brush.Accent.Primary}"
+                     StrokeThickness="1.75"
+                     Opacity="0"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform x:Name="SignalScale" ScaleX="0.82" ScaleY="0.82" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
 
-        <!-- Precision Outer Hairline Ring -->
-        <Ellipse Width="114"
-                 Height="114"
-                 Stroke="{DynamicResource Brush.Border.Hairline}"
-                 StrokeThickness="1" />
+            <!-- Layer 3: Precision Orbital Track Ring -->
+            <Ellipse x:Name="OrbitRing"
+                     Width="144"
+                     Height="144"
+                     Stroke="{DynamicResource Brush.Border.Hairline}"
+                     StrokeThickness="1.1"
+                     StrokeDashArray="3,4"
+                     Opacity="0.85"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <RotateTransform x:Name="OrbitRotation" Angle="0" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
 
-        <!-- Signature 3D Specular Hardware Sphere -->
-        <Ellipse x:Name="CoreSphere"
-                 Width="88"
-                 Height="88"
-                 Fill="{DynamicResource Brush.Surface.OrbCore}"
-                 Stroke="#3DF4EFE6"
-                 StrokeThickness="1.2"
-                 Effect="{DynamicResource Shadow.Dial}" />
+            <!-- Layer 4: Secondary Frosted Glass Ring -->
+            <Ellipse x:Name="GlassRing"
+                     Width="126"
+                     Height="126"
+                     Fill="#10F4EFE6"
+                     Stroke="{DynamicResource Brush.Border.GlassRim}"
+                     StrokeThickness="1.2" />
 
-        <!-- 5-Bar Acoustic Signature (Morphs between Calm Emblem & Live Listening) -->
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <Border x:Name="Bar1" Width="3.5" Height="11" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Primary}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
-            </Border>
-            <Border x:Name="Bar2" Width="3.5" Height="20" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Hover}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
-            </Border>
-            <Border x:Name="Bar3" Width="3.5" Height="28" CornerRadius="1.75" Background="#F4EFE6" Margin="2,0" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
-            </Border>
-            <Border x:Name="Bar4" Width="3.5" Height="20" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Hover}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
-            </Border>
-            <Border x:Name="Bar5" Width="3.5" Height="11" CornerRadius="1.75" Background="{DynamicResource Brush.Accent.Primary}" Margin="2,0" RenderTransformOrigin="0.5,0.5">
-                <Border.RenderTransform><ScaleTransform ScaleY="1" /></Border.RenderTransform>
-            </Border>
-        </StackPanel>
-    </Grid>
+            <!-- Layer 5: Connected Device Nodes (Rendered strictly from SelectedNodeCount) -->
+            <Canvas x:Name="NodesCanvas" Width="176" Height="176" IsHitTestVisible="False" />
+
+            <!-- Layer 6: Subtle Orbital Signal Particles -->
+            <Canvas x:Name="ParticlesCanvas" Width="176" Height="176" IsHitTestVisible="False" Opacity="0" RenderTransformOrigin="0.5,0.5">
+                <Canvas.RenderTransform>
+                    <RotateTransform x:Name="ParticleRotation" Angle="0" />
+                </Canvas.RenderTransform>
+                <Ellipse Canvas.Left="86" Canvas.Top="12" Width="4.5" Height="4.5" Fill="{DynamicResource Brush.Accent.Primary}" Opacity="0.85" />
+                <Ellipse Canvas.Left="24" Canvas.Top="122" Width="3.5" Height="3.5" Fill="{DynamicResource Brush.Accent.Hover}" Opacity="0.65" />
+                <Ellipse Canvas.Left="146" Canvas.Top="118" Width="3.5" Height="3.5" Fill="{DynamicResource Brush.Ink.Primary}" Opacity="0.45" />
+            </Canvas>
+
+            <!-- Layer 7: Cast Shadow (Sibling behind core sphere so graphics remain razor crisp) -->
+            <Ellipse Width="96"
+                     Height="96"
+                     Fill="#191817"
+                     IsHitTestVisible="False"
+                     Effect="{DynamicResource Shadow.Dial}" />
+
+            <!-- Layer 8: Signature Carbon Crystal Sphere -->
+            <Ellipse x:Name="CoreSphere"
+                     Width="96"
+                     Height="96"
+                     Fill="{DynamicResource Brush.Surface.OrbCore}"
+                     Stroke="#42F4EFE6"
+                     StrokeThickness="1.25"
+                     RenderTransformOrigin="0.5,0.5">
+                <Ellipse.RenderTransform>
+                    <ScaleTransform x:Name="CoreScale" ScaleX="1" ScaleY="1" />
+                </Ellipse.RenderTransform>
+            </Ellipse>
+
+            <!-- Layer 9: Directional Specular Top-Left Light Reflection -->
+            <Ellipse Width="78"
+                     Height="48"
+                     Margin="0,-32,0,0"
+                     Fill="{DynamicResource Brush.Surface.OrbSpecular}"
+                     IsHitTestVisible="False" />
+
+            <!-- Layer 10: Signature 5-Bar Acoustic Wave (Live Audio Reactive when Listening) -->
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsHitTestVisible="False">
+                <Border x:Name="Bar1" Width="3.8" Height="12" CornerRadius="1.9" Background="{DynamicResource Brush.Accent.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform><ScaleTransform x:Name="Bar1Scale" ScaleY="1" /></Border.RenderTransform>
+                </Border>
+                <Border x:Name="Bar2" Width="3.8" Height="22" CornerRadius="1.9" Background="{DynamicResource Brush.Accent.Hover}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform><ScaleTransform x:Name="Bar2Scale" ScaleY="1" /></Border.RenderTransform>
+                </Border>
+                <Border x:Name="Bar3" Width="3.8" Height="32" CornerRadius="1.9" Background="#F4EFE6" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform><ScaleTransform x:Name="Bar3Scale" ScaleY="1" /></Border.RenderTransform>
+                </Border>
+                <Border x:Name="Bar4" Width="3.8" Height="22" CornerRadius="1.9" Background="{DynamicResource Brush.Accent.Hover}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform><ScaleTransform x:Name="Bar4Scale" ScaleY="1" /></Border.RenderTransform>
+                </Border>
+                <Border x:Name="Bar5" Width="3.8" Height="12" CornerRadius="1.9" Background="{DynamicResource Brush.Accent.Primary}" Margin="2.2,0" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform><ScaleTransform x:Name="Bar5Scale" ScaleY="1" /></Border.RenderTransform>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Viewbox>
 </UserControl>

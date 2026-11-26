@@ -2,29 +2,29 @@
 
 **One sound. Everyone listening.**
 
-Share your Windows PC's audio across multiple supported headphones. Choose who's listening. Press play.
+Share your Windows PC's audio across multiple supported headphones simultaneously — Bluetooth TWS earbuds, 3.5 mm wired headsets, and USB audio together. Choose who's listening. Press play.
 
 ---
 
-## Product Architecture
+## Product Architecture (`v4.0`)
 
-- **`src/`** — Native Windows Desktop Application (`C# / .NET 10 / WPF / MVVM / NAudio 3.3.0`)
-  - `SyncSound.Core` — Domain models, `AudioDevice`, `AppSettings` (`AppThemeMode`, per-device & session volume), state interfaces
-  - `SyncSound.Audio` — Multi-output WASAPI loopback capture & fan-out (`AudioEngine`, `WasapiLoopbackAudioSource`, drift-protected `WasapiAudioOutput`, `DelayLineSampleProvider`)
-  - `SyncSound.Windows` — Core Audio endpoint discovery, PnP Bluetooth battery queries (`BluetoothBatteryReader`), JSON persistence, Win32 global hotkeys, tray icon, single-instance guard
-  - `SyncSound.App` — Per-Monitor DPI v2 aware UI (`Listen`, `Headphones`, `Preferences` + `QuickSidebarWindow`) in Warm Cream (`#F4EFE6`), Black (`#191817`), and Burnt Orange (`#C65D32`) with Light, Dark, and System themes
-  - `SyncSound.Tests` — Automated xUnit tests
-- **`website/`** — Next.js landing page sharing the exact SYNC SOUND visual design system (`Root Directory: website`)
+- **`src/`** — Native Windows Desktop Application (`C# / .NET 10 / WPF / MVVM / NAudio`)
+  - `SyncSound.Core` — Domain models, `AudioDevice`, `AudioTransportKind`, `AppSettings`, notification & reduced-motion preferences
+  - `SyncSound.Audio` — Multi-output WASAPI loopback capture & fan-out (`AudioEngine` with live RMS signal metering, `WasapiLoopbackAudioSource`, drift-protected `WasapiAudioOutput`, `MultiOutputTestEngine`, `MusicPlayerService`)
+  - `SyncSound.Windows` — Hardware-metadata endpoint discovery (`PKEY_AudioEndpoint_FormFactor`, `EnumeratorName`, `BusInfSection`), PnP Bluetooth battery queries (`BluetoothBatteryReader`), JSON persistence, Win32 global hotkeys, tray icon, single-instance guard
+  - `SyncSound.App` — Razor-sharp Per-Monitor DPI v2 vector UI (`Listen` theatre with 10-layer reactive `SyncOrb`, `Devices` Connection Atelier, 6-category `Preferences` + floating glass `QuickSidebarWindow` + tactile `SoundFeedbackService`) in Warm Cream (`#F4EFE6`), Carbon Black (`#191817`), and Burnt Orange (`#C65D32`)
+  - `SyncSound.Tests` — Automated xUnit tests (21/21 passing)
+- **`website/`** — Next.js landing page sharing the exact SYNC SOUND v4 visual design system (`Root Directory: website`)
 
 ---
 
 ## Key Features
 
-- **Connect → Choose → Listen:** Discover Bluetooth and wired headphones paired with Windows, pick your listening group, and share system audio seamlessly.
-- **Tactile Volume & Wired + Bluetooth Freedom:** Precision **Sync Dial** session volume + per-headphone rotary dials, real Bluetooth battery indicators where exposed by Windows, and seamless simultaneous routing across 3.5 mm wired Realtek headphones, USB headsets, and Bluetooth TWS earbuds.
-- **Quick Sidebar (`Ctrl + Shift + S`):** Draggable floating control instrument with remembered screen position, always-on-top support, and instant Start/Stop listening.
-- **Fault Isolation & Auto-Recovery:** If a headphone disconnects out of range, healthy headphones stay active and reconnect automatically when back online.
-- **Light, Dark & System Modes:** Instant, persistent theme switching across the app and Quick Sidebar.
+- **Connect · Choose · Listen:** Discover Bluetooth A2DP, 3.5 mm Realtek jack headphones, and USB headsets in Windows, pick your listening group, and share audio simultaneously with zero buffer underruns.
+- **Stateful Sync Orb & Listening Theatre:** 10-layer crystal Sync Orb with connected device constellation nodes and real-time audio reactivity, paired with multi-output **Test Sound** verification and an optional collapsible Music Dock.
+- **Tactile Master & Per-Device Control:** Precision **Sync Dial** with keyboard & haptic detent feedback, individual per-headphone volume trim & mute, and real Bluetooth battery indicators where exposed by Windows.
+- **Quick Sidebar (`Ctrl + Shift + S`):** Floating glass control instrument with live mini `SyncOrb`, expandable inline device controls, interruptible motion, and multi-monitor work-area positioning.
+- **Fault Isolation & Auto-Recovery:** If a headphone disconnects out of range, remaining headphones play uninterrupted and auto-recover when back in range.
 
 ---
 

@@ -2,41 +2,42 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- =====================================================================
-         SYNC SOUND Light Palette
-         Core Identity: Cream (#F4EFE6) · Black (#191817) · Burnt Orange (#C65D32)
+         SYNC SOUND v4 Light Palette (Warm Cream Atelier)
+         Locked Identity: Cream (#F4EFE6) · Carbon (#191817) · Burnt Orange (#C65D32)
          ===================================================================== -->
 
     <Color x:Key="Color.Canvas.Primary">#F4EFE6</Color>
-    <Color x:Key="Color.Canvas.Rail">#EDE7DC</Color>
-    <Color x:Key="Color.Canvas.Subtle">#E7E0D3</Color>
+    <Color x:Key="Color.Canvas.Rail">#ECE5D8</Color>
+    <Color x:Key="Color.Canvas.Subtle">#E6DEC9</Color>
 
     <Color x:Key="Color.Surface.Card">#FCFBF8</Color>
-    <Color x:Key="Color.Surface.CardBottom">#F6F2EA</Color>
-    <Color x:Key="Color.Surface.Hover">#EFEAE0</Color>
-    <Color x:Key="Color.Surface.Glass">#E6FAF7F1</Color>
-    <Color x:Key="Color.Surface.ControlTrack">#DCD5C7</Color>
+    <Color x:Key="Color.Surface.CardBottom">#F5F0E6</Color>
+    <Color x:Key="Color.Surface.Hover">#EFE9DC</Color>
+    <Color x:Key="Color.Surface.Glass">#ECFAF6EE</Color>
+    <Color x:Key="Color.Surface.GlassInteractive">#D8FCFBF8</Color>
+    <Color x:Key="Color.Surface.ControlTrack">#DAD2C3</Color>
 
-    <Color x:Key="Color.Border.Hairline">#DFD8CA</Color>
+    <Color x:Key="Color.Border.Hairline">#DDD5C5</Color>
     <Color x:Key="Color.Border.Rim">#FFFFFF</Color>
-    <Color x:Key="Color.Border.RimBottom">#D5CDBD</Color>
+    <Color x:Key="Color.Border.RimBottom">#D1C8B7</Color>
 
     <Color x:Key="Color.Ink.Primary">#191817</Color>
-    <Color x:Key="Color.Ink.Secondary">#595550</Color>
-    <Color x:Key="Color.Ink.Muted">#878179</Color>
+    <Color x:Key="Color.Ink.Secondary">#57524C</Color>
+    <Color x:Key="Color.Ink.Muted">#837C73</Color>
     <Color x:Key="Color.Ink.OnAccent">#FCFBF8</Color>
 
     <Color x:Key="Color.Accent.Primary">#C65D32</Color>
     <Color x:Key="Color.Accent.Hover">#D56A3E</Color>
-    <Color x:Key="Color.Accent.Pressed">#AA4C26</Color>
-    <Color x:Key="Color.Accent.Soft">#17C65D32</Color>
-    <Color x:Key="Color.Accent.Border">#55C65D32</Color>
+    <Color x:Key="Color.Accent.Pressed">#A84B25</Color>
+    <Color x:Key="Color.Accent.Soft">#16C65D32</Color>
+    <Color x:Key="Color.Accent.Border">#5AC65D32</Color>
 
-    <Color x:Key="Color.Status.Success">#2E7D5B</Color>
-    <Color x:Key="Color.Status.SuccessSoft">#162E7D5B</Color>
-    <Color x:Key="Color.Status.Warning">#B4691E</Color>
-    <Color x:Key="Color.Status.WarningSoft">#18B4691E</Color>
-    <Color x:Key="Color.Status.Error">#B83B3B</Color>
-    <Color x:Key="Color.Status.ErrorSoft">#16B83B3B</Color>
+    <Color x:Key="Color.Status.Success">#297553</Color>
+    <Color x:Key="Color.Status.SuccessSoft">#18297553</Color>
+    <Color x:Key="Color.Status.Warning">#B3651C</Color>
+    <Color x:Key="Color.Status.WarningSoft">#1AB3651C</Color>
+    <Color x:Key="Color.Status.Error">#B73939</Color>
+    <Color x:Key="Color.Status.ErrorSoft">#18B73939</Color>
 
     <SolidColorBrush x:Key="Brush.Canvas.Primary" Color="{StaticResource Color.Canvas.Primary}" />
     <SolidColorBrush x:Key="Brush.Canvas.Rail" Color="{StaticResource Color.Canvas.Rail}" />
@@ -44,6 +45,7 @@
     <SolidColorBrush x:Key="Brush.Surface.Card" Color="{StaticResource Color.Surface.Card}" />
     <SolidColorBrush x:Key="Brush.Surface.Hover" Color="{StaticResource Color.Surface.Hover}" />
     <SolidColorBrush x:Key="Brush.Surface.Glass" Color="{StaticResource Color.Surface.Glass}" />
+    <SolidColorBrush x:Key="Brush.Surface.GlassInteractive" Color="{StaticResource Color.Surface.GlassInteractive}" />
     <SolidColorBrush x:Key="Brush.Surface.ControlTrack" Color="{StaticResource Color.Surface.ControlTrack}" />
     <SolidColorBrush x:Key="Brush.Border.Hairline" Color="{StaticResource Color.Border.Hairline}" />
 
@@ -66,53 +68,66 @@
     <SolidColorBrush x:Key="Brush.Status.ErrorSoft" Color="{StaticResource Color.Status.ErrorSoft}" />
 
     <LinearGradientBrush x:Key="Brush.Surface.ElevatedCard" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FCFBF8" Offset="0" />
-        <GradientStop Color="#F6F2EA" Offset="1" />
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#FCFBF8" Offset="0.32" />
+        <GradientStop Color="#F4EFE5" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="Brush.Surface.Rail" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#F0EBE0" Offset="0" />
-        <GradientStop Color="#E8E1D4" Offset="1" />
+        <GradientStop Color="#EFE9DC" Offset="0" />
+        <GradientStop Color="#E6DFD0" Offset="1" />
     </LinearGradientBrush>
 
-    <LinearGradientBrush x:Key="Brush.Surface.SignatureCard" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#23211F" Offset="0" />
+    <LinearGradientBrush x:Key="Brush.Surface.SignatureCard" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#252220" Offset="0" />
         <GradientStop Color="#191817" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="Brush.Border.GlassRim" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FFFFFF" Offset="0" />
-        <GradientStop Color="#DFD8CA" Offset="0.45" />
-        <GradientStop Color="#D3CBB9" Offset="1" />
+        <GradientStop Color="#FFFFFFFF" Offset="0" />
+        <GradientStop Color="#DDD5C5" Offset="0.40" />
+        <GradientStop Color="#CEC5B3" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="Brush.Border.SelectedRim" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#C65D32" Offset="0" />
+        <GradientStop Color="#88C65D32" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="Brush.Accent.Gradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#D56A3E" Offset="0" />
-        <GradientStop Color="#C65D32" Offset="0.55" />
-        <GradientStop Color="#B34F27" Offset="1" />
+        <GradientStop Color="#DA7043" Offset="0" />
+        <GradientStop Color="#C65D32" Offset="0.52" />
+        <GradientStop Color="#AE4D25" Offset="1" />
     </LinearGradientBrush>
 
-    <RadialGradientBrush x:Key="Brush.Canvas.AmbientGlow" Center="0.38,0.32" GradientOrigin="0.38,0.32" RadiusX="0.62" RadiusY="0.62">
-        <GradientStop Color="#18C65D32" Offset="0" />
-        <GradientStop Color="#06C65D32" Offset="0.50" />
+    <RadialGradientBrush x:Key="Brush.Canvas.AmbientGlow" Center="0.34,0.32" GradientOrigin="0.34,0.32" RadiusX="0.62" RadiusY="0.62">
+        <GradientStop Color="#1CC65D32" Offset="0" />
+        <GradientStop Color="#08C65D32" Offset="0.48" />
         <GradientStop Color="#00F4EFE6" Offset="1" />
     </RadialGradientBrush>
 
-    <RadialGradientBrush x:Key="Brush.Surface.OrbCore" Center="0.34,0.26" GradientOrigin="0.30,0.22" RadiusX="0.78" RadiusY="0.78">
-        <GradientStop Color="#35322F" Offset="0" />
-        <GradientStop Color="#211F1D" Offset="0.55" />
-        <GradientStop Color="#141312" Offset="1" />
+    <RadialGradientBrush x:Key="Brush.Surface.OrbCore" Center="0.34,0.24" GradientOrigin="0.28,0.20" RadiusX="0.80" RadiusY="0.80">
+        <GradientStop Color="#3B3733" Offset="0" />
+        <GradientStop Color="#221F1D" Offset="0.52" />
+        <GradientStop Color="#121110" Offset="1" />
     </RadialGradientBrush>
 
-    <RadialGradientBrush x:Key="Brush.Surface.DialCap" Center="0.35,0.25" GradientOrigin="0.30,0.20" RadiusX="0.80" RadiusY="0.80">
-        <GradientStop Color="#FCFBF8" Offset="0" />
-        <GradientStop Color="#EFEAE0" Offset="0.65" />
-        <GradientStop Color="#E2DBCD" Offset="1" />
+    <RadialGradientBrush x:Key="Brush.Surface.OrbSpecular" Center="0.36,0.22" GradientOrigin="0.36,0.18" RadiusX="0.56" RadiusY="0.45">
+        <GradientStop Color="#4DFCFBF8" Offset="0" />
+        <GradientStop Color="#14FCFBF8" Offset="0.55" />
+        <GradientStop Color="#00FCFBF8" Offset="1" />
     </RadialGradientBrush>
 
-    <DropShadowEffect x:Key="Shadow.SoftCard" BlurRadius="22" ShadowDepth="5" Direction="270" Opacity="0.08" Color="#191817" />
-    <DropShadowEffect x:Key="Shadow.HeroButton" BlurRadius="22" ShadowDepth="6" Direction="270" Opacity="0.30" Color="#C65D32" />
-    <DropShadowEffect x:Key="Shadow.Window" BlurRadius="34" ShadowDepth="10" Direction="270" Opacity="0.16" Color="#191817" />
-    <DropShadowEffect x:Key="Shadow.Dial" BlurRadius="18" ShadowDepth="4" Direction="270" Opacity="0.14" Color="#191817" />
+    <RadialGradientBrush x:Key="Brush.Surface.DialCap" Center="0.35,0.24" GradientOrigin="0.30,0.18" RadiusX="0.82" RadiusY="0.82">
+        <GradientStop Color="#FFFFFF" Offset="0" />
+        <GradientStop Color="#F3EEE4" Offset="0.62" />
+        <GradientStop Color="#E1D9CA" Offset="1" />
+    </RadialGradientBrush>
+
+    <!-- Sibling background shadow effects (never placed on parents wrapping ClearType text) -->
+    <DropShadowEffect x:Key="Shadow.SoftCard" BlurRadius="22" ShadowDepth="5" Direction="270" Opacity="0.09" Color="#191817" />
+    <DropShadowEffect x:Key="Shadow.HeroButton" BlurRadius="24" ShadowDepth="6" Direction="270" Opacity="0.30" Color="#C65D32" />
+    <DropShadowEffect x:Key="Shadow.Window" BlurRadius="32" ShadowDepth="9" Direction="270" Opacity="0.16" Color="#191817" />
+    <DropShadowEffect x:Key="Shadow.Dial" BlurRadius="16" ShadowDepth="4" Direction="270" Opacity="0.16" Color="#191817" />
 
 </ResourceDictionary>

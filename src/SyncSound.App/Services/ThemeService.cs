@@ -9,8 +9,8 @@ namespace SyncSound.App.Services;
 /// </summary>
 public sealed class ThemeService : IDisposable
 {
-    private const string LightPalettePath = "Themes/LightPalette.xaml";
-    private const string DarkPalettePath = "Themes/DarkPalette.xaml";
+    private const string LightPalettePath = "pack://application:,,,/SyncSound.App;component/Themes/LightPalette.xaml";
+    private const string DarkPalettePath = "pack://application:,,,/SyncSound.App;component/Themes/DarkPalette.xaml";
 
     private AppThemeMode _mode = AppThemeMode.System;
     private bool _isDarkActive;
@@ -47,7 +47,7 @@ public sealed class ThemeService : IDisposable
         }
 
         var merged = app.Resources.MergedDictionaries;
-        var targetUri = new Uri(dark ? DarkPalettePath : LightPalettePath, UriKind.Relative);
+        var targetUri = new Uri(dark ? DarkPalettePath : LightPalettePath, UriKind.RelativeOrAbsolute);
 
         // Replace only the palette dictionary (index 0 or matching *Palette.xaml)
         var existingIndex = -1;

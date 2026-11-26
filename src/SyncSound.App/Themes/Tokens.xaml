@@ -2,28 +2,32 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- =====================================================================
-         SYNC SOUND Typography, Scale & Vector Icon System
-         Primary Interface: Manrope (Embedded) -> Segoe UI Variable -> Segoe UI
-         Editorial Accent: Georgia Italic
+         SYNC SOUND v4 Typography Scale, Geometry & Vector Icon Family
+         24x24 grid · consistent 1.75px round-cap stroke · zero raster icons
          ===================================================================== -->
 
-    <FontFamily x:Key="Font.Display">pack://application:,,,/Assets/Fonts/#Manrope, Segoe UI Variable Display, Segoe UI</FontFamily>
-    <FontFamily x:Key="Font.Body">pack://application:,,,/Assets/Fonts/#Manrope, Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.Display">Segoe UI Variable Display, pack://application:,,,/Assets/Fonts/#Manrope, Segoe UI</FontFamily>
+    <FontFamily x:Key="Font.Body">Segoe UI Variable Text, pack://application:,,,/Assets/Fonts/#Manrope, Segoe UI</FontFamily>
     <FontFamily x:Key="Font.Editorial">Georgia, Palatino Linotype, Times New Roman</FontFamily>
     <FontFamily x:Key="Font.Mono">Cascadia Mono, Consolas, Courier New</FontFamily>
 
     <!-- Corner Radius Scale -->
-    <CornerRadius x:Key="Radius.Card">20</CornerRadius>
-    <CornerRadius x:Key="Radius.CardCompact">14</CornerRadius>
+    <CornerRadius x:Key="Radius.Control">12</CornerRadius>
+    <CornerRadius x:Key="Radius.CardCompact">16</CornerRadius>
+    <CornerRadius x:Key="Radius.Card">22</CornerRadius>
+    <CornerRadius x:Key="Radius.Surface">26</CornerRadius>
     <CornerRadius x:Key="Radius.Pill">24</CornerRadius>
     <CornerRadius x:Key="Radius.Window">22</CornerRadius>
 
-    <!-- Coherent Vector Icon Family (24x24 viewBox, consistent 1.75px stroke) -->
+    <!-- Coherent Vector Icon Family (24x24 viewBox) -->
     <Geometry x:Key="Icon.Listen">M3 12H6.5L9 5L12 19L15 9L17.5 12H21</Geometry>
     <Geometry x:Key="Icon.Headphones">M4 13V12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12V13M4 13H6.5C7.33 13 8 13.67 8 14.5V18.5C8 19.33 7.33 20 6.5 20H5C3.9 20 3 19.1 3 18V14C3 13.45 3.45 13 4 13ZM20 13H17.5C16.67 13 16 13.67 16 14.5V18.5C16 19.33 16.67 20 17.5 20H19C20.1 20 21 19.1 21 18V14C21 13.45 20.55 13 20 13Z</Geometry>
     <Geometry x:Key="Icon.Earbuds">M7 6C4.79 6 3 7.79 3 10C3 11.86 4.28 13.42 6 13.86V19C6 19.55 6.45 20 7 20C7.55 20 8 19.55 8 19V10C8 7.79 7.55 6 7 6ZM17 6C19.21 6 21 7.79 21 10C21 11.86 19.72 13.42 18 13.86V19C18 19.55 17.55 20 17 20C16.45 20 16 19.55 16 19V10C16 7.79 16.45 6 17 6Z</Geometry>
+    <Geometry x:Key="Icon.WiredJack">M8 5A3 3 0 1 0 8 11A3 3 0 1 0 8 5ZM16 5A3 3 0 1 0 16 11A3 3 0 1 0 16 5ZM8 11V14C8 16.21 9.79 18 12 18C14.21 18 16 16.21 16 14V11M12 18V21</Geometry>
+    <Geometry x:Key="Icon.UsbAudio">M9 4H15V9H9V4ZM7 9H17V14C17 16.21 15.21 18 13 18H11C8.79 18 7 16.21 7 14V9ZM12 18V21</Geometry>
     <Geometry x:Key="Icon.Speaker">M6 3H18C19.1 3 20 3.9 20 5V19C20 20.1 19.1 21 18 21H6C4.9 21 4 20.1 4 19V5C4 3.9 4.9 3 6 3ZM12 17C14.21 17 16 15.21 16 13C16 10.79 14.21 9 12 9C9.79 9 8 10.79 8 13C8 15.21 9.79 17 12 17ZM12 6.5A0.75 0.75 0 1 0 12 8A0.75 0.75 0 1 0 12 6.5Z</Geometry>
     <Geometry x:Key="Icon.Display">M3 5H21V16H3V5ZM8 20H16M12 16V20</Geometry>
+    <Geometry x:Key="Icon.Bluetooth">M7 7L17 17L12 22V2L17 7L7 17</Geometry>
     <Geometry x:Key="Icon.Settings">M12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15ZM19.4 15A1.65 1.65 0 0 0 19.73 16.82L19.79 16.88A2 2 0 1 1 16.96 19.71L16.9 19.65A1.65 1.65 0 0 0 15.08 19.32A1.65 1.65 0 0 0 14 20.83V21A2 2 0 1 1 10 21V20.91A1.65 1.65 0 0 0 8.92 19.4A1.65 1.65 0 0 0 7.1 19.73L7.04 19.79A2 2 0 1 1 4.21 16.96L4.27 16.9A1.65 1.65 0 0 0 4.6 15.08A1.65 1.65 0 0 0 3.09 14H3A2 2 0 1 1 3 10H3.09A1.65 1.65 0 0 0 4.6 8.92A1.65 1.65 0 0 0 4.27 7.1L4.21 7.04A2 2 0 1 1 7.04 4.21L7.1 4.27A1.65 1.65 0 0 0 8.92 4.6H9A1.65 1.65 0 0 0 10 3.09V3A2 2 0 1 1 14 3V3.09A1.65 1.65 0 0 0 15.08 4.6A1.65 1.65 0 0 0 16.9 4.27L16.96 4.21A2 2 0 1 1 19.79 7.04L19.73 7.1A1.65 1.65 0 0 0 19.4 8.92V9A1.65 1.65 0 0 0 20.91 10H21A2 2 0 1 1 21 14H20.91A1.65 1.65 0 0 0 19.4 15Z</Geometry>
     <Geometry x:Key="Icon.Volume">M11 5L6 9H2V15H6L11 19V5ZM15.5 8.5C16.8 9.8 16.8 14.2 15.5 15.5M18.5 6C21 8.5 21 15.5 18.5 18</Geometry>
     <Geometry x:Key="Icon.Mute">M11 5L6 9H2V15H6L11 19V5ZM21 9L15 15M15 9L21 15</Geometry>
@@ -31,6 +35,15 @@
     <Geometry x:Key="Icon.Plus">M12 5V19M5 12H19</Geometry>
     <Geometry x:Key="Icon.Refresh">M20 11A8 8 0 0 0 6.3 5.3L4 7.5M4 4V7.5H7.5M4 13A8 8 0 0 0 17.7 18.7L20 16.5M20 20V16.5H16.5</Geometry>
     <Geometry x:Key="Icon.Check">M5 12.5L9.5 17L19 7.5</Geometry>
+    <Geometry x:Key="Icon.TestSignal">M4 10V14M8 7V17M12 4V20M16 7V17M20 10V14</Geometry>
+    <Geometry x:Key="Icon.MusicNote">M9 18V5L21 3V16M9 18A3 3 0 1 1 3 18A3 3 0 1 1 9 18ZM21 16A3 3 0 1 1 15 16A3 3 0 1 1 21 16Z</Geometry>
+    <Geometry x:Key="Icon.Play">M6 4L20 12L6 20V4Z</Geometry>
+    <Geometry x:Key="Icon.Pause">M6 4H10V20H6V4ZM14 4H18V20H14V4Z</Geometry>
+    <Geometry x:Key="Icon.Next">M5 4L15 12L5 20V4ZM19 5V19</Geometry>
+    <Geometry x:Key="Icon.Previous">M19 20L9 12L19 4V20ZM5 19V5</Geometry>
+    <Geometry x:Key="Icon.ChevronDown">M6 9L12 15L18 9</Geometry>
+    <Geometry x:Key="Icon.Bell">M18 8A6 6 0 0 0 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8ZM13.73 21A2 2 0 0 1 10.27 21</Geometry>
+    <Geometry x:Key="Icon.Sidebar">M3 4H21V20H3V4ZM15 4V20</Geometry>
     <Geometry x:Key="Icon.Sun">M12 3V5M12 19V21M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M3 12H5M19 12H21M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22M12 8A4 4 0 1 0 12 16A4 4 0 1 0 12 8Z</Geometry>
     <Geometry x:Key="Icon.Moon">M20.35 15.35A8.5 8.5 0 0 1 8.65 3.65A8.5 8.5 0 1 0 20.35 15.35Z</Geometry>
     <Geometry x:Key="Icon.WinMinimize">M5 12H19</Geometry>

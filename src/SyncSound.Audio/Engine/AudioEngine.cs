@@ -26,6 +26,7 @@ public sealed class AudioEngine : IAudioEngine
     private AudioEngineState _state = AudioEngineState.Idle;
     private string _userMessage = "Ready to listen.";
     private float _masterVolume = 1.0f;
+    private float _currentSignalLevel;
     private bool _isPaused;
     private bool _disposed;
 
@@ -72,6 +73,8 @@ public sealed class AudioEngine : IAudioEngine
             }
         }
     }
+
+    public float CurrentSignalLevel => Volatile.Read(ref _currentSignalLevel);
 
     public event EventHandler<AudioEngineStatusSnapshot>? StatusChanged;
     public event EventHandler? SourceCompleted;
@@ -277,6 +280,7 @@ public sealed class AudioEngine : IAudioEngine
             _entries.Clear();
             _startedAtUtc = null;
             _isPaused = false;
+            Volatile.Write(ref _currentSignalLevel, 0f);
         }
 
         if (stoppingSnapshot is not null)
@@ -430,10 +434,15 @@ public sealed class AudioEngine : IAudioEngine
                     if (read > 0)
                     {
                         var span = sampleBuffer.AsSpan(0, read);
+                        UpdateSignalLevel(span);
                         foreach (var entry in activeOutputs)
                         {
                             entry.Output?.WriteFloatSamples(span, source.Format);
                         }
+                    }
+                    else
+                    {
+                        DecaySignalLevel();
                     }
 
                     if (source.IsEnded)
@@ -441,6 +450,10 @@ public sealed class AudioEngine : IAudioEngine
                         sourceEnded = true;
                         break;
                     }
+                }
+                else
+                {
+                    Volatile.Write(ref _currentSignalLevel, 0f);
                 }
 
                 chunkIndex++;
@@ -512,6 +525,41 @@ public sealed class AudioEngine : IAudioEngine
         }
 
         return read;
+    }
+
+    private void UpdateSignalLevel(ReadOnlySpan<float> samples)
+    {
+        if (samples.IsEmpty)
+        {
+            DecaySignalLevel();
+            return;
+        }
+
+        double sumSq = 0;
+        var step = Math.Max(1, samples.Length / 96);
+        var count = 0;
+        for (var i = 0; i < samples.Length; i += step)
+        {
+            var s = samples[i];
+            sumSq += s * s;
+            count++;
+        }
+
+        var rms = count > 0 ? MathF.Sqrt((float)(sumSq / count)) : 0f;
+        // Scale conversational/music RMS (-24dBFS..0dBFS) gently into 0..1 visual energy
+        var normalized = Math.Clamp(rms * 3.2f, 0f, 1f);
+        var previous = Volatile.Read(ref _currentSignalLevel);
+        var smoothed = normalized >= previous
+            ? previous + (normalized - previous) * 0.45f
+            : previous * 0.84f;
+        Volatile.Write(ref _currentSignalLevel, smoothed < 0.004f ? 0f : smoothed);
+    }
+
+    private void DecaySignalLevel()
+    {
+        var previous = Volatile.Read(ref _currentSignalLevel);
+        var next = previous * 0.78f;
+        Volatile.Write(ref _currentSignalLevel, next < 0.004f ? 0f : next);
     }
 
     private OutputEntry TryInitializeEntry(

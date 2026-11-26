@@ -33,13 +33,19 @@
               StrokeEndLineCap="Round"
               IsHitTestVisible="False" />
 
+        <!-- Sibling Shadow Layer behind Dial Cap -->
+        <Ellipse Width="96"
+                 Height="96"
+                 Fill="#191817"
+                 IsHitTestVisible="False"
+                 Effect="{DynamicResource Shadow.Dial}" />
+
         <!-- Tactile Physical Dial Cap -->
         <Ellipse Width="96"
                  Height="96"
                  Fill="{DynamicResource Brush.Surface.DialCap}"
-                 Stroke="{DynamicResource Brush.Border.Hairline}"
-                 StrokeThickness="1.2"
-                 Effect="{DynamicResource Shadow.Dial}" />
+                 Stroke="{DynamicResource Brush.Border.GlassRim}"
+                 StrokeThickness="1.2" />
 
         <!-- Rotating Indicator Needle -->
         <Grid Width="96"

@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media.Animation;
+using SyncSound.App.Services;
 using SyncSound.App.ViewModels;
 using SyncSound.Core.Interfaces;
 
@@ -15,6 +16,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = viewModel;
         _settingsService = settingsService;
+        SourceInitialized += (_, _) => DwmWindowHelper.ApplyRoundedCorners(this);
         Loaded += OnLoaded;
     }
 
@@ -34,7 +36,6 @@ public partial class MainWindow : Window
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        // Fit comfortably inside the monitor work area across 100%-200% Windows scaling
         var area = SystemParameters.WorkArea;
         if (Width > area.Width - 20)
         {
@@ -49,25 +50,17 @@ public partial class MainWindow : Window
         Left = area.Left + Math.Max(0, (area.Width - Width) / 2);
         Top = area.Top + Math.Max(0, (area.Height - Height) / 2);
 
-        if (SystemParameters.ClientAreaAnimation)
+        if (SystemParameters.ClientAreaAnimation && !_settingsService.Current.ReducedMotion)
         {
             Opacity = 0;
             BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)));
         }
     }
 
-    private void OnMinimizeClick(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
-    }
+    private void OnMinimizeClick(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
-    private void OnMaximizeClick(object sender, RoutedEventArgs e)
-    {
+    private void OnMaximizeClick(object sender, RoutedEventArgs e) =>
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-    }
 
-    private void OnCloseClick(object sender, RoutedEventArgs e)
-    {
-        Close();
-    }
+    private void OnCloseClick(object sender, RoutedEventArgs e) => Close();
 }

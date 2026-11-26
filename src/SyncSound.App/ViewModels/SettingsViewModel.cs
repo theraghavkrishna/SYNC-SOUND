@@ -17,6 +17,7 @@ public enum PreferencesCategory
     QuickAccess,
     Listening,
     Windows,
+    Notifications,
     About
 }
 
@@ -38,7 +39,15 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
     private bool _closeToTray;
     private bool _sidebarAlwaysOnTop;
     private bool _sidebarClickOutsideToClose;
+    private bool _rememberSidebarPosition;
     private bool _autoSelectPreferredDevices;
+    private bool _reducedMotion;
+    private bool _enableUiSounds;
+    private bool _notifyDeviceConnected;
+    private bool _notifyDeviceDisconnected;
+    private bool _notifyDeviceRecovered;
+    private bool _notifySessionStarted;
+    private bool _notifyLowBattery;
     private bool _diagnosticsExpanded;
     private PreferencesCategory _selectedCategory = PreferencesCategory.Appearance;
 
@@ -66,23 +75,22 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         _closeToTray = s.CloseToTray;
         _sidebarAlwaysOnTop = s.SidebarAlwaysOnTop;
         _sidebarClickOutsideToClose = s.SidebarClickOutsideToClose;
+        _rememberSidebarPosition = s.RememberSidebarPosition;
         _autoSelectPreferredDevices = s.AutoSelectPreferredDevices;
+        _reducedMotion = s.ReducedMotion;
+        _enableUiSounds = s.EnableUiSounds;
+        _notifyDeviceConnected = s.NotifyDeviceConnected;
+        _notifyDeviceDisconnected = s.NotifyDeviceDisconnected;
+        _notifyDeviceRecovered = s.NotifyDeviceRecovered;
+        _notifySessionStarted = s.NotifySessionStarted;
+        _notifyLowBattery = s.NotifyLowBattery;
 
         ApplyShortcutCommand = new RelayCommand(ApplyShortcut);
         OpenLogsFolderCommand = new RelayCommand(() => _windowsLauncher.OpenLogsFolder());
         OpenSoundSettingsCommand = new RelayCommand(() => _windowsLauncher.OpenSoundSettings());
         OpenSidebarPreviewCommand = new RelayCommand(() => OpenSidebarPreviewRequested?.Invoke(this, EventArgs.Empty));
-        OpenGitHubCommand = new RelayCommand(() =>
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo("https://github.com/theraghavkrishna/SYNC-SOUND") { UseShellExecute = true });
-            }
-            catch
-            {
-                // Ignore shell launch errors.
-            }
-        });
+        OpenGitHubCommand = new RelayCommand(() => OpenUrl("https://github.com/theraghavkrishna/SYNC-SOUND"));
+        OpenReleasesCommand = new RelayCommand(() => OpenUrl("https://github.com/theraghavkrishna/SYNC-SOUND/releases"));
         SelectThemeCommand = new RelayCommand(p =>
         {
             if (p is string str && Enum.TryParse<AppThemeMode>(str, true, out var mode))
@@ -108,9 +116,13 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
     public RelayCommand OpenSoundSettingsCommand { get; }
     public RelayCommand OpenSidebarPreviewCommand { get; }
     public RelayCommand OpenGitHubCommand { get; }
+    public RelayCommand OpenReleasesCommand { get; }
     public RelayCommand SelectThemeCommand { get; }
 
     public event EventHandler? OpenSidebarPreviewRequested;
+    public event EventHandler? SidebarPreferencesChanged;
+    public event EventHandler? AppearancePreferencesChanged;
+    public event EventHandler<string>? HotkeyUpdated;
 
     public PreferencesCategory SelectedCategory
     {
@@ -123,40 +135,18 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
                 OnPropertyChanged(nameof(IsQuickAccessCategory));
                 OnPropertyChanged(nameof(IsListeningCategory));
                 OnPropertyChanged(nameof(IsWindowsCategory));
+                OnPropertyChanged(nameof(IsNotificationsCategory));
                 OnPropertyChanged(nameof(IsAboutCategory));
             }
         }
     }
 
-    public bool IsAppearanceCategory
-    {
-        get => _selectedCategory == PreferencesCategory.Appearance;
-        set { if (value) SelectedCategory = PreferencesCategory.Appearance; }
-    }
-
-    public bool IsQuickAccessCategory
-    {
-        get => _selectedCategory == PreferencesCategory.QuickAccess;
-        set { if (value) SelectedCategory = PreferencesCategory.QuickAccess; }
-    }
-
-    public bool IsListeningCategory
-    {
-        get => _selectedCategory == PreferencesCategory.Listening;
-        set { if (value) SelectedCategory = PreferencesCategory.Listening; }
-    }
-
-    public bool IsWindowsCategory
-    {
-        get => _selectedCategory == PreferencesCategory.Windows;
-        set { if (value) SelectedCategory = PreferencesCategory.Windows; }
-    }
-
-    public bool IsAboutCategory
-    {
-        get => _selectedCategory == PreferencesCategory.About;
-        set { if (value) SelectedCategory = PreferencesCategory.About; }
-    }
+    public bool IsAppearanceCategory { get => _selectedCategory == PreferencesCategory.Appearance; set { if (value) SelectedCategory = PreferencesCategory.Appearance; } }
+    public bool IsQuickAccessCategory { get => _selectedCategory == PreferencesCategory.QuickAccess; set { if (value) SelectedCategory = PreferencesCategory.QuickAccess; } }
+    public bool IsListeningCategory { get => _selectedCategory == PreferencesCategory.Listening; set { if (value) SelectedCategory = PreferencesCategory.Listening; } }
+    public bool IsWindowsCategory { get => _selectedCategory == PreferencesCategory.Windows; set { if (value) SelectedCategory = PreferencesCategory.Windows; } }
+    public bool IsNotificationsCategory { get => _selectedCategory == PreferencesCategory.Notifications; set { if (value) SelectedCategory = PreferencesCategory.Notifications; } }
+    public bool IsAboutCategory { get => _selectedCategory == PreferencesCategory.About; set { if (value) SelectedCategory = PreferencesCategory.About; } }
 
     public AppThemeMode ThemeMode
     {
@@ -172,36 +162,46 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
                 OnPropertyChanged(nameof(IsLightTheme));
                 OnPropertyChanged(nameof(IsDarkTheme));
                 OnPropertyChanged(nameof(IsSystemTheme));
+                AppearancePreferencesChanged?.Invoke(this, EventArgs.Empty);
             }
         }
     }
 
-    public bool IsLightTheme
-    {
-        get => ThemeMode == AppThemeMode.Light;
-        set { if (value) ThemeMode = AppThemeMode.Light; }
-    }
-
-    public bool IsDarkTheme
-    {
-        get => ThemeMode == AppThemeMode.Dark;
-        set { if (value) ThemeMode = AppThemeMode.Dark; }
-    }
-
-    public bool IsSystemTheme
-    {
-        get => ThemeMode == AppThemeMode.System;
-        set { if (value) ThemeMode = AppThemeMode.System; }
-    }
+    public bool IsLightTheme { get => ThemeMode == AppThemeMode.Light; set { if (value) ThemeMode = AppThemeMode.Light; } }
+    public bool IsDarkTheme { get => ThemeMode == AppThemeMode.Dark; set { if (value) ThemeMode = AppThemeMode.Dark; } }
+    public bool IsSystemTheme { get => ThemeMode == AppThemeMode.System; set { if (value) ThemeMode = AppThemeMode.System; } }
 
     public string AppVersion { get; } =
-        $"SYNC SOUND v{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0"}";
+        $"SYNC SOUND v{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "4.0.0"}";
 
-    public string ShortcutInput
+    public bool ReducedMotion
     {
-        get => _shortcutInput;
-        set => SetProperty(ref _shortcutInput, value);
+        get => _reducedMotion;
+        set
+        {
+            if (SetProperty(ref _reducedMotion, value))
+            {
+                _settingsService.Current.ReducedMotion = value;
+                _ = _settingsService.SaveAsync();
+                AppearancePreferencesChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
     }
+
+    public bool EnableUiSounds
+    {
+        get => _enableUiSounds;
+        set
+        {
+            if (SetProperty(ref _enableUiSounds, value))
+            {
+                _settingsService.Current.EnableUiSounds = value;
+                _ = _settingsService.SaveAsync();
+            }
+        }
+    }
+
+    public string ShortcutInput { get => _shortcutInput; set => SetProperty(ref _shortcutInput, value); }
 
     public string? ShortcutStatusMessage
     {
@@ -216,12 +216,7 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
     }
 
     public bool HasShortcutStatus => !string.IsNullOrWhiteSpace(_shortcutStatusMessage);
-
-    public bool HasShortcutError
-    {
-        get => _hasShortcutError;
-        private set => SetProperty(ref _hasShortcutError, value);
-    }
+    public bool HasShortcutError { get => _hasShortcutError; private set => SetProperty(ref _hasShortcutError, value); }
 
     public bool StartWithWindows
     {
@@ -296,6 +291,25 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         }
     }
 
+    public bool RememberSidebarPosition
+    {
+        get => _rememberSidebarPosition;
+        set
+        {
+            if (SetProperty(ref _rememberSidebarPosition, value))
+            {
+                _settingsService.Current.RememberSidebarPosition = value;
+                if (!value)
+                {
+                    _settingsService.Current.SidebarLeft = null;
+                    _settingsService.Current.SidebarTop = null;
+                }
+                _ = _settingsService.SaveAsync();
+                SidebarPreferencesChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+
     public bool AutoSelectPreferredDevices
     {
         get => _autoSelectPreferredDevices;
@@ -309,14 +323,37 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         }
     }
 
-    public bool DiagnosticsExpanded
+    public bool NotifyDeviceConnected
     {
-        get => _diagnosticsExpanded;
-        set => SetProperty(ref _diagnosticsExpanded, value);
+        get => _notifyDeviceConnected;
+        set { if (SetProperty(ref _notifyDeviceConnected, value)) { _settingsService.Current.NotifyDeviceConnected = value; _ = _settingsService.SaveAsync(); } }
     }
 
-    public event EventHandler? SidebarPreferencesChanged;
-    public event EventHandler<string>? HotkeyUpdated;
+    public bool NotifyDeviceDisconnected
+    {
+        get => _notifyDeviceDisconnected;
+        set { if (SetProperty(ref _notifyDeviceDisconnected, value)) { _settingsService.Current.NotifyDeviceDisconnected = value; _ = _settingsService.SaveAsync(); } }
+    }
+
+    public bool NotifyDeviceRecovered
+    {
+        get => _notifyDeviceRecovered;
+        set { if (SetProperty(ref _notifyDeviceRecovered, value)) { _settingsService.Current.NotifyDeviceRecovered = value; _ = _settingsService.SaveAsync(); } }
+    }
+
+    public bool NotifySessionStarted
+    {
+        get => _notifySessionStarted;
+        set { if (SetProperty(ref _notifySessionStarted, value)) { _settingsService.Current.NotifySessionStarted = value; _ = _settingsService.SaveAsync(); } }
+    }
+
+    public bool NotifyLowBattery
+    {
+        get => _notifyLowBattery;
+        set { if (SetProperty(ref _notifyLowBattery, value)) { _settingsService.Current.NotifyLowBattery = value; _ = _settingsService.SaveAsync(); } }
+    }
+
+    public bool DiagnosticsExpanded { get => _diagnosticsExpanded; set => SetProperty(ref _diagnosticsExpanded, value); }
 
     public void ApplyShortcut()
     {
@@ -401,12 +438,19 @@ public sealed class SettingsViewModel : ViewModelBase, IDisposable
         _ = _settingsService.SaveAsync();
     }
 
-    public sealed record DiagnosticOutputItem(
-        string Name,
-        string State,
-        string Format,
-        string Metrics,
-        string? Error);
+    private static void OpenUrl(string url)
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch
+        {
+            // Ignore shell launch errors.
+        }
+    }
+
+    public sealed record DiagnosticOutputItem(string Name, string State, string Format, string Metrics, string? Error);
 
     public sealed class DeviceDelayItem : ViewModelBase
     {

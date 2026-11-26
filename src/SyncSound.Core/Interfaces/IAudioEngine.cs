@@ -10,6 +10,7 @@ public interface IAudioEngine : IAsyncDisposable
     AudioEngineState State { get; }
     AudioEngineStatusSnapshot Status { get; }
     float MasterVolume { get; }
+    float CurrentSignalLevel { get; }
 
     event EventHandler<AudioEngineStatusSnapshot>? StatusChanged;
     event EventHandler? SourceCompleted;

@@ -131,10 +131,19 @@ public sealed class MusicPlayerService : IMusicPlayerService
                 _currentSource = source;
             }
 
+            var effectiveVolumes = new Dictionary<string, float>(_settingsService.Current.PerDeviceVolume, StringComparer.OrdinalIgnoreCase);
+            foreach (var mutedId in _settingsService.Current.MutedDeviceIds)
+            {
+                effectiveVolumes[mutedId] = 0.0f;
+            }
+
             var config = new AudioEngineConfiguration
             {
+                OutputLatencyMs = 40,
+                PrefillChunks = 10,
                 MasterVolume = _volume,
-                PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs
+                PerOutputDelayMs = _settingsService.Current.PerDeviceDelayMs,
+                PerOutputVolume = effectiveVolumes
             };
 
             var engineStatus = await _engine.StartAsync(source, targets, config).ConfigureAwait(false);

@@ -3,21 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="clr-namespace:SyncSound.App.Controls">
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="34,42,34,26" VerticalAlignment="Center" MaxWidth="980">
+        <Grid Margin="30,44,30,24" VerticalAlignment="Center" MaxWidth="1020">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.18*" />
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="0.88*" MinWidth="310" MaxWidth="376" />
+                <ColumnDefinition Width="1.15*" />
+                <ColumnDefinition Width="18" />
+                <ColumnDefinition Width="0.92*" MinWidth="320" MaxWidth="398" />
             </Grid.ColumnDefinitions>
 
-            <!-- LEFT: Studio Listening Stage Card -->
-            <Border Grid.Column="0"
-                    Style="{StaticResource SurfaceCardStyle}"
-                    Padding="28,26"
-                    VerticalAlignment="Center">
+            <!-- LEFT: The Listening Theatre Stage -->
+            <ContentControl Grid.Column="0"
+                            Style="{StaticResource CardSurfaceStyle}"
+                            Padding="28,24"
+                            VerticalAlignment="Center">
                 <StackPanel>
-                    <!-- Status Pills -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                    <!-- Live Status Pills Strip -->
+                    <WrapPanel Orientation="Horizontal" Margin="0,0,0,14">
                         <Border Background="{DynamicResource Brush.Canvas.Subtle}"
                                 BorderBrush="{DynamicResource Brush.Border.Hairline}"
                                 BorderThickness="1"
@@ -51,50 +51,68 @@
                                 BorderBrush="{DynamicResource Brush.Accent.Border}"
                                 BorderThickness="1"
                                 CornerRadius="14"
-                                Padding="11,5">
+                                Padding="11,5"
+                                Margin="0,0,8,0">
                             <TextBlock Text="{Binding SelectedCountText}"
                                        FontSize="12.5"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource Brush.Accent.Primary}" />
                         </Border>
-                    </StackPanel>
 
-                    <!-- Signature Stateful Sync Orb -->
+                        <Border Background="{DynamicResource Brush.Accent.Primary}"
+                                CornerRadius="14"
+                                Padding="10,5"
+                                Visibility="{Binding IsSharing, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Text="Live"
+                                       FontSize="11.5"
+                                       FontWeight="Bold"
+                                       Foreground="#FCFBF8" />
+                        </Border>
+                    </WrapPanel>
+
+                    <!-- Signature 10-Layer Crystal Sync Orb -->
                     <controls:SyncOrb VisualState="{Binding VisualState}"
+                                      AudioLevel="{Binding SignalLevel}"
+                                      SelectedNodeCount="{Binding SelectedCount}"
+                                      ReducedMotion="{Binding ReducedMotion}"
+                                      Width="168"
+                                      Height="168"
                                       HorizontalAlignment="Left"
-                                      Margin="-6,0,0,14" />
+                                      Margin="-10,0,0,10" />
 
-                    <!-- Editorial Headline + Italic Accent -->
+                    <!-- Editorial Typography -->
                     <TextBlock Text="{Binding HeroTitle}"
                                FontFamily="{StaticResource Font.Display}"
-                               FontSize="36"
+                               FontSize="40"
                                FontWeight="Bold"
-                               LineHeight="42"
+                               LineHeight="44"
+                               TextOptions.TextFormattingMode="Ideal"
                                Foreground="{DynamicResource Brush.Ink.Primary}"
                                TextWrapping="Wrap" />
 
                     <TextBlock Text="{Binding HeroAccent}"
                                FontFamily="{StaticResource Font.Editorial}"
                                FontStyle="Italic"
-                               FontSize="19"
+                               FontSize="20"
+                               TextOptions.TextFormattingMode="Ideal"
                                Foreground="{DynamicResource Brush.Accent.Primary}"
                                TextWrapping="Wrap"
-                               Margin="0,5,0,0" />
+                               Margin="0,4,0,0" />
 
                     <TextBlock Text="{Binding HeroSubtitle}"
                                FontSize="14.5"
                                Foreground="{DynamicResource Brush.Ink.Secondary}"
                                TextWrapping="Wrap"
                                LineHeight="21"
-                               Margin="0,10,0,0" />
+                               Margin="0,9,0,0" />
 
-                    <!-- Optional Alert Banner -->
+                    <!-- Alert Banner (Only on genuine warning / failure) -->
                     <Border Background="{DynamicResource Brush.Status.WarningSoft}"
                             BorderBrush="{DynamicResource Brush.Accent.Border}"
                             BorderThickness="1"
                             CornerRadius="12"
                             Padding="12,8"
-                            Margin="0,14,0,0"
+                            Margin="0,12,0,0"
                             Visibility="{Binding HasErrorBanner, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock Text="{Binding StatusBannerMessage}"
                                    FontSize="13"
@@ -103,23 +121,58 @@
                                    TextWrapping="Wrap" />
                     </Border>
 
-                    <!-- Primary & Secondary Actions -->
-                    <StackPanel Orientation="Horizontal" Margin="0,22,0,0">
+                    <!-- Primary Action Strip -->
+                    <WrapPanel Orientation="Horizontal" Margin="0,20,0,0">
                         <Button Content="{Binding ShareButtonText}"
                                 Style="{StaticResource PrimaryPillButtonStyle}"
                                 Command="{Binding ToggleSharingCommand}"
-                                MinWidth="172"
-                                Margin="0,0,10,0" />
+                                Padding="22,12"
+                                MinWidth="156"
+                                Margin="0,0,8,8" />
+
+                        <Button Style="{StaticResource SecondaryPillButtonStyle}"
+                                Command="{Binding TestSoundCommand}"
+                                ToolTip="Play a short chime across selected outputs to verify playback"
+                                Padding="15,11"
+                                Margin="0,0,8,8">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Icon.TestSignal}"
+                                      Stroke="{DynamicResource Brush.Accent.Primary}"
+                                      StrokeThickness="1.75"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      Width="14" Height="14" Stretch="Uniform"
+                                      Margin="0,0,7,0" />
+                                <TextBlock Text="{Binding TestSoundButtonLabel}" />
+                            </StackPanel>
+                        </Button>
 
                         <Button Content="Headphones"
                                 Style="{StaticResource SecondaryPillButtonStyle}"
                                 Command="{Binding ManageDevicesCommand}"
-                                Padding="18,12" />
-                    </StackPanel>
+                                Padding="16,11"
+                                Margin="0,0,0,8" />
+                    </WrapPanel>
 
-                    <!-- Subtle Divider & Quick Sidebar Access -->
-                    <Border Height="1" Background="{DynamicResource Brush.Border.Hairline}" Margin="0,22,0,14" />
+                    <!-- Truthful Multi-Output Test Feedback Pill -->
+                    <Border Background="{DynamicResource Brush.Canvas.Subtle}"
+                            BorderBrush="{DynamicResource Brush.Border.Hairline}"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="11,7"
+                            Margin="0,6,0,0"
+                            Visibility="{Binding HasTestSoundStatus, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="7" Height="7" Fill="{DynamicResource Brush.Accent.Primary}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <TextBlock Text="{Binding TestSoundStatusText}"
+                                       FontSize="12.5"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource Brush.Ink.Primary}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
 
+                    <!-- Footer Quick Sidebar Launcher -->
+                    <Border Height="1" Background="{DynamicResource Brush.Border.Hairline}" Margin="0,18,0,12" />
                     <DockPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="Quick Sidebar"
@@ -127,7 +180,7 @@
                                        Foreground="{DynamicResource Brush.Ink.Secondary}"
                                        VerticalAlignment="Center" />
                             <Border Background="{DynamicResource Brush.Surface.SignatureCard}"
-                                    CornerRadius="6"
+                                    CornerRadius="7"
                                     Padding="8,3"
                                     Margin="8,0">
                                 <TextBlock Text="{Binding ShortcutHint}"
@@ -147,43 +200,44 @@
                                 Padding="8,4" />
                     </DockPanel>
                 </StackPanel>
-            </Border>
+            </ContentControl>
 
-            <!-- RIGHT: Sync Dial + Compact Listening Group -->
+            <!-- RIGHT: Sync Dial + Listening Group + Optional Collapsible Music Dock -->
             <StackPanel Grid.Column="2" VerticalAlignment="Center">
                 <!-- Master Volume Sync Dial Card -->
-                <Border Style="{StaticResource SurfaceCardStyle}" Padding="18,16" Margin="0,0,0,14">
+                <ContentControl Style="{StaticResource CardSurfaceStyle}" Padding="16,14" Margin="0,0,0,12">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="14" />
+                            <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
                         <controls:SyncDial Grid.Column="0"
                                            Value="{Binding MasterVolume, Mode=TwoWay}"
                                            IsMuted="{Binding IsMuted}"
-                                           MuteToggled="OnDialMuteToggled" />
+                                           MuteToggled="OnDialMuteToggled"
+                                           DetentCrossed="OnDialDetentCrossed" />
 
                         <StackPanel Grid.Column="2" VerticalAlignment="Center">
                             <TextBlock Text="Listening volume"
                                        FontFamily="{StaticResource Font.Display}"
-                                       FontSize="16.5"
+                                       FontSize="16"
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource Brush.Ink.Primary}" />
-                            <TextBlock Text="Adjusts your shared SYNC SOUND session."
+                            <TextBlock Text="Shared SYNC SOUND output level."
                                        FontSize="12.5"
                                        Foreground="{DynamicResource Brush.Ink.Secondary}"
                                        TextWrapping="Wrap"
-                                       LineHeight="18"
-                                       Margin="0,3,0,12" />
+                                       LineHeight="17"
+                                       Margin="0,3,0,10" />
                             <Button Command="{Binding ToggleMuteCommand}"
                                     Style="{StaticResource SecondaryPillButtonStyle}"
                                     HorizontalAlignment="Left"
-                                    Padding="13,7"
+                                    Padding="12,6"
                                     FontSize="12.5">
                                 <StackPanel Orientation="Horizontal">
-                                    <Path Width="14" Height="14" Stretch="Uniform"
+                                    <Path Width="13" Height="13" Stretch="Uniform"
                                           Stroke="{DynamicResource Brush.Ink.Primary}"
                                           StrokeThickness="1.75"
                                           StrokeStartLineCap="Round" StrokeEndLineCap="Round"
@@ -215,15 +269,15 @@
                             </Button>
                         </StackPanel>
                     </Grid>
-                </Border>
+                </ContentControl>
 
-                <!-- Compact Listening Group Card -->
-                <Border Style="{StaticResource SurfaceCardStyle}" Padding="18,16">
+                <!-- Compact Listening Group Card with Inline Mute & Expandable Per-Device Trim -->
+                <ContentControl Style="{StaticResource CardSurfaceStyle}" Padding="16,14" Margin="0,0,0,12">
                     <StackPanel>
-                        <DockPanel Margin="0,0,0,12">
+                        <DockPanel Margin="0,0,0,10">
                             <TextBlock Text="Listening group"
                                        FontFamily="{StaticResource Font.Display}"
-                                       FontSize="16.5"
+                                       FontSize="16"
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource Brush.Ink.Primary}" />
                             <Button DockPanel.Dock="Right"
@@ -232,11 +286,11 @@
                                     Style="{StaticResource QuietButtonStyle}"
                                     Foreground="{DynamicResource Brush.Accent.Primary}"
                                     HorizontalAlignment="Right"
-                                    FontSize="12.5"
+                                    FontSize="12"
                                     Padding="8,2" />
                         </DockPanel>
 
-                        <ItemsControl ItemsSource="{Binding ListeningGroupDevices}" MaxHeight="240">
+                        <ItemsControl ItemsSource="{Binding ListeningGroupDevices}" MaxHeight="224">
                             <ItemsControl.Template>
                                 <ControlTemplate TargetType="ItemsControl">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -246,122 +300,252 @@
                             </ItemsControl.Template>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Command="{Binding ToggleCommand}"
-                                            ToolTip="{Binding FullSystemName}"
-                                            Cursor="Hand"
-                                            Margin="0,0,0,8">
-                                        <Button.Template>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border x:Name="Card"
-                                                        Background="{DynamicResource Brush.Canvas.Subtle}"
-                                                        BorderBrush="Transparent"
-                                                        BorderThickness="1.2"
-                                                        CornerRadius="14"
-                                                        Padding="12,10">
-                                                    <Grid>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
+                                    <Border CornerRadius="14" Padding="10,8" Margin="0,0,0,7" ToolTip="{Binding FullSystemName}">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="{DynamicResource Brush.Canvas.Subtle}" />
+                                                <Setter Property="BorderBrush" Value="Transparent" />
+                                                <Setter Property="BorderThickness" Value="1.2" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource Brush.Surface.Card}" />
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Border}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
 
-                                                        <Border Width="34" Height="34" CornerRadius="10"
-                                                                Background="{DynamicResource Brush.Surface.ElevatedCard}"
-                                                                BorderBrush="{DynamicResource Brush.Border.Hairline}"
-                                                                BorderThickness="1"
-                                                                Margin="0,0,10,0">
-                                                            <Path Data="{Binding DeviceIconGeometry}"
-                                                                  StrokeThickness="1.75"
-                                                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                                                  Width="16" Height="16" Stretch="Uniform"
-                                                                  HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                                <Path.Style>
-                                                                    <Style TargetType="Path">
-                                                                        <Setter Property="Stroke" Value="{DynamicResource Brush.Ink.Secondary}" />
+                                                <Button Grid.Column="0" Command="{Binding ToggleExpandCommand}" Cursor="Hand" Margin="0,0,9,0">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Width="32" Height="32" CornerRadius="10"
+                                                                    Background="{DynamicResource Brush.Surface.ElevatedCard}"
+                                                                    BorderBrush="{DynamicResource Brush.Border.Hairline}"
+                                                                    BorderThickness="1">
+                                                                <Path Data="{Binding DeviceIconGeometry}"
+                                                                      StrokeThickness="1.75"
+                                                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                                      Width="15" Height="15" Stretch="Uniform"
+                                                                      HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                    <Path.Style>
+                                                                        <Style TargetType="Path">
+                                                                            <Setter Property="Stroke" Value="{DynamicResource Brush.Ink.Secondary}" />
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                                                    <Setter Property="Stroke" Value="{DynamicResource Brush.Accent.Primary}" />
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Path.Style>
+                                                                </Path>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+
+                                                <Button Grid.Column="1" Command="{Binding ToggleExpandCommand}" Cursor="Hand" HorizontalContentAlignment="Left">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <StackPanel VerticalAlignment="Center" Background="Transparent">
+                                                                <TextBlock Text="{Binding Name}"
+                                                                           FontSize="13"
+                                                                           FontWeight="SemiBold"
+                                                                           Foreground="{DynamicResource Brush.Ink.Primary}"
+                                                                           TextTrimming="CharacterEllipsis" />
+                                                                <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                                                                    <TextBlock Text="{Binding CategoryLabel}"
+                                                                               FontSize="11.5"
+                                                                               Foreground="{DynamicResource Brush.Ink.Secondary}" />
+                                                                    <StackPanel Orientation="Horizontal"
+                                                                                Visibility="{Binding HasBattery, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                                        <TextBlock Text=" · " FontSize="11.5" Foreground="{DynamicResource Brush.Ink.Muted}" />
+                                                                        <TextBlock Text="{Binding BatteryText}"
+                                                                                   FontSize="11.5"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Foreground="{DynamicResource Brush.Status.Success}" />
+                                                                    </StackPanel>
+                                                                </StackPanel>
+                                                            </StackPanel>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+
+                                                <Button Grid.Column="2"
+                                                        Command="{Binding ToggleMuteCommand}"
+                                                        Style="{StaticResource QuietButtonStyle}"
+                                                        Padding="6"
+                                                        Margin="4,0"
+                                                        ToolTip="Adjust or mute individual device">
+                                                    <Path Width="13" Height="13" Stretch="Uniform"
+                                                          Stroke="{DynamicResource Brush.Ink.Secondary}"
+                                                          StrokeThickness="1.7"
+                                                          StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                                                        <Path.Style>
+                                                            <Style TargetType="Path">
+                                                                <Setter Property="Data" Value="{StaticResource Icon.Volume}" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsDeviceMuted}" Value="True">
+                                                                        <Setter Property="Data" Value="{StaticResource Icon.Mute}" />
+                                                                        <Setter Property="Stroke" Value="{DynamicResource Brush.Accent.Primary}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Path.Style>
+                                                    </Path>
+                                                </Button>
+
+                                                <Button Grid.Column="3" Command="{Binding ToggleCommand}" Cursor="Hand" ToolTip="Join or leave listening group">
+                                                    <Button.Template>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Width="25" Height="25" CornerRadius="12.5" BorderThickness="1.2">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Setter Property="Background" Value="{DynamicResource Brush.Surface.Card}" />
+                                                                        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Hairline}" />
                                                                         <Style.Triggers>
                                                                             <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                                                <Setter Property="Stroke" Value="{DynamicResource Brush.Accent.Primary}" />
+                                                                                <Setter Property="Background" Value="{DynamicResource Brush.Accent.Primary}" />
+                                                                                <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
-                                                                </Path.Style>
-                                                            </Path>
-                                                        </Border>
+                                                                </Border.Style>
+                                                                <Path Data="{StaticResource Icon.Check}"
+                                                                      Stroke="#FCFBF8"
+                                                                      StrokeThickness="2"
+                                                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                                      Width="11" Height="11" Stretch="Uniform"
+                                                                      HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                      Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </Grid>
 
-                                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,8,0">
-                                                            <TextBlock Text="{Binding Name}"
-                                                                       FontSize="13.5"
-                                                                       FontWeight="SemiBold"
-                                                                       Foreground="{DynamicResource Brush.Ink.Primary}"
-                                                                       TextTrimming="CharacterEllipsis" />
-                                                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                                                <TextBlock Text="{Binding CategoryLabel}"
-                                                                           FontSize="12"
-                                                                           Foreground="{DynamicResource Brush.Ink.Secondary}" />
-                                                                <StackPanel Orientation="Horizontal"
-                                                                            Visibility="{Binding HasBattery, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                                    <TextBlock Text=" · " FontSize="12" Foreground="{DynamicResource Brush.Ink.Muted}" />
-                                                                    <TextBlock Text="{Binding BatteryText}"
-                                                                               FontSize="12"
-                                                                               FontWeight="SemiBold"
-                                                                               Foreground="{DynamicResource Brush.Status.Success}" />
-                                                                </StackPanel>
-                                                            </StackPanel>
-                                                        </StackPanel>
-
-                                                        <!-- Tactile Join/Selected Checkmark Pill -->
-                                                        <Border Grid.Column="2"
-                                                                Width="26" Height="26"
-                                                                CornerRadius="13"
-                                                                VerticalAlignment="Center"
-                                                                BorderThickness="1.2">
-                                                            <Border.Style>
-                                                                <Style TargetType="Border">
-                                                                    <Setter Property="Background" Value="{DynamicResource Brush.Surface.Card}" />
-                                                                    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border.Hairline}" />
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                                            <Setter Property="Background" Value="{DynamicResource Brush.Accent.Primary}" />
-                                                                            <Setter Property="BorderBrush" Value="{DynamicResource Brush.Accent.Primary}" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </Border.Style>
-                                                            <Path Data="{StaticResource Icon.Check}"
-                                                                  Stroke="#FCFBF8"
-                                                                  StrokeThickness="2"
-                                                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                                                  Width="12" Height="12" Stretch="Uniform"
-                                                                  HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                                  Visibility="{Binding IsSelected, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                                        </Border>
-                                                    </Grid>
-                                                </Border>
-                                                <ControlTemplate.Triggers>
-                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                        <Setter TargetName="Card" Property="Background" Value="{DynamicResource Brush.Surface.Card}" />
-                                                        <Setter TargetName="Card" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Border}" />
-                                                    </DataTrigger>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="Card" Property="Background" Value="{DynamicResource Brush.Surface.Hover}" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Button.Template>
-                                    </Button>
+                                            <!-- Inline Expanded Per-Device Gain -->
+                                            <Grid Margin="4,8,4,2" Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="44" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="Level" FontSize="11.5" Foreground="{DynamicResource Brush.Ink.Muted}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                                <Slider Grid.Column="1" Style="{StaticResource MinimalSliderStyle}" Minimum="0" Maximum="1" Value="{Binding Volume, Mode=TwoWay}" />
+                                                <TextBlock Grid.Column="2" Text="{Binding VolumePercentText}" FontFamily="{StaticResource Font.Mono}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Secondary}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <!-- Empty Devices Inline Hint -->
                         <TextBlock Text="Connect headphones in Windows to add them here."
-                                   FontSize="12.5"
+                                   FontSize="12"
                                    Foreground="{DynamicResource Brush.Ink.Muted}"
                                    TextWrapping="Wrap"
-                                   Margin="0,4,0,0"
+                                   Margin="0,2,0,0"
                                    Visibility="{Binding HasConnectedDevices, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
                     </StackPanel>
-                </Border>
+                </ContentControl>
+
+                <!-- Card 3: Optional Collapsible Music Test Dock (Secondary to Listening) -->
+                <ContentControl Style="{StaticResource CardSurfaceStyle}" Padding="14,11">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button Command="{Binding ToggleMusicDockCommand}" Style="{StaticResource QuietButtonStyle}" HorizontalContentAlignment="Left" Padding="4,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Icon.MusicNote}"
+                                          Stroke="{DynamicResource Brush.Accent.Primary}"
+                                          StrokeThickness="1.7"
+                                          Width="14" Height="14" Stretch="Uniform"
+                                          Margin="0,0,8,0" />
+                                    <TextBlock Text="{Binding TrackTitle}"
+                                               FontSize="12.5"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource Brush.Ink.Primary}"
+                                               MaxWidth="190"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button DockPanel.Dock="Right"
+                                    Content="Choose file"
+                                    Command="{Binding ChooseMusicFileCommand}"
+                                    Style="{StaticResource QuietButtonStyle}"
+                                    Foreground="{DynamicResource Brush.Accent.Primary}"
+                                    FontSize="12"
+                                    Padding="8,3"
+                                    HorizontalAlignment="Right" />
+                        </DockPanel>
+
+                        <StackPanel Margin="0,10,0,0" Visibility="{Binding IsMusicDockExpanded, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <DockPanel Margin="0,0,0,8">
+                                <Border Width="40" Height="40" CornerRadius="10"
+                                        Background="{DynamicResource Brush.Canvas.Subtle}"
+                                        BorderBrush="{DynamicResource Brush.Border.Hairline}"
+                                        BorderThickness="1"
+                                        ClipToBounds="True"
+                                        Margin="0,0,10,0">
+                                    <Grid>
+                                        <Path Data="{StaticResource Icon.MusicNote}"
+                                              Stroke="{DynamicResource Brush.Ink.Muted}"
+                                              StrokeThickness="1.75"
+                                              Width="16" Height="16" Stretch="Uniform"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              Visibility="{Binding TrackAlbumArtBytes, Converter={StaticResource InverseNullToVisibilityConverter}}" />
+                                        <Image Source="{Binding TrackAlbumArtBytes, Converter={StaticResource ByteArrayToImageSourceConverter}}"
+                                               Stretch="UniformToFill" />
+                                    </Grid>
+                                </Border>
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button Command="{Binding PreviousTrackCommand}" Style="{StaticResource QuietButtonStyle}" Padding="6" ToolTip="Previous">
+                                        <Path Data="{StaticResource Icon.Previous}" Stroke="{DynamicResource Brush.Ink.Secondary}" StrokeThickness="1.7" Width="12" Height="12" Stretch="Uniform" />
+                                    </Button>
+                                    <Button Command="{Binding PlayPauseMusicCommand}" Style="{StaticResource SecondaryPillButtonStyle}" Padding="10,6" Margin="4,0" ToolTip="Play / Pause">
+                                        <Path Width="11" Height="11" Stretch="Uniform" Stroke="{DynamicResource Brush.Accent.Primary}" StrokeThickness="1.9">
+                                            <Path.Style>
+                                                <Style TargetType="Path">
+                                                    <Setter Property="Data" Value="{StaticResource Icon.Play}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsMusicPlaying}" Value="True">
+                                                            <Setter Property="Data" Value="{StaticResource Icon.Pause}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Path.Style>
+                                        </Path>
+                                    </Button>
+                                    <Button Command="{Binding NextTrackCommand}" Style="{StaticResource QuietButtonStyle}" Padding="6" ToolTip="Next">
+                                        <Path Data="{StaticResource Icon.Next}" Stroke="{DynamicResource Brush.Ink.Secondary}" StrokeThickness="1.7" Width="12" Height="12" Stretch="Uniform" />
+                                    </Button>
+                                </StackPanel>
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,6,0">
+                                    <TextBlock Text="{Binding TrackTitle}" FontSize="12.5" FontWeight="SemiBold" Foreground="{DynamicResource Brush.Ink.Primary}" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="{Binding TrackArtist}" FontSize="11.5" Foreground="{DynamicResource Brush.Ink.Secondary}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </DockPanel>
+                            <Slider Style="{StaticResource MinimalSliderStyle}"
+                                    Minimum="0"
+                                    Maximum="{Binding TrackDurationSeconds}"
+                                    Value="{Binding TrackPositionSeconds, Mode=TwoWay}"
+                                    IsEnabled="{Binding HasTrackLoaded}" />
+                            <TextBlock Text="{Binding TrackTimeText}"
+                                       FontFamily="{StaticResource Font.Mono}"
+                                       FontSize="10.5"
+                                       Foreground="{DynamicResource Brush.Ink.Muted}"
+                                       HorizontalAlignment="Right" />
+                        </StackPanel>
+                    </StackPanel>
+                </ContentControl>
             </StackPanel>
         </Grid>
     </ScrollViewer>
